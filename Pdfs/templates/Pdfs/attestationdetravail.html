@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Attestation de travail</title>
+    <style>
+        h3{
+            font-size: 25px;
+            font-weight: bold;
+            color: black;
+        }
+        h4{
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            margin-left: 200px;
+            margin-top: 100px;
+        }
+        h6{
+
+            margin-top: 225px; /* moitié de la hauteur */
+        }
+        p{
+            font-size: 18px;
+            
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+  <!-- Le reste du contenu -->
+    <div align ="center" align ="top">
+        <img src="../../Pdfs/static/Pdfs/img/emidlogo.png" alt="">
+    </div>
+    <div align = "right" >
+        <p> Casablanca, le {{date}}</p>
+    </div>
+    <div align ="center" > 
+        <h3><u>ATTESTATION DE TRAVAIL</u></h3>
+    </div>
+    <div> 
+        <P>Nous soussignés société, <strong>EMID</strong> à Casablanca, certifions que:</P>
+    </div>
+    <div align ="center"> 
+        <p><strong>Mr. </strong>{{nom_prenom}}</p>
+    </div>
+    <div align ="center"> 
+        <p>(C.N.S.S. N<sup>o</sup> {{num_cnss}})</p>
+    </div>
+    <div>
+        <p>Est employé au sein de notre société depuis le {{date_entree}}</p>
+    </div>
+    <div>
+        <p>Actuellement, il occupe la fonction de {{fonction}}</p>
+    </div>
+    <div>
+        <p>La présente attestation est délivrée à l'intéressé sur sa demande pour servir et valoir ce que de droit.</p>
+    </div>
+    <div align ="center">
+        <h4>Directeur Ressources Humaines<br/>{{directeur_rh}}</h4>
+    </div>
+    <div align ="center" align ="bottom">
+        <h6>Société anonyme au capitale de 8.900.000 dhs, 56 Rue Lalla Meriem, Souissi Rabat Maroc<br>
+        RC:98725-CNSS:9653884-IF:3366902-Patente:25995876-contact@emid.ma-www.emid.ma</h6>
+    </div>
+</body>
+</html>
+<div></div> 
