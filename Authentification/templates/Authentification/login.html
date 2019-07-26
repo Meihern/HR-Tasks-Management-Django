@@ -1,0 +1,57 @@
+{% load bootstrap4 %}
+{% load static %}
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link  rel="stylesheet" href="{% static 'Authentification/css/styles.css' %}" type="text/css"  >
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+              <img src= "{% static 'Authentification/images/emid_logo.png' %}" class="card-img-top"/>
+            <div class="card-title text-center">
+                <h3 class="card-text"> Authentifiez-vous </h3>
+            </div>
+            <form class="form-signin" method="POST">
+                {% csrf_token %}
+                {% for message in messages %}
+
+                    <div class="alert alert-danger">
+                        <a class="close" href="#" data-dismiss="alert">×</a>
+                        {{ message }}
+                    </div>
+            {% endfor %}
+              <div class="form-label-group">
+                  {{ form.email.errors }}
+                <input type="email" id="{{ form.email.id_for_label }}" class="form-control" placeholder="Adresse éléctronique" name="email" required autofocus>
+                <label for="{{ form.email.id_for_label }}">Adresse Electronique</label>
+              </div>
+
+              <div class="form-label-group">
+                  {{ form.password.errors }}
+                <input type="password" id="{{ form.password.id_for_label }}" class="form-control" placeholder="Mot de passe" name="password" required>
+                <label for="{{ form.password.id_for_label }}">Mot de Passe</label>
+              </div>
+
+              <!--<div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck1">
+                <label class="custom-control-label" for="customCheck1">Enregister Mot de Passe</label>
+              </div>-->
+              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">S'authentifier</button>
+              <hr class="my-4">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
