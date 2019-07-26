@@ -12,6 +12,7 @@ def envoyer_demande_travail(request):
     demande_travail.save()
     return JsonResponse({'test': 'test'})
 
+
 def envoyer_demande_salaire(request):
     employe = request.user
     type_demande = TypeDemandeAttestataion.objects.get(nom_type_demande='salaire')
@@ -27,8 +28,6 @@ def envoyer_demande_domiciliation(request):
     return JsonResponse({'test': 'test'})
 
 
-def generate_attestation_travail_pdf(request):
-    pass
 
 
 
