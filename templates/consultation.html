@@ -1,0 +1,43 @@
+{% extends "Dashboard.html" %}
+{% block title %}
+  Consultation
+{% endblock %}
+{% block Content %}
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Employés</th>
+            <th>Type de demande</th>
+            <th>Date</th>
+            <th>Etat</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Abdellah METKAL</td>
+            <td>Demande d'attestation de travail</td>
+            <td>29/07/2019</td>
+            <td><a href="#" class="btn btn-success btn-icon-split">
+                <span class="icon text-white-50">
+                  <i class="fas fa-check"></i>
+                </span>
+                <span class="text">Valider</span>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+{% endblock %}
