@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('authentification/', include('Authentification.urls' )),
     url('^$', login_required(views.DashboardView.as_view()), name='dashboard'),
+    url('^consultation$',login_required(views.ConsultationView.as_view()),name='consultation'),
     path('attestations/', include('Gestion_Attestations.urls')),
     path('pdfs/',include('Pdfs.urls')),
 ]

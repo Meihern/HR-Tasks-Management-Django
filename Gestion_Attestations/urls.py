@@ -4,7 +4,5 @@ from . import views
 
 
 urlpatterns = [
-    url('^demande_travail$', login_required(views.envoyer_demande_travail), name='demande_travail'),
-    url('^demande_salaire$', login_required(views.envoyer_demande_travail), name='demande_salaire'),
-    url('^demande_domiciliation', login_required(views.envoyer_demande_travail), name='demande_domiciliation'),
+    url('^demande_doc$', login_required(views.envoyer_demande_doc), name='demande_doc'),
 ]

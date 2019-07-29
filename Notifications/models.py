@@ -10,11 +10,14 @@ class Notification(models.Model):
     receiver = models.ForeignKey(Employe, on_delete=models.CASCADE ,verbose_name='Récepteur', null=False, blank=False, related_name='receiver')
     seen = models.BooleanField(default=False, null=False, blank=False, verbose_name='Vu')
     subject = models.CharField(max_length=50, null=False, blank=False, verbose_name='Sujet')
-    message = models.TextField(null=True,blank=True)
+    message = models.TextField(null=True, blank=True)
     time_sent = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return "Sujet : %s"%(self.subject)
+
+    def get_message(self):
+        return self.message
 
     @property
     def is_seen(self):

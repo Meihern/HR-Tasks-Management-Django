@@ -18,7 +18,10 @@ class TypeDemandeAttestataion(models.Model):
                                         choices=CHOIX_TYPES)
 
     def __str__(self):
-        return self.nom_type_demande
+        if self.nom_type_demande == 'domiciliation':
+            return "Demande de %s"%(self.nom_type_demande)
+        else:
+            return "Demande d'attestation de %s"%(self.nom_type_demande)
 
     class Meta:
         verbose_name = "Type d'attestation"
@@ -41,7 +44,7 @@ class DemandeAttestation(models.Model):
         return self.type
 
     def __str__(self):
-        return "Demande d'Attestation de %s envoyé par %s" % (self.get_type_demande, self.employe.get_full_name())
+        return "%s envoyé par %s" % (self.get_type_demande, self.employe.get_full_name())
 
     @property
     def is_valid(self):

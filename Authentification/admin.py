@@ -29,7 +29,7 @@ class CustomUserAdmin(BaseUserAdmin):
     list_filter = ('admin', 'staff', 'active','sexe','department')
 
     fieldsets = (
-        (None, {'fields': ('last_name', 'first_name', 'email', 'password', 'matricule_paie', 'n_cin', 'n_cnss', 'fonction','date_naissance','last_login','superieur_hierarchique')}),
+        (None, {'fields': ('last_name', 'first_name', 'email', 'password', 'matricule_paie', 'n_cin', 'n_cnss', 'fonction','date_naissance','last_login','superieur_hierarchique','department')}),
         # ('Full name', {'fields': ()}),
         ('Permissions', {'fields': ('admin', 'staff', 'active',)}),
     )

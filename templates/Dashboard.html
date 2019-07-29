@@ -64,12 +64,16 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-light py-2 collapse-inner rounded">
             <h6 class="collapse-header">Demande des documents :</h6>
-            <a class="collapse-item" href="buttons.html">Attestation de salaire</a>
-            <a class="collapse-item" href="#" data-toggle="modal" data-target="#demande-travail-Modal" >Attestation de travail</a>
-            <a class="collapse-item" href="cards.html">Domiciliation</a>
+              <div id="container-demandes-docs">
+            <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="salaire" href="#">Attestation de salaire</a>
+            <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="travail"  href="#">Attestation de travail</a>
+            <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="domiciliation" href="#">Domiciliation</a>
+              </div>
+              <div id="container-demande-services">
             <h6 class="collapse-header">Demande des services:</h6>
             <a class="collapse-item" href="buttons.html">Congés</a>
             <a class="collapse-item" href="cards.html">Recrutements</a>
+              </div>
           </div>
         </div>
       </li>
@@ -79,12 +83,12 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-wrench"></i>
-          <span>Gestion des demandes</span>
+          <span>Consultation des demandes</span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-light py-2 collapse-inner rounded">
             <h6 class="collapse-header">Demande des documents</h6>
-            <a class="collapse-item" href="utilities-color.html">Attestation de salaire</a>
+            <a class="collapse-item" href="{% url 'consultation' %}">Attestation de salaire</a>
             <a class="collapse-item" href="utilities-border.html">Attestation de travail</a>
             <a class="collapse-item" href="utilities-animation.html">Domiciliation</a>
             <h6 class="collapse-header">Demande des services</h6>
@@ -184,45 +188,7 @@
                 <span class="badge badge-danger badge-counter">3+</span>
               </a>
               <!-- Dropdown - Alerts -->
-              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header">
-                  Alerts Center
-                </h6>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-primary">
-                      <i class="fas fa-file-alt text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 12, 2019</div>
-                    <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                  </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-success">
-                      <i class="fas fa-donate text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 7, 2019</div>
-                    $290.29 has been deposited into your account!
-                  </div>
-                </a>
-                <a class="dropdown-item d-flex align-items-center" href="#">
-                  <div class="mr-3">
-                    <div class="icon-circle bg-warning">
-                      <i class="fas fa-exclamation-triangle text-white"></i>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="small text-gray-500">December 2, 2019</div>
-                    Spending Alert: We've noticed unusually high spending for your account.
-                  </div>
-                </a>
-                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-              </div>
+           {% include "Notifications/notifications.html" %}
             </li>
 
 
@@ -341,18 +307,15 @@
         <!-- /.container-fluid -->
 
       </div>
+          {% block Content %}
+
+      {% endblock %}
       <!-- End of Main Content -->
+
       </div>
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; EMID 2019</span>
-          </div>
-        </div>
-      </footer>
+      {% include 'footer.html' %}
       <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
 
@@ -365,41 +328,9 @@
   </a>
 
   <!-- Logout Modal-->
-  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Vous êtes sûr?</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Selectionnez "Déconnexion" si vous êtes prêt à terminer votre session courante.</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
-          <a class="btn btn-primary" href="{% url 'logout' %}">Déconnexion</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--  Demande d'attestation de Travail Validation Modal -->
- <div class="modal fade" id="demande-travail-Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Confirmation de la demande</h5>
-          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">Selectionnez "Confirmer" si vous êtes sûr de l'envoi de votre demande d'attestation de travail</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
-          <a class="btn btn-primary" id="send-demande-travail" href="{% url 'demande_travail' %}">Envoyer</a>
-        </div>
-      </div>
-    </div>
-  </div>
+  {% include "Authentification/validation_logout.html" %}
+  <!-- Validation de la demande des documents Modal-->
+  {% include "Gestion_Attestations/validation_demande_doc.html" %}
   <!-- Bootstrap core JavaScript-->
  <script src="{% static 'Realisation/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'Realisation/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -408,7 +339,7 @@
   <!-- Custom scripts for all pages-->
   <script src="{% static 'Realisation/js/sb-admin-2.min.js' %}"></script>
   <script src="{% static 'Realisation/sweetalert/dist/sweetalert.min.js' %}"></script>
-  <script src="{% static 'Gestion_Attestations/js/envoyer_demande_travail.js' %}" ></script>
+  <script src="{% static 'Gestion_Attestations/js/envoyer_demande_doc.js' %}" ></script>
 </body>
 
 </html>
