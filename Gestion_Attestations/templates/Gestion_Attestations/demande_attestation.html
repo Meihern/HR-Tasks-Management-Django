@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %} Attestations {% endblock %}
+{% block Content %}
+<style>
+    .row{
+        margin-top: 13%;
+    }
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+    
+            <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <a data-toggle="modal" data-target="#demande-doc-Modal" data-value="travail" href="#">
+                          <button style="border:none; background:none ;" >
+                              <div class="card-body">
+                                  <div class="row no-gutters align-items-center">
+                                      <div class="col mr-2">
+                                              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                  <h6>Attestation de travail</h6> 
+                                                  
+                                                </div>    
+                                      </div>
+                                      <div class="col-auto">
+                                      <i class="fas fa-envelope-open-text fa-2x text-gray-300"></i>
+                                  </div>
+                                   </div>
+                              </div>
+                          </button>
+                      </a>
+                    </div>
+                  </div>
+          
+                  <div class="col-xl-3 col-md-6 mb-4">
+                          <div class="card border-left-success shadow h-100 py-2">
+                              <a data-toggle="modal" data-target="#demande-doc-Modal" data-value="salaire" href="#">
+                                <button style="border:none; background:none ;">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                      <h6>Attestation de salaire</h6>      
+                                                  </div>   
+                                            </div>
+                                            <div class="col-auto">
+                                                  <i class="fas fa-money-check-alt fa-2x text-gray-300"></i>
+                                                </div>
+                                         </div>
+                                    </div>
+                                </button>
+                              </a>
+                          </div>
+                  </div>
+                  <div class="col-xl-3 col-md-6 mb-4">
+                          <div class="card border-left-info shadow h-100 py-2">
+                              <a data-toggle="modal" data-target="#demande-doc-Modal" data-value="domiciliation" href="#">
+                                <button style="border:none; background:none ;">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                  <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                      <h6>Domiciliation de salaire</h6> 
+                                                  </div>        
+                                            </div>
+                                            <div class="col-auto" >
+                                            <i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i>
+                                          </div>
+                                         </div>
+                                    </div>
+                                </button>
+                              </a>
+                          </div>
+                  </div>
+        
+    
+    </div>
+</div>
+{% endblock %}
+{% block Footer %}
+    <style>
+        footer{
+            margin-top: 17.5%;
+        }
+        
+    </style>
+    <footer class="sticky-footer bg-white" >
+            <div class="container my-auto">
+              <div class="copyright text-center my-auto">
+                <span>Copyright &copy; EMID 2019</span>
+              </div>
+            </div>
+          </footer>
+{% endblock %}
