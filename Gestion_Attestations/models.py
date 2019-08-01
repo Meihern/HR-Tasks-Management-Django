@@ -1,12 +1,12 @@
 from django.db import models
 from Authentification.models import Employe
 from django.utils.timezone import now
-
-
+from Notifications.models import Notification
+from django.contrib.contenttypes.fields import GenericRelation
 # Create your models here.
 
 
-class TypeDemandeAttestataion(models.Model):
+class TypeDemandeAttestatation(models.Model):
     TYPE_TRAVAIL = 'travail'
     TYPE_SALAIRE = 'salaire'
     TYPE_DOMICILIATION = 'domiciliation'
@@ -33,18 +33,24 @@ class DemandeAttestation(models.Model):
     date_envoi = models.DateTimeField(default=now, verbose_name="Date Envoyée", null=False, blank=False)
     etat_validation = models.BooleanField(default=False, null=False, blank=False, verbose_name="Etat de Validation")
     date_validation = models.DateField(null=True, blank=True, verbose_name="Date de Validation")
-    type = models.ForeignKey(TypeDemandeAttestataion, on_delete=None, null=False, verbose_name="Type de demande",
+    type = models.ForeignKey(TypeDemandeAttestatation, on_delete=None, null=False, verbose_name="Type de demande",
                              blank=False)
+    notifications = GenericRelation(Notification)
 
     def update_etat_validation(self):
         DemandeAttestation.objects.filter(id=self.pk).update(etat_validation=True, date_validation=now())
 
-    @property
     def get_type_demande(self):
         return self.type
 
+    def get_employe(self):
+        return self.employe
+
+    def get_date_validation(self):
+        return self.date_validation
+
     def __str__(self):
-        return "%s envoyé par %s" % (self.get_type_demande, self.employe.get_full_name())
+        return "%s envoyé par %s" % (self.get_type_demande(), self.employe.get_full_name())
 
     @property
     def is_valid(self):

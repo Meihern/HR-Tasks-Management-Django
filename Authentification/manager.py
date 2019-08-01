@@ -3,7 +3,7 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class EmployeManager(BaseUserManager):
-    def create_user(self, email, password=None, is_active=True, is_staff=False , is_admin=False,**kwargs):
+    def create_user(self, email, password=None, is_active=True, is_staff=False, is_admin=False, **kwargs):
         employe = None
         if not email:
             if not email:

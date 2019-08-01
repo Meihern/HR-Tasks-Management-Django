@@ -6,6 +6,46 @@ from Realisation import settings
 from xhtml2pdf import pisa
 
 
+def get_month_name(month: int):
+
+    if month == 1:
+        return 'Janvier'
+    if month == 2:
+        return 'Février'
+    if month == 3:
+        return 'Mars'
+    if month == 4:
+        return 'Avril'
+    if month == 5:
+        return 'Mai'
+    if month == 6:
+        return 'Juin'
+    if month == 7:
+        return 'Juillet'
+    if month == 8:
+        return 'Août'
+    if month == 9:
+        return 'Septembre'
+    if month == 10:
+        return 'Octobre'
+    if month == 11:
+        return 'Novembre'
+    if month == 12:
+        return 'Décembre'
+    else:
+        return None
+
+def get_template_name(doc_type: str):
+
+    if 'travail' in str(doc_type):
+        return 'attestationdetravail'
+
+    if 'domiciliation' in str(doc_type):
+        return 'domiciliationdesalaire'
+
+    if 'salaire' in str(doc_type):
+        return 'attestationdesalaire'
+
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)

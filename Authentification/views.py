@@ -11,8 +11,10 @@ from django.contrib.auth import (
     get_user_model,
     password_validation
 )
+
+from Authentification.models import Salaire
 from . import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from Realisation.settings import LOGIN_REDIRECT_URL, LOGIN_URL
 # Create your views here.
 
@@ -96,4 +98,46 @@ class ResetPasswordView(TemplateView):
         else:
             messages.error(request,"Formulaire Invalide")
             return HttpResponseRedirect(LOGIN_URL)
+
+
+
+class ProfileView(TemplateView):
+    template_name = 'Authentification/profile.html'
+
+    def get(self, request, *args, **kwargs):
+        employe = request.user
+        if employe:
+            context = {
+                'name': employe.get_full_name(),
+                'Matricule': employe.get_matricule(),
+                'Fonction': employe.get_fonction(),
+                'salaire': Salaire.objects.get(matricule_paie=employe).get_valeur_brute(),
+                'cnss': employe.get_n_cnss(),
+                'Departement': 'Ressources Humaines',#employe.get_departement(),
+            }
+
+            return render(request, template_name=self.template_name, context=context)
+        else:
+            return HttpResponseForbidden()
+
+
+class HistoriqueDemandesView(TemplateView):
+    template_name = 'Authentification/historique_demandes.html'
+
+    def get(self, request, *args, **kwargs):
+        employe = request.user
+        if employe:
+            '''
+            context = {
+                'name': employe.get_full_name(),
+                'Matricule': employe.get_matricule(),
+                'Fonction': employe.get_fonction(),
+                'salaire': 2500,#employe.get_salaire(),
+                'cnss': employe.get_n_cnss(),
+                'Departement': 'Ressources Humaines',#employe.get_departement(),
+            }
+            '''
+            return render(request, template_name=self.template_name)
+        else:
+            return HttpResponseForbidden()
 

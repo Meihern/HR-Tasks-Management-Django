@@ -25,7 +25,7 @@ SECRET_KEY = 'g!676-1(#^34fj)rl6$@d2__)rk6*5n8shbfcmb$7kqu^fc!&a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Gestion_Conge.apps.GestionCongeConfig',
     'Gestion_Attestations.apps.GestionAttestationsConfig',
     'bootstrap4',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -126,6 +127,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+DATETIME_INPUT_FORMATS = [
+    '%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', '%d-%m-%Y', '%d/%m/%Y', '%m-%d-%Y',  # '2006-10-25', '10/25/2006', '10/25/06', '25-10-2006'
+    '%b %d %Y', '%b %d, %Y',            # 'Oct 25 2006', 'Oct 25, 2006'
+    '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
+    '%B %d %Y', '%B %d, %Y',            # 'October 25 2006', 'October 25, 2006'
+    '%d %B %Y', '%d %B, %Y',            # '25 October 2006', '25 October, 2006'
+]
+
 
 #Authentification User
 
@@ -152,3 +161,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+IMPORT_EXPORT_USE_TRANSACTIONS = False

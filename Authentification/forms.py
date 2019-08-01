@@ -7,7 +7,7 @@ from .models import Employe
 Employe = get_user_model()
 
 
-class EmployeAdminCreationForm(forms.ModelForm):
+class EmployeAdminCreationForm(UserCreationForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -17,7 +17,7 @@ class EmployeAdminCreationForm(forms.ModelForm):
 
     class Meta:
         model = Employe
-        fields = ('email','n_cin','matricule_paie') #'full_name',)
+        fields = ('email', 'password', 'n_cin', 'matricule_paie') #'full_name',)
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -37,7 +37,7 @@ class EmployeAdminCreationForm(forms.ModelForm):
 
 
 
-class EmployeAdminChangeForm(forms.ModelForm):
+class EmployeAdminChangeForm(UserChangeForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
     password hash display field.
@@ -46,7 +46,8 @@ class EmployeAdminChangeForm(forms.ModelForm):
 
     class Meta:
         model = Employe
-        fields = ('last_name', 'first_name', 'matricule_paie', 'n_cin', 'n_cnss','date_naissance','superieur_hierarchique', 'email', 'password', 'active', 'admin')
+        fields = ('last_name', 'first_name', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte','date_naissance',
+                  'superieur_hierarchique', 'email', 'password', 'active', 'admin')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
