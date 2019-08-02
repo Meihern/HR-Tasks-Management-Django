@@ -41,15 +41,20 @@ class Employe(AbstractBaseUser):
     date_fin_contrat = models.DateField(verbose_name='Date Fin Contrat', null=True, blank=True)
     department = models.ForeignKey('Departement', on_delete=models.SET_NULL, verbose_name='Département', null=True,
                                    blank=True, )
-    email = models.CharField(max_length=50, verbose_name='Adresse Electronique', unique=True)
+    activite = models.ForeignKey('Activite', on_delete=models.SET_NULL, verbose_name='Activité', null=True,
+                                   blank=True)
+    service = models.ForeignKey('Service', on_delete=models.SET_NULL, verbose_name='Service', null=True,
+                                   blank=True )
+
+    email = models.CharField(max_length=50, verbose_name='Adresse Electronique', unique=False, null=True, blank=False)
     n_compte = models.CharField(max_length=25, null=False, unique=True, verbose_name='Numéro de Compte RIB')
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
 
     # Django User Model Settings
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['n_cin', 'matricule_paie']
+    USERNAME_FIELD = 'matricule_paie'
+    REQUIRED_FIELDS = []
     EMAIL_FIELD = 'email'
     objects = EmployeManager()
 
@@ -124,10 +129,9 @@ class Employe(AbstractBaseUser):
 
 
 class Departement(models.Model):
-    id = models.IntegerField(primary_key=True, verbose_name='Department_id')
-    nom_departement = models.CharField(max_length=30, unique=True, null=False, blank=False, verbose_name='Departement')
-    directeur = models.ForeignKey(Employe, on_delete=models.SET_NULL, null=True, blank=False)
-    nbr_employes = models.IntegerField(blank=True, null=True)
+    id = models.IntegerField(primary_key=True, verbose_name='id_Département')
+    nom_departement = models.CharField(max_length=30, unique=True, null=False, blank=False, verbose_name='Nom Département')
+    directeur = models.ForeignKey(Employe, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.nom_departement
@@ -141,6 +145,31 @@ class Departement(models.Model):
     class Meta:
         verbose_name = 'Département'
         verbose_name_plural = 'Départements'
+
+
+class Activite(models.Model):
+    id = models.IntegerField(primary_key=True, verbose_name='id_Activité')
+    nom_activite = models.CharField(max_length=20, verbose_name='Nom Activité', null=False, blank=False)
+
+    def __str__(self):
+        return self.nom_activite
+
+    class Meta:
+        verbose_name = 'Activité'
+        verbose_name_plural = 'Activités'
+
+
+class Service(models.Model):
+    id = models.IntegerField(primary_key=True, verbose_name='id_Service')
+    nom_service = models.CharField(max_length=20, verbose_name='Nom Service', null=False, blank=False)
+
+    def __str__(self):
+        return self.nom_service
+
+    class Meta:
+        verbose_name = 'Service'
+        verbose_name_plural = 'Services'
+
 
 
 

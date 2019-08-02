@@ -58,7 +58,7 @@ class EmployeAdminChangeForm(UserChangeForm):
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField(required=True)
+    matricule_paie = forms.CharField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
     '''
     def confirm_login_allowed(self, employe):
@@ -75,14 +75,14 @@ class LoginForm(forms.Form):
 
 
 class ChangePasswordForm(forms.Form):
-    email = forms.CharField(required=True,widget=forms.HiddenInput)
+    matricule_paie = forms.CharField(required=True, widget=forms.HiddenInput)
     old_password = forms.CharField(required=True, widget=forms.PasswordInput)
     new_password1 = forms.CharField(required=True, widget=forms.PasswordInput)
     new_password2 = forms.CharField(required=True, widget=forms.PasswordInput)
 
     class Meta:
         model = Employe
-        fields = ('email', 'password')
+        fields = ('matricule_paie', 'password')
 
 
 

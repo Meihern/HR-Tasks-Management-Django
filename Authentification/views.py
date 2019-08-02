@@ -37,13 +37,13 @@ class AuthenticationView(TemplateView,views.LoginView):
     def post(self, request, *args, **kwargs):
         form = forms.LoginForm(request.POST or None)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
+            matricule_paie = form.cleaned_data.get('matricule_paie')
             password = form.cleaned_data.get('password')
-            employe = authenticate(request, username=email, password=password)
+            employe = authenticate(request, username=matricule_paie, password=password)
             if employe is not None:
                 if employe.last_login is None:
                     request.session['reset_password_stamp'] = True #Allow the employe access to the change password page
-                    request.session['reset_password_email'] = email #Storing the sent email temporarily in a session variable
+                    request.session['reset_password_matricule_paie'] = matricule_paie #Storing the sent matricule_paie temporarily in a session variable
                     return HttpResponseRedirect('reset_password') #Redirecting the Employe to the change password page
                 else:
                     login(request, employe)
@@ -63,18 +63,18 @@ class ResetPasswordView(TemplateView):
     def get(self, request, *args, **kwargs):
         if 'reset_password_stamp' in request.session:
             del request.session['reset_password_stamp']
-            stored_email = request.session['reset_password_email']
-            del request.session['reset_password_email']
-            return render(request, self.template_name, {'form': self.form,'email': stored_email})
+            stored_matricule_paie = request.session['reset_password_matricule_paie']
+            del request.session['reset_password_matricule_paie']
+            return render(request, self.template_name, {'form': self.form,'matricule_paie': stored_matricule_paie})
         else:
             return HttpResponseRedirect(LOGIN_URL)
 
     def post(self, request, *args, **kwargs):
         form = forms.ChangePasswordForm(request.POST or None)
         if form.is_valid():
-            email = form.cleaned_data.get('email')
+            matricule_paie = form.cleaned_data.get('matricule_paie')
             old_password = form.cleaned_data.get('old_password')
-            employe = authenticate(username=email, password=old_password)
+            employe = authenticate(username=matricule_paie, password=old_password)
             if employe:
                 new_password1 = form.cleaned_data.get('new_password1')
                 new_password2 = form.cleaned_data.get('new_password2')
@@ -83,18 +83,18 @@ class ResetPasswordView(TemplateView):
                         password_validation.validate_password(new_password1)
                     except password_validation.ValidationError as e:
                         messages.error(request, e)
-                        return render(request, self.template_name, {'form': self.form, 'email': email})
-                    employe = Employe.objects.get(email=email)
+                        return render(request, self.template_name, {'form': self.form, 'matricule_paie': matricule_paie})
+                    employe = Employe.objects.get(matricule_paie=matricule_paie)
                     employe.set_password(new_password1)
                     employe.save()
                     login(request, employe)
                     return HttpResponseRedirect(LOGIN_REDIRECT_URL)
                 else:
                     messages.error(request, "Les deux mots de passes saisis sont différents")
-                    return render(request, self.template_name, {'form': self.form, 'email': email})
+                    return render(request, self.template_name, {'form': self.form, 'matricule_paie': matricule_paie})
             else:
                 messages.error(request, "Ancien Mot de Passe saisi est incorrect")
-                return render(request, self.template_name, {'form': self.form, 'email': email})
+                return render(request, self.template_name, {'form': self.form, 'matricule_paie': matricule_paie})
         else:
             messages.error(request,"Formulaire Invalide")
             return HttpResponseRedirect(LOGIN_URL)

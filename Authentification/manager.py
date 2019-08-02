@@ -3,15 +3,15 @@ from django.contrib.auth.models import BaseUserManager
 
 class EmployeManager(BaseUserManager):
 
-    def create_user(self, email, password=None, is_active=True, is_staff=False, is_admin=False, **kwargs):
+    def create_user(self, matricule_paie, password=None, is_active=True, is_staff=False, is_admin=False, **kwargs):
         employe = None
-        if not email:
-            if not email:
-                raise ValueError("Users must have an email address")
+        if not matricule_paie:
+            if not matricule_paie:
+                raise ValueError("Le matricule est nécessaire")
             if not password:
                 password = 'azerty258'
         employe = self.model(
-            email=self.normalize_email(email),
+            email=matricule_paie,
             **kwargs
         )
         print(password)
@@ -22,9 +22,9 @@ class EmployeManager(BaseUserManager):
         employe.save(using=self._db)
         return employe
 
-    def create_staffuser(self, email, password=None,**kwargs):
+    def create_staffuser(self, matricule_paie, password=None,**kwargs):
         employe = self.create_user(
-            email,
+            matricule_paie,
             password=password,
             is_staff=True,
             **kwargs
@@ -32,9 +32,9 @@ class EmployeManager(BaseUserManager):
         employe.save(using=self.db)
         return employe
 
-    def create_superuser(self, email, password=None,**kwargs):
+    def create_superuser(self, matricule_paie, password=None,**kwargs):
         employe = self.create_user(
-            email,
+            matricule_paie,
             password=password,
             is_active=True,
             is_staff=True,

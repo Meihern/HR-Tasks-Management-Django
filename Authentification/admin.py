@@ -1,10 +1,10 @@
 # users/admin.py
 from django.contrib import admin
-from .ressources import EmployeResource, SalaireResource
+from .ressources import EmployeResource, SalaireResource, ServiceRessource
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from .models import Employe, Departement
+from .models import Employe, Departement, Service, Activite
 from Gestion_Attestations.models import Salaire
 from .forms import EmployeAdminChangeForm
 
@@ -45,12 +45,12 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'n_cin', 'matricule_paie')}
+            'fields': ('matricule_paie', 'password1', 'password2')}
          ),
     )
 
     search_fields = ('email', 'full_name', 'n_cin', 'matricule_paie', 'fonction', 'ville')
-    ordering = ('email',)
+    ordering = ('email','matricule_paie')
     filter_horizontal = ()
     actions = [make_employe_active, make_employe_inactive]
     resource_class = EmployeResource
@@ -63,6 +63,21 @@ class DepartmentAdmin(admin.ModelAdmin):
     search_fields = ('nom_departement',)
 
 
+class ActiviteAdmin(admin.ModelAdmin):
+
+    list_display = ('nom_activite',)
+    list_filter = ('nom_activite',)
+    search_fields = ('nom_activite',)
+
+
+class ServiceAdmin(ImportExportModelAdmin):
+
+    list_display = ('nom_service',)
+    list_filter = ('nom_service',)
+    search_fields = ('nom_service',)
+    resource_class = ServiceRessource
+
+
 class SalaireAdmin(ImportExportModelAdmin):
 
     list_display = ('valeur_brute', 'matricule_paie')
@@ -73,4 +88,6 @@ class SalaireAdmin(ImportExportModelAdmin):
 admin.site.register(Employe, CustomUserAdmin)
 admin.site.register(Departement, DepartmentAdmin)
 admin.site.register(Salaire, SalaireAdmin)
+admin.site.register(Service, ServiceAdmin)
+admin.site.register(Activite, ActiviteAdmin)
 admin.site.unregister(Group)
