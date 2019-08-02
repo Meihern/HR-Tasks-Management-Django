@@ -1,13 +1,17 @@
 # users/admin.py
 from django.contrib import admin
-from .ressources import EmployeResource, SalaireResource, ServiceRessource
+from django.contrib.auth import get_user_model
+from .ressources import EmployeResource, SalaireResource, ServiceResource, CostCenterResource, AgenceResource, \
+    DepartmentResource
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from .models import Employe, Departement, Service, Activite
+from .models import Employe, Departement, Service, Activite, Agence, CostCenter
 from Gestion_Attestations.models import Salaire
 from .forms import EmployeAdminChangeForm
 
+
+Employe = get_user_model()
 
 def make_employe_active(modeladmin,request, queryset):
     queryset.update(active=True)
@@ -27,7 +31,6 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     # The forms to add and change user instances
     #form = EmployeAdminChangeForm
     #add_form = EmployeAdminCreationForm
-    form = EmployeAdminChangeForm
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
@@ -36,7 +39,8 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
 
 
     fieldsets = (
-        (None, {'fields': ('full_name', 'email', 'password', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte', 'fonction','date_naissance','last_login','superieur_hierarchique','department')}),
+        (None, {'fields': ('full_name','matricule_paie', 'password', 'email', 'n_cin', 'n_cnss', 'n_compte', 'fonction',
+                           'date_naissance','last_login','superieur_hierarchique','department')}),
         # ('Full name', {'fields': ()}),
         ('Permissions', {'fields': ('admin', 'staff', 'active',)}),
     )
@@ -56,11 +60,12 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     resource_class = EmployeResource
 
 
-class DepartmentAdmin(admin.ModelAdmin):
+class DepartmentAdmin(ImportExportModelAdmin):
 
     list_display = ('nom_departement','directeur')
     list_filter = ('nom_departement',)
     search_fields = ('nom_departement',)
+    resource_class = DepartmentResource
 
 
 class ActiviteAdmin(admin.ModelAdmin):
@@ -75,7 +80,7 @@ class ServiceAdmin(ImportExportModelAdmin):
     list_display = ('nom_service',)
     list_filter = ('nom_service',)
     search_fields = ('nom_service',)
-    resource_class = ServiceRessource
+    resource_class = ServiceResource
 
 
 class SalaireAdmin(ImportExportModelAdmin):
@@ -84,10 +89,27 @@ class SalaireAdmin(ImportExportModelAdmin):
     search_fields = ('matricule_paie',)
     resource_class = SalaireResource
 
+class AgenceAdmin(ImportExportModelAdmin):
+
+    list_display = ('nom_agence',)
+    list_filter = ('nom_agence',)
+    search_fields = ('nom_agence',)
+    resource_class = AgenceResource
+
+
+class CostCenterAdmin(ImportExportModelAdmin):
+
+    list_display = ('nom_cost_center',)
+    list_filter = ('nom_cost_center',)
+    search_fields = ('nom_cost_center',)
+    resource_class = CostCenterResource
+
 
 admin.site.register(Employe, CustomUserAdmin)
 admin.site.register(Departement, DepartmentAdmin)
 admin.site.register(Salaire, SalaireAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Activite, ActiviteAdmin)
+admin.site.register(Agence, AgenceAdmin)
+admin.site.register(CostCenter, CostCenterAdmin)
 admin.site.unregister(Group)

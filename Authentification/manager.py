@@ -3,13 +3,13 @@ from django.contrib.auth.models import BaseUserManager
 
 class EmployeManager(BaseUserManager):
 
-    def create_user(self, matricule_paie, password=None, is_active=True, is_staff=False, is_admin=False, **kwargs):
-        employe = None
+    def create_user(self, matricule_paie, password='azerty258', is_active=True, is_staff=False, is_admin=False, **kwargs):
+
         if not matricule_paie:
-            if not matricule_paie:
-                raise ValueError("Le matricule est nécessaire")
-            if not password:
-                password = 'azerty258'
+            raise ValueError("Le matricule est nécessaire")
+        if not password:
+            password = 'azerty258'
+
         employe = self.model(
             matricule_paie=matricule_paie,
             **kwargs
@@ -23,7 +23,7 @@ class EmployeManager(BaseUserManager):
 
     def create_staffuser(self, matricule_paie, password=None,**kwargs):
         employe = self.create_user(
-            matricule_paie,
+            matricule_paie=matricule_paie,
             password=password,
             is_staff=True,
             **kwargs
@@ -33,7 +33,7 @@ class EmployeManager(BaseUserManager):
 
     def create_superuser(self, matricule_paie, password=None,**kwargs):
         employe = self.create_user(
-            matricule_paie,
+            matricule_paie=matricule_paie,
             password=password,
             is_active=True,
             is_staff=True,

@@ -31,9 +31,19 @@ class Employe(AbstractBaseUser):
     nationalite_paie = models.CharField(max_length=3, null=True, blank=True, verbose_name='Nationalité Paie')
     situation_famille = models.CharField(max_length=1, null=True, blank=True, verbose_name='Situation de famille',
                                          choices=CHOIX_SITUATION_FAMILLE)
+    nb_enfant = models.IntegerField(null=True, blank=True)
+    nb_enfant_deduction = models.IntegerField(null=True, blank=True)
     date_entree = models.DateField(verbose_name='Date Entrée', blank=True, null=True)
     date_anciennete = models.DateField(verbose_name='Date Anciennete', blank=True, null=True)
+    type_base_salariale = models.CharField(verbose_name='Type base salariale',max_length=1,default='F', null=True, blank=True)
+    mode_reglement = models.CharField(verbose_name='Mode de réglement', max_length=1, default='V', null=True, blank=True)
+    type_cp = models.IntegerField(verbose_name='Type CP.',null=True, blank=True)
     n_cnss = models.IntegerField(verbose_name='Numéro CNSS', blank=True, null=True)
+    section = models.IntegerField(verbose_name='Section', null=True, blank=True)
+    code_edition_comm = models.IntegerField(verbose_name='Code edition comm.', null=True, blank=True)
+    code_agent = models.IntegerField(verbose_name='Code agent', null=True, blank=True)
+    commentaire = models.TextField(verbose_name='Commentaire', blank=True, null=True)
+    agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, verbose_name='Agence', null=True, blank=True)
     date_sortie = models.DateField(verbose_name='Date de Sortie', blank=True, null=True)
     superieur_hierarchique = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
                                                verbose_name='Supérieur Hierarchique')
@@ -45,12 +55,14 @@ class Employe(AbstractBaseUser):
                                    blank=True)
     service = models.ForeignKey('Service', on_delete=models.SET_NULL, verbose_name='Service', null=True,
                                    blank=True )
+    cost_center = models.ForeignKey('CostCenter', on_delete=models.SET_NULL, verbose_name='Cost Center', null=True, blank=True)
 
     email = models.CharField(max_length=50, verbose_name='Adresse Electronique', unique=False, null=True, blank=False)
     n_compte = models.CharField(max_length=25, null=False, unique=True, verbose_name='Numéro de Compte RIB')
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
+    solde_conge = models.IntegerField(null=True, blank=True, verbose_name='Solde Jours Possibles Congés')
 
     # Django User Model Settings
     USERNAME_FIELD = 'matricule_paie'
@@ -103,7 +115,7 @@ class Employe(AbstractBaseUser):
         return self.fonction
 
     def get_username(self):
-        return self.email
+        return self.matricule_paie
 
     def has_perm(self, perm, obj=None):
         return True
@@ -161,7 +173,7 @@ class Activite(models.Model):
 
 class Service(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_Service')
-    nom_service = models.CharField(max_length=20, verbose_name='Nom Service', null=False, blank=False)
+    nom_service = models.CharField(max_length=50, verbose_name='Nom Service', null=False, blank=False)
 
     def __str__(self):
         return self.nom_service
@@ -169,6 +181,30 @@ class Service(models.Model):
     class Meta:
         verbose_name = 'Service'
         verbose_name_plural = 'Services'
+
+
+class Agence(models.Model):
+    id = models.IntegerField(primary_key=True, verbose_name='id_agence')
+    nom_agence = models.CharField(max_length=20, verbose_name='Nom Agence', null=False, blank=False)
+
+    def __str__(self):
+        return self.nom_agence
+
+    class Meta:
+        verbose_name = 'Agence'
+        verbose_name_plural = 'Agences'
+
+
+class CostCenter(models.Model):
+    id = models.IntegerField(primary_key=True, verbose_name='id_cost_center')
+    nom_cost_center = models.CharField(max_length=20, verbose_name='Nom Cost Center', null=False, blank=False)
+
+    def __str__(self):
+        return self.nom_cost_center
+
+    class Meta:
+        verbose_name = 'Cost Center'
+        verbose_name_plural = 'Cost Centers'
 
 
 

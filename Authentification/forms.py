@@ -2,7 +2,6 @@
 from django import forms
 from django.forms import ValidationError
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, get_user_model, ReadOnlyPasswordHashField, PasswordChangeForm
-from .models import Employe
 
 Employe = get_user_model()
 
@@ -10,14 +9,14 @@ Employe = get_user_model()
 class EmployeAdminCreationForm(UserCreationForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
+    matricule_paie = forms.CharField(label='Matricule Paie', widget=forms.IntegerField)
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput)
-    numero_cin = forms.CharField(label='Numero de Cin',widget=forms.CharField)
-    matricule_paie = forms.CharField(label='Matricule Paie',widget=forms.IntegerField)
+
 
     class Meta:
         model = Employe
-        fields = ('email', 'password', 'n_cin', 'matricule_paie') #'full_name',)
+        fields = ('matricule_paie', 'password') #'full_name',)
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -46,8 +45,8 @@ class EmployeAdminChangeForm(UserChangeForm):
 
     class Meta:
         model = Employe
-        fields = ('full_name', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte','date_naissance',
-                  'superieur_hierarchique', 'email', 'password', 'active', 'admin')
+        fields = ('full_name', 'matricule_paie', 'password', 'email', 'n_cin', 'n_cnss',
+                  'n_compte', 'fonction','date_naissance','last_login','superieur_hierarchique','department')
 
     def clean_password(self):
         # Regardless of what the user provides, return the initial value.
@@ -60,18 +59,10 @@ class LoginForm(forms.Form):
 
     matricule_paie = forms.CharField(required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
-    '''
-    def confirm_login_allowed(self, employe):
-        if not employe.is_active:
-            raise forms.ValidationError(
-                ("This account is inactive."),
-                code='inactive',
-            )
-        return True
-    '''
+
     class Meta:
         model = Employe
-        fields = ('email', 'password')
+        fields = ('matricule_paie', 'password')
 
 
 class ChangePasswordForm(forms.Form):
