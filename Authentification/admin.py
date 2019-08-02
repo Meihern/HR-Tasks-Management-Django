@@ -2,7 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from .ressources import EmployeResource, SalaireResource, ServiceResource, CostCenterResource, AgenceResource, \
-    DepartmentResource
+    DepartmentResource, ActiviteResource
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
@@ -68,11 +68,12 @@ class DepartmentAdmin(ImportExportModelAdmin):
     resource_class = DepartmentResource
 
 
-class ActiviteAdmin(admin.ModelAdmin):
+class ActiviteAdmin(ImportExportModelAdmin):
 
     list_display = ('nom_activite',)
     list_filter = ('nom_activite',)
     search_fields = ('nom_activite',)
+    reource_class = ActiviteResource
 
 
 class ServiceAdmin(ImportExportModelAdmin):

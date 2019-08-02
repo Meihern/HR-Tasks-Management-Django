@@ -215,7 +215,7 @@ class DepartmentResource(resources.ModelResource):
         return import_result
 
     class Meta:
-        model = CostCenter
+        model = Departement
         skip_unchanged = True
         report_skipped = True
         raise_errors = False
@@ -258,3 +258,40 @@ class AgenceResource(resources.ModelResource):
         raise_errors = False
         import_id_fields = ('id',)
         fields = ('id', 'nom_agence')
+
+class ActiviteResource(resources.ModelResource):
+
+    id = fields.Field(
+        column_name='id',
+        attribute='id',
+        widget=widgets.IntegerWidget()
+    )
+
+    nom_activite = fields.Field(
+        column_name='nom_activite',
+        attribute='nom_activite',
+        widget=widgets.CharWidget()
+    )
+
+    def import_row(self, row, instance_loader, **kwargs):
+        # overriding import_row to ignore errors and skip rows that fail to import
+        # without failing the entire import
+        import_result = super(ActiviteResource, self).import_row(row, instance_loader, **kwargs)
+        if import_result.import_type == RowResult.IMPORT_TYPE_ERROR:
+            # Copy the values to display in the preview report
+            import_result.diff = [row[val] for val in row]
+            # Add a column with the error message
+            import_result.diff.append('Errors: {}'.format([err.error for err in import_result.errors]))
+            # clear errors and mark the record to skip
+            import_result.errors = []
+            import_result.import_type = RowResult.IMPORT_TYPE_SKIP
+
+        return import_result
+
+    class Meta:
+        model = Activite
+        skip_unchanged = True
+        report_skipped = True
+        raise_errors = False
+        import_id_fields = ('id',)
+        fields = ('id', 'nom_activite')

@@ -142,7 +142,7 @@ class Employe(AbstractBaseUser):
 
 class Departement(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_Département')
-    nom_departement = models.CharField(max_length=30, unique=True, null=False, blank=False, verbose_name='Nom Département')
+    nom_departement = models.CharField(max_length=50, unique=True, null=False, blank=False, verbose_name='Nom Département')
     directeur = models.ForeignKey(Employe, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
