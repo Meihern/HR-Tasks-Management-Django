@@ -26,7 +26,8 @@ class GeneratePDF(TemplateView):
             'directeur_rh': Departement.objects.get(nom_departement='Ressources Humaines').get_directeur().get_full_name() or None,
             'salaire': Salaire.objects.get(matricule_paie=employe).get_valeur_brute() or None,
             'num_compte': employe.get_n_compte() or None,
-            'mois':  get_month_name(datetime.datetime.now().month),
+            'mois_courant':  get_month_name(datetime.datetime.now().month),
+            'mois_precedant': get_month_name(datetime.datetime.now().month-1),
             'bank': 'CIH',
         }
         if context:
