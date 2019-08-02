@@ -1,19 +1,20 @@
 from django.contrib.auth.models import BaseUserManager
 
 
-
 class EmployeManager(BaseUserManager):
+
     def create_user(self, email, password=None, is_active=True, is_staff=False, is_admin=False, **kwargs):
         employe = None
         if not email:
             if not email:
                 raise ValueError("Users must have an email address")
             if not password:
-                employe.set_password('azerty258')
+                password = 'azerty258'
         employe = self.model(
             email=self.normalize_email(email),
             **kwargs
         )
+        print(password)
         employe.set_password(password)  # change user password
         employe.staff = is_staff
         employe.admin = is_admin

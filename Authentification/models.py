@@ -124,6 +124,7 @@ class Employe(AbstractBaseUser):
 
 
 class Departement(models.Model):
+    id = models.IntegerField(primary_key=True, verbose_name='Department_id')
     nom_departement = models.CharField(max_length=30, unique=True, null=False, blank=False, verbose_name='Departement')
     directeur = models.ForeignKey(Employe, on_delete=models.SET_NULL, null=True, blank=False)
     nbr_employes = models.IntegerField(blank=True, null=True)

@@ -37,13 +37,6 @@ class EmployeResource(resources.ModelResource):
                         'date_anciennete', 'n_cnss', 'date_sortie', 'superieur_hierarchique',
                         'type_contrat', 'date_fin_contrat', 'email', 'n_compte')
         #exclude = ('active', 'staff', 'admin', 'last_login')
-        '''
-        import_order = ('password', 'matricule_paie', 'last_name', 'first_name',
-                        'fonction', 'date_naissance', 'sexe', 'adresse', 'ville',
-                        'n_cin', 'nationalite_paie', 'situation_famille', 'date_entree',
-                        'date_anciennete', 'n_cnss', 'date_sortie', 'superieur_hierarchique',
-                        'type_contrat', 'date_fin_contrat', 'email', 'n_compte')
-        '''
 
         #import_order = ('matricule_paie', 'last_name', 'first_name', 'fonction', 'email')
 
