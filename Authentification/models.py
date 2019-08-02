@@ -64,7 +64,7 @@ class Employe(AbstractBaseUser):
         if self.full_name:
             return self.full_name
         else:
-            return self.email
+            return self.matricule_paie
 
     def get_full_name(self):
         return self.full_name
@@ -73,7 +73,7 @@ class Employe(AbstractBaseUser):
         if self.full_name:
             return self.full_name
         else:
-            return self.email
+            return self.matricule_paie
 
     def get_last_login(self):
         return self.last_login

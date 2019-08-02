@@ -11,10 +11,9 @@ class EmployeManager(BaseUserManager):
             if not password:
                 password = 'azerty258'
         employe = self.model(
-            email=matricule_paie,
+            matricule_paie=matricule_paie,
             **kwargs
         )
-        print(password)
         employe.set_password(password)  # change user password
         employe.staff = is_staff
         employe.admin = is_admin
@@ -41,6 +40,5 @@ class EmployeManager(BaseUserManager):
             is_admin=True,
             **kwargs
         )
-        print(employe)
         employe.save(using=self.db)
         return employe
