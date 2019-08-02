@@ -46,7 +46,7 @@ class EmployeAdminChangeForm(UserChangeForm):
 
     class Meta:
         model = Employe
-        fields = ('last_name', 'first_name', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte','date_naissance',
+        fields = ('full_name', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte','date_naissance',
                   'superieur_hierarchique', 'email', 'password', 'active', 'admin')
 
     def clean_password(self):
@@ -82,7 +82,7 @@ class ChangePasswordForm(forms.Form):
 
     class Meta:
         model = Employe
-        fields = ('email','password')
+        fields = ('email', 'password')
 
 
 

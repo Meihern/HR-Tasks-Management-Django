@@ -4,7 +4,8 @@ from .ressources import EmployeResource, SalaireResource
 from import_export.admin import ImportExportModelAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from .models import Employe, Departement, Salaire
+from .models import Employe, Departement
+from Gestion_Attestations.models import Salaire
 from .forms import EmployeAdminChangeForm
 
 
@@ -30,12 +31,12 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email','last_name','first_name','fonction','department', 'admin','active','staff')
+    list_display = ('email','full_name','fonction','department', 'admin','active','staff')
     list_filter = ('admin', 'staff', 'active', 'sexe', 'department')
 
 
     fieldsets = (
-        (None, {'fields': ('last_name', 'first_name', 'email', 'password', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte', 'fonction','date_naissance','last_login','superieur_hierarchique','department')}),
+        (None, {'fields': ('full_name', 'email', 'password', 'matricule_paie', 'n_cin', 'n_cnss', 'n_compte', 'fonction','date_naissance','last_login','superieur_hierarchique','department')}),
         # ('Full name', {'fields': ()}),
         ('Permissions', {'fields': ('admin', 'staff', 'active',)}),
     )
@@ -48,7 +49,7 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
          ),
     )
 
-    search_fields = ('email', 'last_name', 'first_name', 'n_cin', 'matricule_paie', 'fonction', 'ville')
+    search_fields = ('email', 'full_name', 'n_cin', 'matricule_paie', 'fonction', 'ville')
     ordering = ('email',)
     filter_horizontal = ()
     actions = [make_employe_active, make_employe_inactive]

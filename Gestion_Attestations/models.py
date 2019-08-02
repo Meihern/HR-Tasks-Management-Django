@@ -59,3 +59,22 @@ class DemandeAttestation(models.Model):
     class Meta:
         verbose_name = "Demande Attestation"
         verbose_name_plural = "Demandes des Attestations"
+
+class Salaire(models.Model):
+
+    matricule_paie = models.OneToOneField(Employe, primary_key=True, on_delete=models.CASCADE, null=False, blank=False,
+                                verbose_name='Employé', db_column='matricule_paie')
+    valeur_brute = models.IntegerField(null=False, blank=False, verbose_name='Salaire Brute')
+
+    def __str__(self):
+        return ('%s')%self.valeur_brute
+
+    def get_valeur_brute(self):
+        return self.valeur_brute
+
+    def get_employe(self):
+        return self.matricule_paie
+
+    class Meta:
+        verbose_name = 'Salaire'
+        verbose_name_plural = 'Salaires'

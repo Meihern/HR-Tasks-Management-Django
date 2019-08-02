@@ -12,7 +12,7 @@ from django.contrib.auth import (
     password_validation
 )
 
-from Authentification.models import Salaire
+from Gestion_Attestations.models import Salaire
 from . import forms
 from django.http import HttpResponseRedirect, HttpResponseForbidden, Http404
 from Realisation.settings import LOGIN_REDIRECT_URL, LOGIN_URL

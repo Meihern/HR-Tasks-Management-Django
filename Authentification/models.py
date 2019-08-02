@@ -21,8 +21,7 @@ class Employe(AbstractBaseUser):
     # Attributs
 
     matricule_paie = models.CharField(primary_key=True, unique=True, max_length=10, verbose_name='Matricule Paie')
-    last_name = models.CharField(max_length=30, blank=True, null=True, verbose_name='Nom')
-    first_name = models.CharField(max_length=30, blank=True, null=True, verbose_name='Prénom')
+    full_name = models.CharField(max_length=60, null=True, blank=True, verbose_name='Nom Prénom')
     fonction = models.CharField(max_length=50, blank=True, null=True, verbose_name='Fonction')
     date_naissance = models.DateField(verbose_name='Date de Naissance', blank=True, null=True)
     sexe = models.CharField(max_length=1, choices=CHOIX_SEXE, verbose_name='Sexe', null=True, blank=True)
@@ -57,23 +56,17 @@ class Employe(AbstractBaseUser):
     # Méthodes
 
     def __str__(self):
-        if self.last_name and self.first_name:
-            return self.last_name + ' ' + self.first_name
+        if self.full_name:
+            return self.full_name
         else:
             return self.email
 
     def get_full_name(self):
-        return self.first_name + ' ' + self.last_name
-
-    def get_last_name(self):
-        return self.last_name
-
-    def get_first_name(self):
-        return self.first_name
+        return self.full_name
 
     def get_short_name(self):
-        if self.last_name:
-            return self.last_name
+        if self.full_name:
+            return self.full_name
         else:
             return self.email
 
@@ -148,24 +141,5 @@ class Departement(models.Model):
         verbose_name = 'Département'
         verbose_name_plural = 'Départements'
 
-
-class Salaire(models.Model):
-
-    matricule_paie = models.OneToOneField(Employe, primary_key=True, on_delete=models.CASCADE, null=False, blank=False,
-                                verbose_name='Employé', db_column='matricule_paie')
-    valeur_brute = models.IntegerField(null=False, blank=False, verbose_name='Salaire Brute')
-
-    def __str__(self):
-        return ('%s')%self.valeur_brute
-
-    def get_valeur_brute(self):
-        return self.valeur_brute
-
-    def get_employe(self):
-        return self.matricule_paie
-
-    class Meta:
-        verbose_name = 'Salaire'
-        verbose_name_plural = 'Salaires'
 
 

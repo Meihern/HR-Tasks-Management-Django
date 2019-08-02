@@ -1,8 +1,8 @@
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from .utils import render_to_pdf, get_template,get_template_name, get_month_name
-from Gestion_Attestations.models import DemandeAttestation
-from Authentification.models import Departement, Salaire
+from Gestion_Attestations.models import DemandeAttestation, Salaire
+from Authentification.models import Departement
 import datetime
 # Create your views here.
 

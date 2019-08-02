@@ -9,7 +9,7 @@ class EmployeManager(BaseUserManager):
             if not email:
                 raise ValueError("Users must have an email address")
             if not password:
-                raise ValueError("Users must have a password")
+                employe.set_password('azerty258')
         employe = self.model(
             email=self.normalize_email(email),
             **kwargs
