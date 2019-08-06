@@ -1,9 +1,11 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from django.views.generic import TemplateView
-from .utils import render_to_pdf, get_template,get_template_name, get_month_name, get_banque
+from .utils import render_to_pdf, get_template, get_template_name, get_month_name, get_banque
 from Gestion_Attestations.models import DemandeAttestation, Salaire
 from Authentification.models import Departement
 import datetime
+
+
 # Create your views here.
 
 
@@ -16,7 +18,7 @@ class GeneratePDF(TemplateView):
             del request.session['doc_id']
             demande_doc = DemandeAttestation.objects.get(id=doc_id)
             demande_doc_type = get_template_name(demande_doc.get_type_demande())
-            self.template_name = self.template_name+'/'+get_template_name(demande_doc_type)+'.html'
+            self.template_name = self.template_name + '/' + get_template_name(demande_doc_type) + '.html'
             employe = demande_doc.get_employe()
             context = {
                 'date': demande_doc.get_date_validation(),
@@ -27,8 +29,8 @@ class GeneratePDF(TemplateView):
                 'directeur_rh': Departement.objects.safe_get(id=5).get_directeur().get_full_name(),
                 'salaire': Salaire.objects.safe_get(matricule_paie=employe),
                 'num_compte': employe.get_n_compte(),
-                'mois_courant':  get_month_name(datetime.datetime.now().month),
-                'mois_precedant': get_month_name(datetime.datetime.now().month-1),
+                'mois_courant': get_month_name(datetime.datetime.now().month),
+                'mois_precedant': get_month_name(datetime.datetime.now().month - 1),
                 'bank': get_banque(employe.get_n_compte()),
             }
             if context:
@@ -37,11 +39,11 @@ class GeneratePDF(TemplateView):
                 pdf = render_to_pdf(self.template_name, context)
                 if pdf:
                     response = HttpResponse(pdf, content_type='application/pdf')
-                    filename = "%s_%s.pdf" %(demande_doc_type,context['nom_prenom'])
-                    content = "inline; filename='%s'" %(filename)
+                    filename = "%s_%s.pdf" % (demande_doc_type, context['nom_prenom'])
+                    content = "inline; filename=%s" % filename
                     download = request.GET.get("download")
                     if download:
-                        content = "attachment; filename='%s'" %(filename)
+                        content = "attachment; filename=%s" % filename
                     response['Content-Disposition'] = content
                     return response
                 return HttpResponse("Not found")
