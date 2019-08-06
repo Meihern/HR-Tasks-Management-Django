@@ -298,8 +298,10 @@
                 $("#notification-detail-modal .modal-title").text(data.subject);
                 $("#notification-detail-modal .modal-body").text(data.message);
                 if(data.no_reply === true) {
-                    $("#notification-detail-modal #accept-demande-doc").remove();}
+                    $("#notification-detail-modal #accept-demande-doc").detach();}
+                else{
                 $("#accept-demande-doc").val(notif_id);
+                }
             }
         });
     }));

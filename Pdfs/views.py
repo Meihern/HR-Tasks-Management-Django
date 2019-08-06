@@ -11,8 +11,8 @@ class GeneratePDF(TemplateView):
     template_name = 'Pdfs'
 
     def get(self, request, *args, **kwargs):
-        doc_id = request.session['doc_id']
-        if doc_id:
+        if request.session['doc_id']:
+            doc_id = request.session['doc_id']
             del request.session['doc_id']
             demande_doc = DemandeAttestation.objects.get(id=doc_id)
             demande_doc_type = get_template_name(demande_doc.get_type_demande())

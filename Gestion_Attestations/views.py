@@ -57,7 +57,8 @@ class ConsultationDemandesDoc(TemplateView):
 
     def get(self, request, type_doc, *args, **kwargs):
         departement_rh = Departement.objects.get(id=5)
-        if request.user.get_departement() == departement_rh:
+        directeur_rh = departement_rh.get_directeur()
+        if request.user.get_departement() == departement_rh or request.user == directeur_rh:
             type_doc = TypeDemandeAttestatation.objects.get(nom_type_demande=type_doc)
             demandes_docs = DemandeAttestation.objects.filter(type=type_doc).order_by('-date_envoi')
             demandes_docs = demandes_docs.all().values('id', 'type', 'date_envoi', 'etat_validation', 'employe')
