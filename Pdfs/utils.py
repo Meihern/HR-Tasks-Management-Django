@@ -1,9 +1,12 @@
 import os
+import pandas as pd
 from io import BytesIO
+
 from django.http import HttpResponse
 from django.template.loader import get_template
-from Realisation import settings
 from xhtml2pdf import pisa
+
+from Realisation import settings
 
 
 def get_month_name(month: int):
@@ -35,6 +38,12 @@ def get_month_name(month: int):
     else:
         return None
 
+
+def get_banque(rib: str):
+    data = pd.read_csv('Pdfs/RIBS_banques.csv', sep=",", names=['Code', 'Libelle'])
+    return data[data.Code == rib[:3]][['Libelle']].to_string(index=False, header=False)
+
+
 def get_template_name(doc_type: str):
 
     if 'travail' in str(doc_type):
@@ -46,6 +55,7 @@ def get_template_name(doc_type: str):
     if 'salaire' in str(doc_type):
         return 'attestationdesalaire'
 
+
 def render_to_pdf(template_src, context_dict={}):
     template = get_template(template_src)
     html = template.render(context_dict)
@@ -55,7 +65,7 @@ def render_to_pdf(template_src, context_dict={}):
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return None
 
+
 def fetch_resources(uri, rel):
     path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
-
     return path

@@ -1,8 +1,10 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from Authentification.models import Employe
 from django.utils.timezone import now
 from Notifications.models import Notification
 from django.contrib.contenttypes.fields import GenericRelation
+from Authentification.manager import CustomModelManager
 # Create your models here.
 
 
@@ -16,6 +18,8 @@ class TypeDemandeAttestatation(models.Model):
     )
     nom_type_demande = models.CharField(unique=True, max_length=15, verbose_name="Type de la demande d'attestation", blank=False, null=False,
                                         choices=CHOIX_TYPES)
+
+    objects = CustomModelManager()
 
     def __str__(self):
         if self.nom_type_demande == 'domiciliation':
@@ -36,6 +40,8 @@ class DemandeAttestation(models.Model):
     type = models.ForeignKey(TypeDemandeAttestatation, on_delete=None, null=False, verbose_name="Type de demande",
                              blank=False)
     notifications = GenericRelation(Notification)
+
+    objects = CustomModelManager()
 
     def update_etat_validation(self):
         DemandeAttestation.objects.filter(id=self.pk).update(etat_validation=True, date_validation=now())
@@ -60,11 +66,13 @@ class DemandeAttestation(models.Model):
         verbose_name = "Demande Attestation"
         verbose_name_plural = "Demandes des Attestations"
 
-class Salaire(models.Model):
+class Salaire(models.Model, models.Manager):
 
     matricule_paie = models.OneToOneField(Employe, primary_key=True, on_delete=models.CASCADE, null=False, blank=False,
                                 verbose_name='Employé', db_column='matricule_paie')
     valeur_brute = models.IntegerField(null=False, blank=False, verbose_name='Salaire Brute')
+
+    objects = CustomModelManager()
 
     def __str__(self):
         return ('%s')%self.valeur_brute
@@ -74,6 +82,12 @@ class Salaire(models.Model):
 
     def get_employe(self):
         return self.matricule_paie
+
+    def safe_get(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
 
     class Meta:
         verbose_name = 'Salaire'

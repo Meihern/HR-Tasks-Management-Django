@@ -29,11 +29,11 @@ class EmployeResource(resources.ModelResource):
     section = fields.Field(column_name='Section', attribute='section', widget=widgets.IntegerWidget())
     code_edition_comm = fields.Field(column_name='Code edition comm.', attribute='code_edition_comm',widget=widgets.IntegerWidget())
     code_agent = fields.Field(column_name='Code agent', attribute='code_agente', widget=widgets.IntegerWidget())
-    commentaire = fields.Field(column_name='Commentaire', attribute='commentaire', widget=widgets.CharWidget())
     date_sortie = fields.Field(column_name='Date sortie', attribute='date_sortie', widget=widgets.DateWidget(format('%d-%m-%Y')))
     superieur_hierarchique = fields.Field(column_name='Supérieur hierarchiq', attribute='superieur_hierarchique', widget=widgets.ForeignKeyWidget(Employe))
     type_contrat = fields.Field(column_name='Type de contrat', attribute='type_contrat', widget=widgets.CharWidget())
-    date_fin_contrat = fields.Field(column_name='Date fin contrat', attribute='date_fin_contrat', widget=widgets.CharWidget())
+    date_fin_contrat = fields.Field(column_name='Date fin contrat', attribute='date_fin_contrat', widget=widgets.DateWidget('%d-%m-%Y'))
+    commentaire = fields.Field(column_name='Commentaire', attribute='commentaire', widget=widgets.CharWidget())
     email = fields.Field(column_name='email', attribute='email', widget=widgets.CharWidget())
     agence = fields.Field(column_name='Agence', attribute='agence', widget=widgets.ForeignKeyWidget(Agence))
     service = fields.Field(column_name='Service', attribute='service', widget=widgets.ForeignKeyWidget(Service))
@@ -59,13 +59,13 @@ class EmployeResource(resources.ModelResource):
     class Meta:
         model = Employe
         import_id_fields = ('matricule_paie',)
-        '''
+
         fields = ('matricule_paie', 'full_name',
                         'fonction', 'date_naissance', 'sexe', 'adresse', 'ville',
                         'n_cin', 'nationalite_paie', 'situation_famille', 'nb_enfant', 'nb_enfant_deduction', 'date_entree',
                         'date_anciennete', 'n_compte', 'n_cnss', 'superieur_hierarchique',
                         'type_contrat','service', 'department', 'activite', 'date_fin_contrat', 'email', 'n_compte')
-        '''
+
         #exclude = ('active', 'staff', 'admin', 'last_login')
 
         #import_order = ('matricule_paie', 'last_name', 'first_name', 'fonction', 'email')

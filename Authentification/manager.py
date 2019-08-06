@@ -1,9 +1,11 @@
 from django.contrib.auth.models import BaseUserManager
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 
 class EmployeManager(BaseUserManager):
 
-    def create_user(self, matricule_paie, password='azerty258', is_active=True, is_staff=False, is_admin=False, **kwargs):
+    def create_user(self, matricule_paie, password='azerty258', is_active=True, is_staff=False, is_admin=False,
+                    **kwargs):
 
         if not matricule_paie:
             raise ValueError("Le matricule est nécessaire")
@@ -21,7 +23,7 @@ class EmployeManager(BaseUserManager):
         employe.save(using=self._db)
         return employe
 
-    def create_staffuser(self, matricule_paie, password=None,**kwargs):
+    def create_staffuser(self, matricule_paie, password=None, **kwargs):
         employe = self.create_user(
             matricule_paie=matricule_paie,
             password=password,
@@ -31,7 +33,7 @@ class EmployeManager(BaseUserManager):
         employe.save(using=self.db)
         return employe
 
-    def create_superuser(self, matricule_paie, password=None,**kwargs):
+    def create_superuser(self, matricule_paie, password=None, **kwargs):
         employe = self.create_user(
             matricule_paie=matricule_paie,
             password=password,
@@ -42,3 +44,20 @@ class EmployeManager(BaseUserManager):
         )
         employe.save(using=self.db)
         return employe
+
+    def safe_get(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
+
+
+class CustomModelManager(models.Manager):
+
+    def safe_get(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
+
+

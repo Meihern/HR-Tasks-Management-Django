@@ -51,10 +51,7 @@
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'Dashboard' %}">
-        <div class="sidebar-brand-icon">
-          <img src="{% static 'Authentification/images/emidlogo.png' %}" class="card-img" >
-        </div>
-        <div class="sidebar-brand-text mx-3">Services RH</div>
+          <div class="sidebar-brand-text mx-3">Département RH</div>
       </a>
 
       <!-- Divider -->
@@ -282,7 +279,7 @@
                         $('#notification-logo').attr('class', 'badge badge-danger badge-counter');
                     }
                     else {
-                         $('#notification-logo').text().remove();
+                         $('#notification-logo').text('');
                     }
             }
 
@@ -300,6 +297,8 @@
             success: function(data) {
                 $("#notification-detail-modal .modal-title").text(data.subject);
                 $("#notification-detail-modal .modal-body").text(data.message);
+                if(data.no_reply === true) {
+                    $("#notification-detail-modal #accept-demande-doc").remove();}
                 $("#accept-demande-doc").val(notif_id);
             }
         });

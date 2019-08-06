@@ -40,9 +40,9 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('full_name','matricule_paie', 'password', 'email', 'n_cin', 'n_cnss', 'n_compte', 'fonction',
-                           'date_naissance','last_login','superieur_hierarchique','department')}),
+                           'date_naissance','last_login','superieur_hierarchique','department','activite')}),
         # ('Full name', {'fields': ()}),
-        ('Permissions', {'fields': ('admin', 'staff', 'active',)}),
+        ('Permissions', {'fields': ('staff', 'admin', 'active',)}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -87,7 +87,7 @@ class ServiceAdmin(ImportExportModelAdmin):
 class SalaireAdmin(ImportExportModelAdmin):
 
     list_display = ('valeur_brute', 'matricule_paie')
-    search_fields = ('matricule_paie',)
+    search_fields = ('matricule_paie__full_name',)
     resource_class = SalaireResource
 
 class AgenceAdmin(ImportExportModelAdmin):

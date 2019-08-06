@@ -65,15 +65,21 @@ class LoginForm(forms.Form):
         fields = ('matricule_paie', 'password')
 
 
+class SendPasswordResetEmailForm(forms.Form):
+    matricule_paie = forms.CharField(required=True)
+
+    class Meta:
+        model = Employe
+        fields = ('matricule_paie',)
+
+
 class ChangePasswordForm(forms.Form):
-    matricule_paie = forms.CharField(required=True, widget=forms.HiddenInput)
-    old_password = forms.CharField(required=True, widget=forms.PasswordInput)
     new_password1 = forms.CharField(required=True, widget=forms.PasswordInput)
     new_password2 = forms.CharField(required=True, widget=forms.PasswordInput)
 
     class Meta:
         model = Employe
-        fields = ('matricule_paie', 'password')
+        fields = ('password',)
 
 
 

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -139,7 +140,7 @@ DATETIME_INPUT_FORMATS = [
 #Authentification User
 
 AUTH_USER_MODEL = 'Authentification.Employe'
-LOGIN_URL = 'login'
+LOGIN_URL = '/authentification/login'
 LOGIN_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
@@ -152,6 +153,7 @@ STATICFILES_DIRS = (
 )
 MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media/')
 MEDIA_URL = '/media/'
+
 # Rest Framework Api Configuration
 
 REST_FRAMEWORK = {
@@ -162,4 +164,26 @@ REST_FRAMEWORK = {
     ]
 }
 
+# Messages configuration
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
+
+# django import_export settings for excel imports
+
 IMPORT_EXPORT_USE_TRANSACTIONS = False
+
+# Email configurations
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'django.app.digitalisation@gmail.com'
+EMAIL_HOST_PASSWORD = 'Testapp@258'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'django.app.digitalisation@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

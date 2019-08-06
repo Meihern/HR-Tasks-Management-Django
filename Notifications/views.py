@@ -23,8 +23,10 @@ def get_notification_detail(request):
     notification.update_seen_status()
     notification_message = notification.get_message()
     notification_subject = str(notification)
-    data = {'message': notification_message, 'subject': notification_subject}
+    notification_no_reply = notification.is_no_reply
+    data = {'message': notification_message, 'subject': notification_subject, 'no_reply': notification_no_reply}
     return JsonResponse(data)
+
 
 def get_notifications_count(request):
     employe = request.user

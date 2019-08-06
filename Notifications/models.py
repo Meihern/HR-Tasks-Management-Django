@@ -11,6 +11,7 @@ class Notification(models.Model):
     sender = models.ForeignKey(Employe, on_delete=models.CASCADE, verbose_name='Emétteur', null=False, blank=False, related_name='sender')
     receiver = models.ForeignKey(Employe, on_delete=models.CASCADE ,verbose_name='Récepteur', null=False, blank=False, related_name='receiver')
     seen = models.BooleanField(default=False, null=False, blank=False, verbose_name='Vu')
+    no_reply = models.BooleanField(default=True, null=False, blank=False, verbose_name='Pas de réponse nécessaire')
     subject = models.CharField(max_length=50, null=False, blank=False, verbose_name='Sujet')
     message = models.TextField(null=True, blank=True)
     time_sent = models.DateTimeField(default=timezone.now)
@@ -31,6 +32,10 @@ class Notification(models.Model):
     @property
     def is_seen(self):
         return self.seen
+
+    @property
+    def is_no_reply(self):
+        return self.no_reply
 
     def update_seen_status(self):
         Notification.objects.filter(id=self.pk).update(seen=True)

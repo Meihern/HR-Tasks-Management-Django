@@ -1,7 +1,7 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser
-from .manager import EmployeManager
+from .manager import EmployeManager, CustomModelManager
 
 
 # Create your models here.
@@ -93,6 +93,12 @@ class Employe(AbstractBaseUser):
     def get_matricule(self):
         return self.matricule_paie
 
+    def get_email(self):
+        if self.email:
+            return self.email
+        else:
+            return None
+
     def get_superieur_hierarchique(self):
         if self.superieur_hierarchique:
             return self.superieur_hierarchique
@@ -113,6 +119,12 @@ class Employe(AbstractBaseUser):
 
     def get_fonction(self):
         return self.fonction
+
+    def get_activite(self):
+        return self.activite
+
+    def get_departement(self):
+        return self.department
 
     def get_username(self):
         return self.matricule_paie
@@ -145,6 +157,8 @@ class Departement(models.Model):
     nom_departement = models.CharField(max_length=50, unique=True, null=False, blank=False, verbose_name='Nom Département')
     directeur = models.ForeignKey(Employe, on_delete=models.SET_NULL, null=True, blank=True)
 
+    objects = CustomModelManager()
+
     def __str__(self):
         return self.nom_departement
 
@@ -163,8 +177,16 @@ class Activite(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_Activité')
     nom_activite = models.CharField(max_length=20, verbose_name='Nom Activité', null=False, blank=False)
 
+    objects = CustomModelManager()
+
     def __str__(self):
         return self.nom_activite
+
+    def safe_get(self, **kwargs):
+        try:
+            return self.get(**kwargs)
+        except ObjectDoesNotExist:
+            return None
 
     class Meta:
         verbose_name = 'Activité'
@@ -174,6 +196,8 @@ class Activite(models.Model):
 class Service(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_Service')
     nom_service = models.CharField(max_length=50, verbose_name='Nom Service', null=False, blank=False)
+
+    objects = CustomModelManager()
 
     def __str__(self):
         return self.nom_service
@@ -187,6 +211,8 @@ class Agence(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_agence')
     nom_agence = models.CharField(max_length=20, verbose_name='Nom Agence', null=False, blank=False)
 
+    objects = CustomModelManager()
+
     def __str__(self):
         return self.nom_agence
 
@@ -198,6 +224,8 @@ class Agence(models.Model):
 class CostCenter(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_cost_center')
     nom_cost_center = models.CharField(max_length=20, verbose_name='Nom Cost Center', null=False, blank=False)
+
+    objects = CustomModelManager()
 
     def __str__(self):
         return self.nom_cost_center

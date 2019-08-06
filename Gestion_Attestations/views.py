@@ -24,10 +24,10 @@ def envoyer_demande_doc(request):
         demande_doc = DemandeAttestation(employe=employe, type=type_demande)
         demande_doc.save()
         notif_subject = str(type_demande)
-        notif_receiver = Departement.objects.get(nom_departement='Ressources Humaines').get_directeur()
+        notif_receiver = Departement.objects.get(id=5).get_directeur()
         notif_msg = str(demande_doc)
         notification = Notification(sender=employe, receiver=notif_receiver, subject=notif_subject,
-                                    message=notif_msg, content_object=demande_doc)
+                                    message=notif_msg, content_object=demande_doc, no_reply=False)
         notification.save()
         return JsonResponse({'Response': 'Success'})
     else:
@@ -56,8 +56,8 @@ class ConsultationDemandesDoc(TemplateView):
     template_name = 'consultation.html'
 
     def get(self, request, type_doc, *args, **kwargs):
-        directeur_rh = Departement.objects.get(nom_departement='Ressources Humaines').get_directeur()
-        if request.user.is_staff:
+        departement_rh = Departement.objects.get(id=5)
+        if request.user.get_departement() == departement_rh:
             type_doc = TypeDemandeAttestatation.objects.get(nom_type_demande=type_doc)
             demandes_docs = DemandeAttestation.objects.filter(type=type_doc).order_by('-date_envoi')
             demandes_docs = demandes_docs.all().values('id', 'type', 'date_envoi', 'etat_validation', 'employe')
