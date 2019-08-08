@@ -2,6 +2,7 @@ from django.db import models
 from Authentification.models import Employe
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
+from Authentification.manager import CustomModelManager
 from django.contrib.contenttypes.fields import GenericForeignKey
 # Create your models here.
 
@@ -20,6 +21,8 @@ class Notification(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey()
 
+    objects = CustomModelManager()
+    
     def __str__(self):
         return "Sujet : %s"%(self.subject)
 
@@ -28,6 +31,9 @@ class Notification(models.Model):
 
     def get_content_object(self):
         return self.content_object
+
+    def get_content_type(self):
+        return self.content_type
 
     @property
     def is_seen(self):

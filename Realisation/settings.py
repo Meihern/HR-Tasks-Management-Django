@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Gestion_Attestations.apps.GestionAttestationsConfig',
     'bootstrap4',
     'import_export',
+    'phonenumber_field',
 ]
 
 MIDDLEWARE = [

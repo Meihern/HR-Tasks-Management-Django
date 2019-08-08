@@ -18,6 +18,7 @@
 
   <!-- Custom styles for this template-->
   <link href="{% static 'Realisation/css/sb-admin-2.min.css' %}" rel="stylesheet">
+  {% block css %}{% endblock %}
   <style>
     * {
     margin: 0;
@@ -87,7 +88,7 @@
             <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="domiciliation" href="#">Domiciliation</a>
               </div>
             <h6 class="collapse-header">Demande des services:</h6>
-            <a class="collapse-item" href="buttons.html">Congés</a>
+            <a class="collapse-item" href="{% url 'demande_conge' %}">Congés</a>
             <a class="collapse-item" href="cards.html">Recrutements</a>
           </div>
         </div>
@@ -95,7 +96,7 @@
 
       <!-- Nav Item - Utilities Collapse Menu -->
        <!-- Menu gestion des demandes // En attente d'application de restrictions sur cette partie -->
-        {% if request.user.is_staff %}
+        {% if request.user.can_consult_attestations is True %}
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="far fa-eye"></i>
@@ -232,17 +233,8 @@
       {% block Content %}
 
       {% endblock %}
-      {% block Footer %}
-      <!-- Footer -->
-      <footer class="sticky-footer bg-white" >
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; EMID 2019</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
-      {% endblock %}
+      </div>
+      {% include "footer.html" %}
     </div>
     <!-- End of Content Wrapper -->
 
@@ -258,12 +250,15 @@
   <!-- Validation de la demande des documents Modal-->
   {% include "Gestion_Attestations/validation_demande_doc.html" %}
   <!-- Bootstrap core JavaScript-->
- <script src="{% static 'Realisation/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'Realisation/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'Realisation/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <!-- Core plugin JavaScript-->
   <script src="{% static 'Realisation/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
   <!-- Custom scripts for all pages-->
   <script src="{% static 'Realisation/js/sb-admin-2.min.js' %}"></script>
+  <script src="{% static 'Realisation/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+  <script src="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  {% block javascript %}{% endblock %}
   <script src="{% static 'Realisation/sweetalert/dist/sweetalert.min.js' %}"></script>
   <script src="{% static 'Notifications/js/notifications_handling.js' %}"></script>
   <script type="text/javascript" >
@@ -306,7 +301,12 @@
         });
     }));
   </script>
-  <script src="{% static 'Gestion_Attestations/js/envoyer_demande_doc.js' %}" ></script>
+      <script src="{% static 'Gestion_Attestations/js/envoyer_demande_doc.js' %}" ></script>
+        <script type = "text/javascript">
+    $(document).ready(function(){
+        $('#dataTable').DataTable();
+    });
+    </script>
 </body>
 
 </html>

@@ -34,15 +34,17 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email','full_name','fonction','department', 'admin','active','staff')
-    list_filter = ('admin', 'staff', 'active', 'sexe', 'department')
+    list_display = ('email','full_name','fonction','department','activite', 'admin', 'active', 'staff')
+    list_filter = ('admin', 'staff', 'active', 'sexe', 'department', 'activite', 'consultant_recrutements', 'consultant_attestations',
+                   'consultant_conges')
 
 
     fieldsets = (
         (None, {'fields': ('full_name','matricule_paie', 'password', 'email', 'n_cin', 'n_cnss', 'n_compte', 'fonction',
                            'date_naissance','last_login','superieur_hierarchique','department','activite')}),
         # ('Full name', {'fields': ()}),
-        ('Permissions', {'fields': ('staff', 'admin', 'active',)}),
+        ('Permissions', {'fields': ('staff', 'admin', 'active','consultant_recrutements',
+                                    'consultant_attestations', 'consultant_conges')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.

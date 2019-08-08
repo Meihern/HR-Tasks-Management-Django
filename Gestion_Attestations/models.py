@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from Authentification.models import Employe
+from Authentification.models import Employe, Activite
 from django.utils.timezone import now
 from Notifications.models import Notification
 from django.contrib.contenttypes.fields import GenericRelation
@@ -8,7 +8,7 @@ from Authentification.manager import CustomModelManager
 # Create your models here.
 
 
-class TypeDemandeAttestatation(models.Model):
+class TypeDemandeAttestation(models.Model):
     TYPE_TRAVAIL = 'travail'
     TYPE_SALAIRE = 'salaire'
     TYPE_DOMICILIATION = 'domiciliation'
@@ -37,7 +37,7 @@ class DemandeAttestation(models.Model):
     date_envoi = models.DateTimeField(default=now, verbose_name="Date Envoyée", null=False, blank=False)
     etat_validation = models.BooleanField(default=False, null=False, blank=False, verbose_name="Etat de Validation")
     date_validation = models.DateField(null=True, blank=True, verbose_name="Date de Validation")
-    type = models.ForeignKey(TypeDemandeAttestatation, on_delete=None, null=False, verbose_name="Type de demande",
+    type = models.ForeignKey(TypeDemandeAttestation, on_delete=None, null=False, verbose_name="Type de demande",
                              blank=False)
     notifications = GenericRelation(Notification)
 
@@ -58,6 +58,17 @@ class DemandeAttestation(models.Model):
     def __str__(self):
         return "%s envoyé par %s" % (self.get_type_demande(), self.employe.get_full_name())
 
+    def get_notif_recevier(self):
+        activite_mdlz = Activite.objects.safe_get(id=5)
+        activite_shared = Activite.objects.safe_get(id=3)
+        if self.get_employe().get_activite() in list(Activite.objects.all().exclude(id=5)):
+            return Employe.objects.safe_get(activite=activite_shared, consultant_attestations=True)
+        elif self.get_employe().get_activite() == activite_mdlz:
+            return Employe.objects.safe_get(activite=activite_mdlz, consultant_attestations=True)
+        else:
+            return None
+
+
     @property
     def is_valid(self):
         return self.etat_validation
@@ -65,6 +76,7 @@ class DemandeAttestation(models.Model):
     class Meta:
         verbose_name = "Demande Attestation"
         verbose_name_plural = "Demandes des Attestations"
+
 
 class Salaire(models.Model, models.Manager):
 

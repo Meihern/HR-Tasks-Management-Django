@@ -9,6 +9,7 @@ class DashboardView(TemplateView,LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
 
+
 class ConsultationView(TemplateView, LoginRequiredMixin):
     template_name = 'consultation.html'
 

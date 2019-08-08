@@ -5,7 +5,7 @@ from django.db import models
 class EmployeManager(BaseUserManager):
 
     def create_user(self, matricule_paie, password='azerty258', is_active=True, is_staff=False, is_admin=False,
-                    **kwargs):
+                    can_consult_attestations=False, can_consult_conges=False, can_consult_recrutements=False,**kwargs):
 
         if not matricule_paie:
             raise ValueError("Le matricule est nécessaire")
@@ -20,6 +20,9 @@ class EmployeManager(BaseUserManager):
         employe.staff = is_staff
         employe.admin = is_admin
         employe.active = is_active
+        employe.consultant_recrutments = can_consult_recrutements
+        employe.consultant_attestations = can_consult_attestations
+        employe.consultant_conges = can_consult_conges
         employe.save(using=self._db)
         return employe
 

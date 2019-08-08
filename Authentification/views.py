@@ -52,7 +52,7 @@ class AuthenticationView(TemplateView,views.LoginView):
                 login(request, employe)
                 return HttpResponseRedirect(LOGIN_REDIRECT_URL)
             else:
-                messages.error(request,"Authentification Echouée, Adresse Electronique ou Mot de Passe Incorrecte")
+                messages.error(request, "Authentification Echouée, Adresse Electronique ou Mot de Passe Incorrecte")
                 return HttpResponseRedirect(LOGIN_URL)
         else:
             messages.error(request, "Formulaire Invalide")

@@ -22,6 +22,7 @@ class GeneratePDF(TemplateView):
             employe = demande_doc.get_employe()
             context = {
                 'date': demande_doc.get_date_validation(),
+                'sexe': employe.get_sexe_nomination(),
                 'nom_prenom': employe.get_full_name(),
                 'num_cnss': employe.get_n_cnss(),
                 'date_entree': employe.get_date_entree(),
@@ -39,7 +40,7 @@ class GeneratePDF(TemplateView):
                 pdf = render_to_pdf(self.template_name, context)
                 if pdf:
                     response = HttpResponse(pdf, content_type='application/pdf')
-                    filename = "%s_%s.pdf" % (demande_doc_type, context['nom_prenom'])
+                    filename = "%s_%s.pdf" % (demande_doc_type, context['nom_prenom'].replace(' ', '_'))
                     content = "inline; filename=%s" % filename
                     download = request.GET.get("download")
                     if download:

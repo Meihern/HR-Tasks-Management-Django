@@ -38,7 +38,7 @@ class Employe(AbstractBaseUser):
     type_base_salariale = models.CharField(verbose_name='Type base salariale',max_length=1,default='F', null=True, blank=True)
     mode_reglement = models.CharField(verbose_name='Mode de réglement', max_length=1, default='V', null=True, blank=True)
     type_cp = models.IntegerField(verbose_name='Type CP.',null=True, blank=True)
-    n_cnss = models.IntegerField(verbose_name='Numéro CNSS', blank=True, null=True)
+    n_cnss = models.IntegerField(verbose_name='Numéro CNSS', blank=True, null=True, unique=True)
     section = models.IntegerField(verbose_name='Section', null=True, blank=True)
     code_edition_comm = models.IntegerField(verbose_name='Code edition comm.', null=True, blank=True)
     code_agent = models.IntegerField(verbose_name='Code agent', null=True, blank=True)
@@ -58,10 +58,13 @@ class Employe(AbstractBaseUser):
     cost_center = models.ForeignKey('CostCenter', on_delete=models.SET_NULL, verbose_name='Cost Center', null=True, blank=True)
 
     email = models.CharField(max_length=50, verbose_name='Adresse Electronique', unique=False, null=True, blank=False)
-    n_compte = models.CharField(max_length=25, null=False, unique=True, verbose_name='Numéro de Compte RIB')
+    n_compte = models.CharField(max_length=25, null=True, blank=True, unique=True, verbose_name='Numéro de Compte RIB')
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)
     admin = models.BooleanField(default=False)
+    consultant_attestations = models.BooleanField(default=False)
+    consultant_conges = models.BooleanField(default=False)
+    consultant_recrutements = models.BooleanField(default=False)
     solde_conge = models.IntegerField(null=True, blank=True, verbose_name='Solde Jours Possibles Congés')
 
     # Django User Model Settings
@@ -75,6 +78,8 @@ class Employe(AbstractBaseUser):
     def __str__(self):
         if self.full_name:
             return self.full_name
+        elif self.email:
+            return self.email
         else:
             return self.matricule_paie
 
@@ -84,6 +89,8 @@ class Employe(AbstractBaseUser):
     def get_short_name(self):
         if self.full_name:
             return self.full_name
+        elif self.email:
+            return self.email
         else:
             return self.matricule_paie
 
@@ -98,6 +105,14 @@ class Employe(AbstractBaseUser):
             return self.email
         else:
             return None
+
+    def get_sexe_nomination(self):
+        if self.sexe == 'F':
+            return 'Mme'
+        elif self.sexe == 'M':
+            return 'Mr'
+        else:
+            return 'M.'
 
     def get_superieur_hierarchique(self):
         if self.superieur_hierarchique:
@@ -135,6 +150,14 @@ class Employe(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def get_solde_conge(self):
+        if self.solde_conge is None:
+            return 0
+        else:
+            return self.solde_conge
+
+    # Properties
+
     @property
     def is_staff(self):
         return self.staff
@@ -146,6 +169,34 @@ class Employe(AbstractBaseUser):
     @property
     def is_admin(self):
         return self.admin
+
+    @property
+    def can_consult_attestations(self):
+        return self.consultant_attestations
+
+    @property
+    def can_consult_conges(self):
+        return self.consultant_conges
+
+    @property
+    def can_consult_recrutements(self):
+        return self.consultant_recrutements
+
+    @property
+    def can_consult_mdlz(self):
+        activite_mdlz = Activite.objects.safe_get(id=5)
+        if self.activite == activite_mdlz:
+            return True
+        else:
+            return False
+
+    @property
+    def can_consult_shared(self):
+        activite_shared = Activite.objects.safe_get(id=3)
+        if self.activite == activite_shared:
+            return True
+        else:
+            return False
 
     class Meta:
         verbose_name = 'Employé'
@@ -165,9 +216,6 @@ class Departement(models.Model):
     def get_directeur(self):
         return self.directeur
 
-    def get_nbr_employes(self):
-        return self.nbr_employes
-
     class Meta:
         verbose_name = 'Département'
         verbose_name_plural = 'Départements'
@@ -181,12 +229,6 @@ class Activite(models.Model):
 
     def __str__(self):
         return self.nom_activite
-
-    def safe_get(self, **kwargs):
-        try:
-            return self.get(**kwargs)
-        except ObjectDoesNotExist:
-            return None
 
     class Meta:
         verbose_name = 'Activité'

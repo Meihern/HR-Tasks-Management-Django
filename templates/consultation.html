@@ -1,9 +1,12 @@
 {% extends "Dashboard.html" %}
+{% load static %}
 {% block title %}
   Consultation
 {% endblock %}
 {% block Content %}
-
+{% block css %}
+<link href="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
@@ -47,7 +50,5 @@
       </table>
     </div>
   </div>
-</div>
-
 </div>
 {% endblock %}

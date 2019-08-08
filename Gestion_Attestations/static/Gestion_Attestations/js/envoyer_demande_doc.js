@@ -8,19 +8,18 @@ $("#demande-doc-Modal").on('show.bs.modal',function(e) {
 $("#confirm-demande-doc").click(function(e) {
     e.preventDefault();
     type_demande = $(this).val();
+    $('#demande-doc-Modal').modal('hide');
     $.ajax({
         url: $(this).data("url"),
         data:{
             'type_demande': type_demande,
         },
         success: function(result) {
-            $('#demande-doc-Modal').modal('hide');
             if(type_demande == 'domiciliation') swal("Succès","Demande de "+type_demande+" envoyée avec succès","success");
             else swal("Succès","Demande d'attestation de "+type_demande+" envoyée avec succès","success");
 
         },
         error: function(result) {
-            $("#demande-doc-Modal").modal('hide');
            if(type_demande == 'domiciliation') swal("Echec","Demande de "+type_demande+" non envoyé","error");
            else swal("Echec","Demande d'attestation de "+type_demande+" non envoyé","error");
         }
@@ -29,6 +28,7 @@ $("#confirm-demande-doc").click(function(e) {
 
 $("#accept-demande-doc").click(function (e) {
     let notif_id = $(this).val();
+    $('#notification-detail-modal').modal('hide');
     $.ajax({
         url: $(this).data("url"),
         data:{
@@ -37,11 +37,9 @@ $("#accept-demande-doc").click(function (e) {
         type: 'GET',
         datatype : 'json',
         success: function(result) {
-             $('#notification-detail-modal').modal('hide');
              swal("Succès","Le document est prêt sous format PDF","success");
         },
         error: function(result) {
-            $('#notification-detail-modal').modal('hide');
             swal("Echec", "Le document n'est pas prêt ", "error");
         }
     })

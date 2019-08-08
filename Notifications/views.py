@@ -24,7 +24,10 @@ def get_notification_detail(request):
     notification_message = notification.get_message()
     notification_subject = str(notification)
     notification_no_reply = notification.is_no_reply
-    data = {'message': notification_message, 'subject': notification_subject, 'no_reply': notification_no_reply}
+    notification_content_type = str(notification.get_content_type())
+    data = {'message': notification_message, 'subject': notification_subject,
+            'no_reply': notification_no_reply, 'content_type': notification_content_type}
+    print(data)
     return JsonResponse(data)
 
 
