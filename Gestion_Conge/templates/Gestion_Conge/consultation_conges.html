@@ -18,6 +18,7 @@
         <thead>
           <tr>
             <th>Employés</th>
+            <th>Date d'envoi</th>
             <th>Date de depart</th>
             <th>Date de retour</th>
             <th>Etat</th>
@@ -27,6 +28,7 @@
         {% for Demande in demandes %}
           <tr>
             <td>{{ Demande.employe }}</td>
+            <td>{{ Demande.date_envoi }}</td>
             <td>{{ Demande.date_depart }}</td>
             <td>{{ Demande.date_retour }}</td>
             <td>{{ Demande.etat }}</td>
