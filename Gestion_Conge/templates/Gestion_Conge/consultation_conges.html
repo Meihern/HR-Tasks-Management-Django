@@ -18,32 +18,18 @@
         <thead>
           <tr>
             <th>Employés</th>
-            <th>Type de demande</th>
-            <th>Date</th>
+            <th>Date de depart</th>
+            <th>Date de retour</th>
             <th>Etat</th>
           </tr>
         </thead>
         <tbody id="accept-demande-doc-type">
-        {% for doc in docs %}
+        {% for Demande in demandes %}
           <tr>
-            <td>{{ doc.employe }}</td>
-            <td>{{ doc.type }}</td>
-            <td>{{ doc.date_envoi}}</td>
-            <td>
-                {% if not doc.etat %}
-                <a  value="{{ doc.id }}" data-url="{% url 'accept_demande_doc' %}" href="{% url 'generate_pdf' %}" target="_blank" data-value="{{ doc.id }}" class="btn btn-success btn-icon-split">
-                <span class="text">Valider</span>
-                <span class="icon text-white-50">
-                    <i class="fas fa-check"></i>
-                    <i class="far fa-file-pdf"></i>
-                  </span>
-              </a>
-                {% else %}
-                    <span class="icon text-black-50">
-                    Validée
-                    </span>
-                {% endif %}
-            </td>
+            <td>{{ Demande.employe }}</td>
+            <td>{{ Demande.date_depart }}</td>
+            <td>{{ Demande.date_retour }}</td>
+            <td>{{ Demande.etat }}</td>
           </tr>
         {% endfor %}
         </tbody>
