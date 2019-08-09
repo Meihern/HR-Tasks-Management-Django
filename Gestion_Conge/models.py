@@ -97,6 +97,7 @@ class DemandeConge(models.Model):
     def get_etat(self):
         return self.etat
 
+
     def get_date_depart(self):
         return self.date_depart
 
