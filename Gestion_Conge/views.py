@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseForbidden, Http404, JsonResponse
 from Notifications.models import Notification
-from Authentification.models import Departement
+from Authentification.models import Departement, Activite, Employe
 from .models import DemandeConge
 from .forms import DemandeCongeForm
 from django.core.mail import send_mail
@@ -140,4 +140,29 @@ class ConsultationDemandeConges(TemplateView):
     template_name = "Gestion_Conge/consultation_conges.html"
 
     def get(self, request, *args, **kwargs):
-        return render(template_name=self.template_name)
+        if request.user.can_consult_conges:
+            activite_mdlz = Activite.objects.safe_get(id=5)
+            if request.user.can_consult_mdlz:
+                demandes_conges = DemandeConge.objects.filter(employe_activite=activite_mdlz).order_by('-date_envoi')
+                demandes_conges = demandes_conges.all().values('id', 'employe', 'date_envoi',
+                                                               'date_depart', 'date_retour', 'etat')
+            elif request.user.can_consult_shared:
+                demandes_conges = DemandeConge.objects.exclude(employe__activite=activite_mdlz).order_by('-date_envoi')
+                demandes_conges = demandes_conges.all().values('id', 'employe', 'date_envoi',
+                                                               'date_depart', 'date_retour', 'etat')
+            else:
+                return HttpResponseForbidden()
+            data = []
+            for demande in demandes_conges:
+                demande_conge = {
+                    'id': demande['id'],
+                    'date_envoi': demande['date_envoi'],
+                    'employe': Employe.objects.get(matricule_paie=demande['employe']).get_full_name(),
+                    'etat': demande['etat'],
+                    'date_depart': demande['date_depart'],
+                    'date_retour': demande['date_retour'],
+                }
+                data.append(demande_conge)
+            return render(template_name=self.template_name, context={'demandes': data})
+        else:
+            return HttpResponseForbidden()
