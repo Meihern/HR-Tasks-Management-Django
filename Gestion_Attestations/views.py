@@ -63,7 +63,7 @@ def accept_demande_doc(request):
 
 
 class ConsultationDemandesDoc(TemplateView):
-    template_name = 'consultation.html'
+    template_name = 'Gestion_Attestations/consultation_attestations.html'
 
     def get(self, request, type_doc, *args, **kwargs):
 

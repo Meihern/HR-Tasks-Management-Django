@@ -11,7 +11,7 @@ class DashboardView(TemplateView,LoginRequiredMixin):
 
 
 class ConsultationView(TemplateView, LoginRequiredMixin):
-    template_name = 'consultation.html'
+    template_name = 'Gestion_Attestations/consultation_attestations.html'
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)

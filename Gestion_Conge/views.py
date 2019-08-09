@@ -134,3 +134,10 @@ def refuser_demande_conge(request):
         return JsonResponse({'Response': 'error'})
 
     return JsonResponse({'Response': 'success'})
+
+
+class ConsultationDemandeConges(TemplateView):
+    template_name = "Gestion_Conge/consultation_conges.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(template_name=self.template_name)

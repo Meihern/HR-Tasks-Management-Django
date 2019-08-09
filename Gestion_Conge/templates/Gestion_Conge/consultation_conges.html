@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Consultation
+{% endblock %}
+{% block Content %}
+{% block css %}
+<link href="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h6 class="m-0 font-weight-bold text-primary">Table des Demandes </h6>
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Employés</th>
+            <th>Type de demande</th>
+            <th>Date</th>
+            <th>Etat</th>
+          </tr>
+        </thead>
+        <tbody id="accept-demande-doc-type">
+        {% for doc in docs %}
+          <tr>
+            <td>{{ doc.employe }}</td>
+            <td>{{ doc.type }}</td>
+            <td>{{ doc.date_envoi}}</td>
+            <td>
+                {% if not doc.etat %}
+                <a  value="{{ doc.id }}" data-url="{% url 'accept_demande_doc' %}" href="{% url 'generate_pdf' %}" target="_blank" data-value="{{ doc.id }}" class="btn btn-success btn-icon-split">
+                <span class="text">Valider</span>
+                <span class="icon text-white-50">
+                    <i class="fas fa-check"></i>
+                    <i class="far fa-file-pdf"></i>
+                  </span>
+              </a>
+                {% else %}
+                    <span class="icon text-black-50">
+                    Validée
+                    </span>
+                {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
