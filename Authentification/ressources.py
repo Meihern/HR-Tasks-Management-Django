@@ -30,7 +30,7 @@ class EmployeResource(resources.ModelResource):
     code_edition_comm = fields.Field(column_name='Code edition comm.', attribute='code_edition_comm',widget=widgets.IntegerWidget())
     code_agent = fields.Field(column_name='Code agent', attribute='code_agente', widget=widgets.IntegerWidget())
     date_sortie = fields.Field(column_name='Date sortie', attribute='date_sortie', widget=widgets.DateWidget(format('%d-%m-%Y')))
-    superieur_hierarchique = fields.Field(column_name='Supérieur hierarchiq', attribute='superieur_hierarchique', widget=widgets.ForeignKeyWidget(Employe))
+    superieur_hierarchique = fields.Field(column_name='Supérieur hiérarchique', attribute='superieur_hierarchique', widget=widgets.ForeignKeyWidget(Employe))
     type_contrat = fields.Field(column_name='Type de contrat', attribute='type_contrat', widget=widgets.CharWidget())
     date_fin_contrat = fields.Field(column_name='Date fin contrat', attribute='date_fin_contrat', widget=widgets.DateWidget('%d-%m-%Y'))
     commentaire = fields.Field(column_name='Commentaire', attribute='commentaire', widget=widgets.CharWidget())

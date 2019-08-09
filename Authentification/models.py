@@ -16,8 +16,8 @@ class Employe(AbstractBaseUser):
                   (SEXE_FEMININ, 'FEMININ'))
     SITUATION_CELIB = 'C'
     SITUATION_MARIE = 'M'
-    CHOIX_SITUATION_FAMILLE = ((SITUATION_CELIB, 'Celibataire'),
-                               (SITUATION_MARIE, 'Marie'))
+    CHOIX_SITUATION_FAMILLE = ((SITUATION_CELIB, 'Célibataire'),
+                               (SITUATION_MARIE, 'Marié'))
     # Attributs
 
     matricule_paie = models.CharField(primary_key=True, unique=True, max_length=10, verbose_name='Matricule Paie')
@@ -27,17 +27,19 @@ class Employe(AbstractBaseUser):
     sexe = models.CharField(max_length=1, choices=CHOIX_SEXE, verbose_name='Sexe', null=True, blank=True)
     adresse = models.CharField(max_length=255, blank=True, null=True, verbose_name='Adresse')
     ville = models.CharField(max_length=30, blank=True, null=True, verbose_name='Ville')
-    n_cin = models.CharField(max_length=10, unique=True, verbose_name='Numero Cin', null=True, blank=True)
+    n_cin = models.CharField(max_length=10, unique=True, verbose_name='Numéro de Cin', null=True, blank=True)
     nationalite_paie = models.CharField(max_length=3, null=True, blank=True, verbose_name='Nationalité Paie')
     situation_famille = models.CharField(max_length=1, null=True, blank=True, verbose_name='Situation de famille',
                                          choices=CHOIX_SITUATION_FAMILLE)
     nb_enfant = models.IntegerField(null=True, blank=True)
     nb_enfant_deduction = models.IntegerField(null=True, blank=True)
     date_entree = models.DateField(verbose_name='Date Entrée', blank=True, null=True)
-    date_anciennete = models.DateField(verbose_name='Date Anciennete', blank=True, null=True)
-    type_base_salariale = models.CharField(verbose_name='Type base salariale',max_length=1,default='F', null=True, blank=True)
-    mode_reglement = models.CharField(verbose_name='Mode de réglement', max_length=1, default='V', null=True, blank=True)
-    type_cp = models.IntegerField(verbose_name='Type CP.',null=True, blank=True)
+    date_anciennete = models.DateField(verbose_name='Date Ancienneté', blank=True, null=True)
+    type_base_salariale = models.CharField(verbose_name='Type base salariale', max_length=1, default='F', null=True,
+                                           blank=True)
+    mode_reglement = models.CharField(verbose_name='Mode de règlement', max_length=1, default='V', null=True,
+                                      blank=True)
+    type_cp = models.IntegerField(verbose_name='Type CP.', null=True, blank=True)
     n_cnss = models.IntegerField(verbose_name='Numéro CNSS', blank=True, null=True, unique=True)
     section = models.IntegerField(verbose_name='Section', null=True, blank=True)
     code_edition_comm = models.IntegerField(verbose_name='Code edition comm.', null=True, blank=True)
@@ -46,16 +48,17 @@ class Employe(AbstractBaseUser):
     agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, verbose_name='Agence', null=True, blank=True)
     date_sortie = models.DateField(verbose_name='Date de Sortie', blank=True, null=True)
     superieur_hierarchique = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
-                                               verbose_name='Supérieur Hierarchique')
+                                               verbose_name='Supérieur Hiérarchique')
     type_contrat = models.CharField(max_length=6, null=True, blank=True, verbose_name='Type de Contrat')
     date_fin_contrat = models.DateField(verbose_name='Date Fin Contrat', null=True, blank=True)
     department = models.ForeignKey('Departement', on_delete=models.SET_NULL, verbose_name='Département', null=True,
                                    blank=True, )
     activite = models.ForeignKey('Activite', on_delete=models.SET_NULL, verbose_name='Activité', null=True,
-                                   blank=True)
+                                 blank=True)
     service = models.ForeignKey('Service', on_delete=models.SET_NULL, verbose_name='Service', null=True,
-                                   blank=True )
-    cost_center = models.ForeignKey('CostCenter', on_delete=models.SET_NULL, verbose_name='Cost Center', null=True, blank=True)
+                                blank=True)
+    cost_center = models.ForeignKey('CostCenter', on_delete=models.SET_NULL, verbose_name='Cost Center', null=True,
+                                    blank=True)
 
     email = models.CharField(max_length=50, verbose_name='Adresse Electronique', unique=False, null=True, blank=False)
     n_compte = models.CharField(max_length=25, null=True, blank=True, unique=True, verbose_name='Numéro de Compte RIB')
@@ -198,6 +201,13 @@ class Employe(AbstractBaseUser):
         else:
             return False
 
+    @property
+    def is_consultant(self):
+        if self.can_consult_conges or self.can_consult_attestations or self.can_consult_recrutements:
+            return True
+        else:
+            return False
+
     class Meta:
         verbose_name = 'Employé'
         verbose_name_plural = 'Employés'
@@ -205,7 +215,8 @@ class Employe(AbstractBaseUser):
 
 class Departement(models.Model):
     id = models.IntegerField(primary_key=True, verbose_name='id_Département')
-    nom_departement = models.CharField(max_length=50, unique=True, null=False, blank=False, verbose_name='Nom Département')
+    nom_departement = models.CharField(max_length=50, unique=True, null=False, blank=False,
+                                       verbose_name='Nom Département')
     directeur = models.ForeignKey(Employe, on_delete=models.SET_NULL, null=True, blank=True)
 
     objects = CustomModelManager()
@@ -275,7 +286,3 @@ class CostCenter(models.Model):
     class Meta:
         verbose_name = 'Cost Center'
         verbose_name_plural = 'Cost Centers'
-
-
-
-

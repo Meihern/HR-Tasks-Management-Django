@@ -39,9 +39,12 @@ def get_month_name(month: int):
         return None
 
 
-def get_banque(rib: str):
-    data = pd.read_csv('Pdfs/RIBS_banques.csv', sep=",", names=['Code', 'Libelle'])
-    return data[data.Code == rib[:3]][['Libelle']].to_string(index=False, header=False)
+def get_banque(rib: str = None):
+    if rib:
+        data = pd.read_csv('Pdfs/RIBS_banques.csv', sep=",", names=['Code', 'Libelle'])
+        return data[data.Code == rib[:3]][['Libelle']].to_string(index=False, header=False)
+    else:
+        return None
 
 
 def get_template_name(doc_type: str):

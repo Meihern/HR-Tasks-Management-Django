@@ -1,14 +1,16 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 
 from Authentification.manager import CustomModelManager
 from Authentification.models import Employe, Departement
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.timezone import now
+
+
 # Create your models here.
 
 
 class DemandeConge(models.Model):
-
     # Constants
 
     ETAT_REFUS = 0
@@ -31,7 +33,8 @@ class DemandeConge(models.Model):
     telephone = PhoneNumberField(null=True, blank=True, unique=False, verbose_name='Téléphone personnel')
     etat = models.PositiveSmallIntegerField(null=False, blank=False, default=ETAT_ENVOI,
                                             choices=CHOIX_ETATS, verbose_name='Etat Demande')
-    date_envoi = models.DateField(null=False, blank=False, default=now, verbose_name='Date envoi de la demande du Congé')
+    date_envoi = models.DateField(null=False, blank=False, default=now,
+                                  verbose_name='Date envoi de la demande du Congé')
     date_sup = models.DateField(null=True, blank=True, verbose_name='Date validation Hiérarchie')
     date_direction = models.DateField(null=True, blank=True, verbose_name='Date validation Direction Concernée')
     date_direction_rh = models.DateField(null=True, blank=True, verbose_name='Date validation direction RH')
@@ -39,29 +42,42 @@ class DemandeConge(models.Model):
     # Functions and Properties
 
     objects = CustomModelManager()
+    notifications = GenericRelation('Notifications.Notification')
 
     def __str__(self):
-        return "Demande de congé envoyé par %s"%(self.employe.get_full_name())
+        return ("%s a demandé un congé du %s au %s avec %s jours ouvrables." %
+                (self.get_employe().get_full_name(),
+                 self.get_date_depart(),
+                 self.get_date_retour(),
+                 self.get_jours_ouvrables()))
 
-    def update_etat(self, code_etat:int):
+    def update_etat(self, code_etat: int):
+
         if code_etat == self.ETAT_SUPERIEUR_HIERARCHIQUE:
-            DemandeConge.objects.filter(id=self.pk).update(etat=code_etat, date_sup=now)
-        if code_etat == self.ETAT_DIRECTION_CONCERNEE:
-            DemandeConge.objects.filter(id=self.pk).update(etat=code_etat, date_direction=now)
-        if code_etat == self.ETAT_DIRECTION_RH:
-            DemandeConge.objects.filter(id=self.pk).update(etat=code_etat, date_direction_rh=now)
+            DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_SUPERIEUR_HIERARCHIQUE, date_sup=now())
 
-    def get_notif_receiver(self):
-        if self.etat == self.ETAT_ENVOI:
-            return self.get_employe().get_superieur_hierarchique()
-        if self.etat == self.ETAT_SUPERIEUR_HIERARCHIQUE:
-            return self.get_employe().get_departement().get_directeur()
-        if self.etat == self.ETAT_DIRECTION_CONCERNEE:
-            return Departement.objects.safe_get(id=5).get_directeur()
-        if self.etat == self.ETAT_DIRECTION_RH:
-            return self.get_employe()
-        if self.etat == self.ETAT_REFUS:
-            return self.get_employe()
+        if code_etat == self.ETAT_DIRECTION_CONCERNEE:
+            if self.date_sup:
+                DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_DIRECTION_CONCERNEE, date_direction=now())
+            else:
+                DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_DIRECTION_CONCERNEE, date_direction=now(),
+                                                               date_sup=now())
+        if code_etat == self.ETAT_DIRECTION_RH:
+            if self.date_sup and self.date_direction:
+                DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_DIRECTION_RH, date_direction_rh=now())
+            elif self.date_direction:
+                DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_DIRECTION_RH, date_direction_rh=now(),
+                                                               date_sup=now())
+            else:
+                DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_DIRECTION_RH,
+                                                               date_direction_rh=now(),
+                                                               date_sup=now(), date_direction=now())
+
+        if code_etat == self.ETAT_REFUS:
+            DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_REFUS)
+
+    def get_id(self):
+        return self.pk
 
     def get_employe(self):
         return self.employe
@@ -91,32 +107,27 @@ class DemandeConge(models.Model):
         return self.date_envoi
 
     def get_date_sup(self):
-        if self.date_sup:
-            return self.date_sup
-        else:
-            return None
+        return self.date_sup
 
     def get_date_direction(self):
-        if self.date_direction:
-            return self.date_direction
-        else:
-            return None
+        return self.date_direction
 
     def get_date_direction_rh(self):
-        if self.date_direction_rh:
-            return self.date_direction_rh
-        else:
-            return None
+        return self.date_direction_rh
+
+    def get_jours_ouvrables(self):
+        return self.jours_ouvrables
 
     @property
     def in_conge(self):
 
-        date_retour = DemandeConge.objects.filter(employe=self.get_employe(), etat=self.ETAT_DIRECTION_RH)\
+        date_retour = DemandeConge.objects.filter(employe=self.get_employe(), etat=self.ETAT_DIRECTION_RH) \
             .order_by('-id').first().get_date_retour()
         if date_retour > now().date():
             return True
         else:
             return False
 
-
-
+    class Meta:
+        verbose_name = "Demande Congé"
+        verbose_name_plural = "Demandes des Congés"

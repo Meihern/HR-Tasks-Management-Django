@@ -26,9 +26,7 @@ $("#confirm-demande-doc").click(function(e) {
     });
 });
 
-
-$('#notif-reply a').click(function (e) {
-    if($(this).attr('id') === 'accept-demande-doc'){
+$("#accept-demande-doc").click(function (e) {
     let notif_id = $(this).val();
     $('#notification-detail-modal').modal('hide');
     $.ajax({
@@ -45,8 +43,7 @@ $('#notif-reply a').click(function (e) {
             swal("Echec", "Le document n'est pas prêt ", "error");
         }
     })
-    }}
-    );
+});
 
 $("#accept-demande-doc-type a").click(function (e) {
     let doc_id = $(e.currentTarget).data("value");

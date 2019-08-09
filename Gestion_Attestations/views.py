@@ -21,19 +21,22 @@ def envoyer_demande_doc(request):
     employe = request.user
     type_demande = request.GET.get("type_demande")
     if type_demande:
+        if employe.is_consultant:
+            return HttpResponseForbidden()
         type_demande = TypeDemandeAttestation.objects.get(nom_type_demande=type_demande)
         demande_doc = DemandeAttestation(employe=employe, type=type_demande)
         demande_doc.save()
-        notif_subject = str(type_demande)
-        notif_receiver = demande_doc.get_notif_recevier()
-        notif_msg = str(demande_doc)
-        notification = Notification(sender=employe, receiver=notif_receiver, subject=notif_subject,
-                                    message=notif_msg, content_object=demande_doc, no_reply=False)
+        notification = Notification(content_object=demande_doc, no_reply=False)
+        notification.set_subject(str(type_demande))
+        notification.set_message(str(demande_doc))
+        notification.set_sender(employe)
+        notification.set_receiver()
         notification.save()
-        send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL, recipient_list=[notif_receiver.get_email()])
+        send_mail(notification.get_subject(), notification.get_message(),
+                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
         return JsonResponse({'Response': 'Success'})
     else:
-        return JsonResponse({'Response': 'Failure'})
+        return JsonResponse({'Response': 'error'})
 
 
 def accept_demande_doc(request):
@@ -46,7 +49,7 @@ def accept_demande_doc(request):
         notification = Notification.objects.safe_get(id=request.GET.get('notif_id'))
         demande_doc = notification.get_content_object()
     elif doc_id:
-        demande_doc = DemandeAttestation.objects.get(id=doc_id)
+        demande_doc = DemandeAttestation.objects.safe_get(id=doc_id)
     else:
         return JsonResponse({'Response': 'error'})
     demande_doc.update_etat_validation()

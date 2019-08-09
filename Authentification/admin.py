@@ -34,7 +34,7 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email','full_name','fonction','department','activite', 'admin', 'active', 'staff')
+    list_display = ('full_name','fonction','department', 'superieur_hierarchique', 'activite', 'admin', 'active', 'staff')
     list_filter = ('admin', 'staff', 'active', 'sexe', 'department', 'activite', 'consultant_recrutements', 'consultant_attestations',
                    'consultant_conges')
 

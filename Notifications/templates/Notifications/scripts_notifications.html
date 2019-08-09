@@ -1,0 +1,73 @@
+{% block scripts_notifications %}
+        <script type="text/javascript" >
+
+    setInterval(function() {
+        $.ajax({
+            url: '{% url "get_notifications_count" %}',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                    if (data.notifications_count > 0) {
+                        $('#notification-logo').text(data.notifications_count);
+                        $('#notification-logo').attr('class', 'badge badge-danger badge-counter');
+                    }
+                    else {
+                         $('#notification-logo').text('');
+                    }
+            }
+
+        })
+    }, 500);
+
+      $("#notification-detail-modal").on("show.bs.modal", (function(e) {
+        let notif_id = $(e.relatedTarget).data("value");
+        $.ajax({
+            url: '{% url 'get_notification_detail' %}',
+            type: 'GET',
+            dataType: 'json',
+            data: {
+                'notif_id': notif_id,
+            },
+            success: function(data) {
+                let link = $("#notif-reply a");
+                let close_button = $("#notif-reply button");
+                $("#notification-detail-modal .modal-title").text(data.subject);
+                $("#notification-detail-modal .modal-body").text(data.message);
+                switch(data.content_type){
+                    case "Demande Congé":
+                        link.attr("id","accept-demande-conge");
+                        close_button.attr("id", "refuser-demande-conge");
+                        close_button.attr("data-url","{% url 'refuser_demande_conge' %}");
+                        close_button.text("Refuser");
+                        link.attr("data-url","{% url 'accept_demande_conge' %}");
+                        //link.attr("href","#");
+                        break;
+                    case "Demande Attestation":
+                        link.attr("id","accept-demande-doc");
+                        close_button.attr("id", "close-button");
+                        close_button.attr("data-url", "");
+                        close_button.text("Fermer");
+                        link.text("Valider");
+                        link.attr("data-url","{% url 'accept_demande_doc' %}");
+                        link.attr("href","{% url 'generate_pdf' %}");
+
+                        break;
+                    default:
+                        link.detach();
+                }
+                if(data.no_reply === true) {
+                    link.hide();
+                    close_button.attr("id", "close-button");
+                    close_button.attr("data-url", "");
+                    close_button.text("Fermer");
+                }
+                else{
+                    link.show();
+                    link.val(notif_id);
+                    close_button.val(notif_id);
+                }
+            }
+        });
+    }));
+  </script>
+        {% endblock %}

@@ -1,13 +1,15 @@
 from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic import TemplateView, FormView
-from django.http import HttpResponseForbidden, Http404
-from Authentification.models import Departement
+from django.http import HttpResponseForbidden, Http404, JsonResponse
 from Notifications.models import Notification
+from Authentification.models import Departement
 from .models import DemandeConge
 from .forms import DemandeCongeForm
 from django.core.mail import send_mail
 from Realisation.settings import DEFAULT_FROM_EMAIL
+
+
 # Create your views here.
 
 
@@ -35,14 +37,14 @@ class DemandeCongeView(FormView):
                                              jours_ouvrables=jours_ouvrables)
                 demande_conge.save()
                 try:
-                    notif_subject = "Demande de Congé"
-                    notif_msg = str(demande_conge)
-                    notif_receiver = demande_conge.get_notif_receiver(DemandeConge.ETAT_ENVOI)
-                    notification = Notification(sender=employe, receiver=notif_receiver, subject=notif_subject,
-                                            message=notif_msg, content_object=demande_conge, no_reply=False)
+                    notification = Notification(content_object=demande_conge, no_reply=False)
+                    notification.set_subject("Demande de Congé")
+                    notification.set_message(str(demande_conge))
+                    notification.set_sender(employe)
+                    notification.set_receiver()
                     notification.save()
-                    send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
-                              recipient_list=[notif_receiver.get_email()])
+                    # send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
+                    #          recipient_list=[notif_receiver.get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succés")
                 except:
                     result = self.form_invalid(form)
@@ -57,14 +59,78 @@ class DemandeCongeView(FormView):
 
 
 def accept_demande_conge(request):
+    notification_id = request.GET.get('notif_id')
+    employe = request.user
 
-    notif_id = request.GET.get('notif_id')
-    conge_id = request.GET.get('conge_id')
-    if notif_id:
-        notification = Notification.objects.safe_get(id=notif_id)
+    if notification_id:
+        notification = Notification.objects.get(id=notification_id)
         demande_conge = notification.get_content_object()
-    elif conge_id:
-        demande_conge = DemandeConge.objects.safe_get(id=conge_id)
+        if not request.user == notification.get_receiver():
+            return HttpResponseForbidden()
     else:
-        pass
+        return JsonResponse({'Response': 'error'})
 
+    try:
+
+        if employe.get_superieur_hierarchique() == demande_conge.get_employe().get_departement().get_directeur():
+            demande_conge.update_etat(DemandeConge.ETAT_SUPERIEUR_HIERARCHIQUE)
+
+        if employe == demande_conge.get_employe().get_departement().get_directeur():
+            demande_conge.update_etat(DemandeConge.ETAT_DIRECTION_CONCERNEE)
+
+        if employe == Departement.objects.safe_get(id=5).get_directeur():
+            demande_conge.update_etat(DemandeConge.ETAT_DIRECTION_RH)
+
+        demande_conge = DemandeConge.objects.safe_get(id=demande_conge.get_id())
+
+        if demande_conge.get_etat() == DemandeConge.ETAT_DIRECTION_RH:
+            no_reply = True
+        else:
+            no_reply = False
+
+        notification = Notification(content_object=demande_conge, no_reply=no_reply)
+        notification.set_subject("Demande de Congé")
+        notification.set_sender(employe)
+        notification.set_receiver()
+        if no_reply is False:
+            notif_msg = str(demande_conge)
+        else:
+            notif_msg = "Votre demande de congé a été acceptée"
+        notification.set_message(notif_msg)
+        notification.save()
+        ''' Uncomment to apply sending emails
+        send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
+                  recipient_list=[notification.get_receiver()])
+        '''
+    except ValueError:
+        return JsonResponse({'Response': 'error'})
+
+    return JsonResponse({'Response': 'success'})
+
+
+def refuser_demande_conge(request):
+    notification_id = request.GET.get('notif_id')
+    employe = request.user
+    if notification_id:
+        notification = Notification.objects.get(id=notification_id)
+        demande_conge = notification.get_content_object()
+        if not request.user == notification.get_receiver():
+            return HttpResponseForbidden()
+    else:
+        return JsonResponse({'Response': 'error'})
+
+    try:
+        demande_conge.update_etat(DemandeConge.ETAT_REFUS)
+        demande_conge = DemandeConge.objects.safe_get(id=demande_conge.get_id())
+        notification = Notification(content_object=demande_conge)
+        notification.set_subject("Demande de Congé")
+        notification.set_sender(employe)
+        notification.set_receiver()
+        notification.set_message("Votre demande de Congé a été refusée")
+        notification.save()
+        # send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
+        #          recipient_list=[notif_receiver.get_email()])
+    except ValueError:
+        return JsonResponse({'Response': 'error'})
+
+    return JsonResponse({'Response': 'success'})
