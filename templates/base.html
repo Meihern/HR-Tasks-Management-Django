@@ -113,7 +113,7 @@
                   {% endif %}
           {% if request.user.can_consult_conges is True %}
             <h6 class="collapse-header">Demande des services</h6>
-            <a class="collapse-item" href="buttons.html">Congés</a>
+            <a class="collapse-item" href="{% url 'consultation_demande_conge' %}">Congés</a>
           {% elif request.user.can_consult_recrutements is True %}
             <h6 class="collapse-header">Demande des services</h6>
             <a class="collapse-item" href="cards.html">Recrutements</a>
