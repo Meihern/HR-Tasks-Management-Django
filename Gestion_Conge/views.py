@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseForbidden, Http404, JsonResponse
@@ -19,6 +20,8 @@ class DemandeCongeView(FormView):
     success_url = '/conges/demande_conge'
 
     def get(self, request, *args, **kwargs):
+        if request.user.is_consultant:
+            return HttpResponseForbidden()
         return render(request, template_name=self.template_name, context={'form': self.form})
 
     def post(self, request, *args, **kwargs):
@@ -46,7 +49,7 @@ class DemandeCongeView(FormView):
                     # send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
                     #          recipient_list=[notif_receiver.get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succés")
-                except:
+                except ValueError:
                     result = self.form_invalid(form)
                     messages.error(request, "Echec de l'envoi de votre demande de congé")
                 return result
@@ -139,7 +142,6 @@ def refuser_demande_conge(request):
 class ConsultationDemandeConges(TemplateView):
     template_name = "Gestion_Conge/consultation_conges.html"
 
-
     def get(self, request, *args, **kwargs):
         if request.user.can_consult_conges:
             activite_mdlz = Activite.objects.safe_get(id=5)
@@ -167,3 +169,66 @@ class ConsultationDemandeConges(TemplateView):
             return render(request, template_name=self.template_name, context={'demandes': data})
         else:
             return HttpResponseForbidden()
+
+
+def load_data(employe: Employe):
+    if employe.can_consult_conges:
+        activite_mdlz = Activite.objects.safe_get(id=5)
+
+        if employe.can_consult_mdlz:
+            demandes_conges = DemandeConge.objects.filter(employe__activite=activite_mdlz).order_by('-date_envoi')
+        elif employe.can_consult_shared:
+            demandes_conges = DemandeConge.objects.exclude(employe__activite=activite_mdlz).order_by('-date_envoi')
+
+    else:
+
+        related_demandes_notifications = Notification.objects.filter(receiver=employe,
+                                                                     content_type=ContentType.objects.get_for_model(
+                                                                         DemandeConge))
+        notification_objects_ids = list(related_demandes_notifications.all().values('object_id', ))
+        demandes_conges_ids = []
+
+        for object in notification_objects_ids:
+            demandes_conges_ids.append(object['object_id'])
+
+        demandes_conges = DemandeConge.objects.filter(pk__in=demandes_conges_ids)
+        demandes_conges = demandes_conges.all().values('id', 'employe', 'date_depart', 'date_retour')
+
+    data_in_conge = []
+    data_upcoming_conge = []
+
+    for demande in demandes_conges:
+        employe_is_in_conge = DemandeConge.objects.safe_get(id=demande['id']).in_conge
+        employe_has_upcoming_conge = DemandeConge.objects.safe_get(id=demande['id']).is_upcoming_conge
+        demande_conge = {
+            'id': demande['id'],
+            'employe': Employe.objects.get(matricule_paie=demande['employe']).get_full_name(),
+            'date_depart': demande['date_depart'],
+            'date_retour': demande['date_retour'],
+        }
+
+        if employe_is_in_conge:
+            data_in_conge.append(demande_conge)
+        elif employe_has_upcoming_conge:
+            data_upcoming_conge.append(demande_conge)
+        else:
+            pass
+
+    return data_in_conge, data_upcoming_conge
+
+
+class ConsultationEmployesConges(TemplateView):
+    template_name = 'Gestion_Conge/consultation_conges_valides.html'
+
+    def get(self, request, type_conge, *args, **kwargs):
+
+        data_in_conge, data_upcoming_conge = load_data(request.user)
+
+        if type_conge == 'courant':
+            return render(request, template_name=self.template_name,
+                          context={'demandes': data_in_conge, 'type': type_conge})
+        elif type_conge == 'prochain':
+            return render(request, template_name=self.template_name,
+                          context={'demandes': data_upcoming_conge, 'type': type_conge})
+        else:
+            return Http404()

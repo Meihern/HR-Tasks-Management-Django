@@ -37,8 +37,6 @@ class DemandeCongeForm(forms.ModelForm):
         else:
             return False
 
-
-
     class Meta:
         model = DemandeConge
         fields = ('date_depart', 'date_retour', 'jours_ouvrables', 'interim', 'telephone')

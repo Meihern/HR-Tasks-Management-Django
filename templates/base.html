@@ -97,26 +97,29 @@
 
       <!-- Nav Item - Utilities Collapse Menu -->
        <!-- Menu gestion des demandes // En attente d'application de restrictions sur cette partie -->
-        {% else %}
+        {% endif %}
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="far fa-eye"></i>
-          <span>Consulter les demandes</span>
+          <span>Consultation </span>
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-light py-2 collapse-inner rounded">
-              {% if request.user.can_consult_attestations is True %}
+          {% if request.user.can_consult_attestations is True %}
             <h6 class="collapse-header">Demande des documents</h6>
             <a class="collapse-item" href="{% url 'consultation_demandes_docs' 'salaire' %}">Attestation de salaire</a>
             <a class="collapse-item" href="{% url 'consultation_demandes_docs' 'travail' %}">Attestation de travail</a>
             <a class="collapse-item" href="{% url 'consultation_demandes_docs' 'domiciliation' %}">Domiciliation</a>
+          {% else %}
+            <h6 class="collapse-header">Congés</h6>
+              {% if request.user.can_consult_conges is True %}
+            <a class="collapse-item" href="{% url 'consultation_demande_conge' %}">Demandes de Congés</a>
                   {% endif %}
-          {% if request.user.can_consult_conges is True %}
-            <h6 class="collapse-header">Demande des services</h6>
-            <a class="collapse-item" href="{% url 'consultation_demande_conge' %}">Congés</a>
-          {% elif request.user.can_consult_recrutements is True %}
-            <h6 class="collapse-header">Demande des services</h6>
-            <a class="collapse-item" href="cards.html">Recrutements</a>
+              <a class="collapse-item" href="{% url 'consultation_conges_valides' 'courant' %}">Employés en Congés</a>
+              <a class="collapse-item" href="{% url 'consultation_conges_valides' 'prochain' %}">Prochains Congés</a>
+          {% if request.user.can_consult_recrutements is True %}
+            <h6 class="collapse-header">Recrutements</h6>
+            <a class="collapse-item" href="cards.html">Demandes de Recrutements</a>
           </div>
         </div>
       </li>

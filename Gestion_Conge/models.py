@@ -97,7 +97,6 @@ class DemandeConge(models.Model):
     def get_etat(self):
         return self.etat
 
-
     def get_date_depart(self):
         return self.date_depart
 
@@ -122,9 +121,15 @@ class DemandeConge(models.Model):
     @property
     def in_conge(self):
 
-        date_retour = DemandeConge.objects.filter(employe=self.get_employe(), etat=self.ETAT_DIRECTION_RH) \
-            .order_by('-id').first().get_date_retour()
-        if date_retour > now().date():
+        if self.get_date_depart() <= now().date() < self.get_date_retour() and self.etat == DemandeConge.ETAT_DIRECTION_RH:
+            return True
+        else:
+            return False
+
+    @property
+    def is_upcoming_conge(self):
+
+        if self.get_date_depart() > now().date() and self.etat == DemandeConge.ETAT_DIRECTION_RH:
             return True
         else:
             return False

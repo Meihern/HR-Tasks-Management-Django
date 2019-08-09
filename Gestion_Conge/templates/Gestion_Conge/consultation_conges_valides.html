@@ -10,7 +10,13 @@
 <!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Demandes des Congés </h6>
+    <h6 class="m-0 font-weight-bold text-primary">
+        {% if type == 'courant' %}
+        Employés en Congés
+        {% elif type == 'prochain' %}
+        Prochains Congés
+        {% endif %}
+    </h6>
   </div>
   <div class="card-body">
     <div class="table-responsive">
@@ -18,20 +24,16 @@
         <thead>
           <tr>
             <th>Employés</th>
-            <th>Date d'envoi</th>
             <th>Date de depart</th>
             <th>Date de retour</th>
-            <th>Etat</th>
           </tr>
         </thead>
-        <tbody id="accept-demande-doc-type">
+        <tbody>
         {% for Demande in demandes %}
           <tr>
             <td>{{ Demande.employe }}</td>
-            <td>{{ Demande.date_envoi }}</td>
             <td>{{ Demande.date_depart }}</td>
             <td>{{ Demande.date_retour }}</td>
-            <td>{{ Demande.etat }}</td>
           </tr>
         {% endfor %}
         </tbody>
