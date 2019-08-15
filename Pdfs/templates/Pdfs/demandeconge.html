@@ -1,0 +1,63 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Attestation de travail</title>
+    <style>
+        h3{
+            font-size: 25px;
+            font-weight: bold;
+            color: black;
+        }
+        h4{
+            font-size: 20px;
+            font-weight: bold;
+            color: black;
+            margin-left: 200px;
+            margin-top: 100px;
+        }
+        h6{
+            margin-top: 235px; /* moitié de la hauteur */
+        }
+        p{
+            font-size: 18px;   
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+  <!-- Le reste du contenu -->
+    <div align ="center" align ="top">
+        <img src="../../Pdfs/static/Pdfs/img/emidlogo.png" alt="">
+    </div>
+    <div align ="center" > 
+        <h3><u>DEMANDE DE DEPART EN CONGE</u></h3>
+    </div>
+        <ul>
+            <p>Nom et prenom : {{name}} </p>
+            <p>Direction : {{}} </p>
+            <p>Ville : {{}} </p>
+            <p>Matricule : {{}} </p>
+            <p>Date de depart : {{}} </p>
+            <p>Date de retour : {{}} </p>
+            <p>Jours ouvrables : {{}} </p>
+            <p>Interim assuré par : {{}} </p>
+            <p>Téléphone : {{}}</p>
+        </ul>
+        <div class="validation" align="right">
+            <h3><u>Validé</u></h3>
+        </div>
+        <h5><u>Rappel :</u></h5>
+        <p> - Les congés doivent etre epuisés en totalité dans l'année ;<br>
+            - Toute demande doivent parvenir au DRH, 30 jours à l'avance pour exploitation ;<br>
+            - Cette décision de congé devra après visa de la DIRECTION, etre remise au collaborateur
+              avant son départ congé.
+        </p>
+        <p>
+            LE RESPECT DE LA VALIDATION DE LA DEMANDE EST OBLIGATOIRE FAUTE DE QUOI L'ABSCENCE SERA CONSIDEREE
+            COMME Abandon de poste confermément au code du travail en vigeur
+        </p>
+</body>
+</html>
