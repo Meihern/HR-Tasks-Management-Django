@@ -271,6 +271,7 @@
   {% block javascript %}{% endblock %}
   <script src="{% static 'Realisation/sweetalert/dist/sweetalert.min.js' %}"></script>
   {% include 'Notifications/scripts_notifications.html' %}
+  <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
   <script src="{% static 'Notifications/js/notifications_handling.js' %}"></script>
   <script src="{% static 'Gestion_Attestations/js/envoyer_demande_doc.js' %}"></script>
   <script src="{% static 'Gestion_Conge/js/demande_conge_handling.js' %}"></script>

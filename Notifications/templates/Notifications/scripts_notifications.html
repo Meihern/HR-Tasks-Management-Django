@@ -23,9 +23,10 @@
         let notif_id = $(e.relatedTarget).data("value");
         $.ajax({
             url: '{% url 'get_notification_detail' %}',
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
                 'notif_id': notif_id,
             },
             success: function(data) {
@@ -40,7 +41,7 @@
                         close_button.attr("data-url","{% url 'refuser_demande_conge' %}");
                         close_button.text("Refuser");
                         link.attr("data-url","{% url 'accept_demande_conge' %}");
-                        //link.attr("href","#");
+                        link.attr("href","");
                         break;
                     case "Demande Attestation":
                         link.attr("id","accept-demande-doc");
@@ -53,7 +54,7 @@
 
                         break;
                     default:
-                        link.detach();
+                        link.hide();
                 }
                 if(data.no_reply === true) {
                     link.hide();

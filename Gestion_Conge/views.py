@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseForbidden, Http404, JsonResponse
@@ -49,7 +50,7 @@ class DemandeCongeView(FormView):
                     # send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
                     #          recipient_list=[notif_receiver.get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succés")
-                except ValueError:
+                except:
                     result = self.form_invalid(form)
                     messages.error(request, "Echec de l'envoi de votre demande de congé")
                 return result
@@ -62,7 +63,7 @@ class DemandeCongeView(FormView):
 
 
 def accept_demande_conge(request):
-    notification_id = request.GET.get('notif_id')
+    notification_id = request.POST.get('notif_id')
     employe = request.user
 
     if notification_id:
@@ -72,6 +73,9 @@ def accept_demande_conge(request):
             return HttpResponseForbidden()
     else:
         return JsonResponse({'Response': 'error'})
+
+    if not notification.get_receiver() == employe:
+        return HttpResponseForbidden()
 
     try:
 
@@ -112,7 +116,7 @@ def accept_demande_conge(request):
 
 
 def refuser_demande_conge(request):
-    notification_id = request.GET.get('notif_id')
+    notification_id = request.POST.get('notif_id')
     employe = request.user
     if notification_id:
         notification = Notification.objects.get(id=notification_id)
@@ -121,6 +125,9 @@ def refuser_demande_conge(request):
             return HttpResponseForbidden()
     else:
         return JsonResponse({'Response': 'error'})
+
+    if not notification.get_receiver() == employe:
+        return HttpResponseForbidden()
 
     try:
         demande_conge.update_etat(DemandeConge.ETAT_REFUS)

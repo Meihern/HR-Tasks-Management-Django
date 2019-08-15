@@ -13,6 +13,8 @@ class GeneratePDF(TemplateView):
     template_name = 'Pdfs'
 
     def get(self, request, *args, **kwargs):
+        if not request.user.can_consult_attestations:
+            return HttpResponseForbidden()
         if request.session['doc_id']:
             doc_id = request.session['doc_id']
             del request.session['doc_id']

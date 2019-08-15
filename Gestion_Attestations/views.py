@@ -19,7 +19,7 @@ class DemandeAttestationView(TemplateView):
 
 def envoyer_demande_doc(request):
     employe = request.user
-    type_demande = request.GET.get("type_demande")
+    type_demande = request.POST.get("type_demande")
     if type_demande:
         if employe.is_consultant:
             return HttpResponseForbidden()
@@ -40,13 +40,13 @@ def envoyer_demande_doc(request):
 
 
 def accept_demande_doc(request):
-    notif_id = request.GET.get('notif_id')
-    doc_id = request.GET.get('doc_id')
+    notif_id = request.POST.get('notif_id')
+    doc_id = request.POST.get('doc_id')
 
     if not request.user.can_consult_attestations:
         return HttpResponseForbidden()
     if notif_id:
-        notification = Notification.objects.safe_get(id=request.GET.get('notif_id'))
+        notification = Notification.objects.safe_get(id=notif_id)
         demande_doc = notification.get_content_object()
     elif doc_id:
         demande_doc = DemandeAttestation.objects.safe_get(id=doc_id)
@@ -54,7 +54,9 @@ def accept_demande_doc(request):
         return JsonResponse({'Response': 'error'})
     demande_doc.update_etat_validation()
     notification = Notification(sender=request.user, receiver=demande_doc.get_employe(),
-                                subject=demande_doc.get_type_demande(), message='Votre demande de %s a été acceptée !'%(demande_doc.get_type_demande()), content_object=demande_doc)
+                                subject=demande_doc.get_type_demande(),
+                                message='Votre demande de %s a été acceptée !'%(demande_doc.get_type_demande()),
+                                content_object=demande_doc)
     notification.save()
     # send_mail(subject=demande_doc.get_type_demande(), message='Votre demande de %s a été acceptée !'%(demande_doc.get_type_demande())
     #         , from_email=DEFAULT_FROM_EMAIL, to=demande_doc.get_employe())

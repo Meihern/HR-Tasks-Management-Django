@@ -9,10 +9,13 @@ $("#confirm-demande-doc").click(function(e) {
     e.preventDefault();
     type_demande = $(this).val();
     $('#demande-doc-Modal').modal('hide');
+    let csrf = window.CSRF_TOKEN;
     $.ajax({
+        type: 'POST',
         url: $(this).data("url"),
         data:{
             'type_demande': type_demande,
+            csrfmiddlewaretoken: csrf,
         },
         success: function(result) {
             if(type_demande == 'domiciliation') swal("Succès","Demande de "+type_demande+" envoyée avec succès","success");
@@ -26,33 +29,40 @@ $("#confirm-demande-doc").click(function(e) {
     });
 });
 
-$("#accept-demande-doc").click(function (e) {
-    let notif_id = $(this).val();
-    $('#notification-detail-modal').modal('hide');
-    $.ajax({
-        url: $(this).data("url"),
-        data:{
-            'notif_id': notif_id,
-        },
-        type: 'GET',
-        datatype : 'json',
-        success: function(result) {
-             swal("Succès","Le document est prêt sous format PDF","success");
-        },
-        error: function(result) {
-            swal("Echec", "Le document n'est pas prêt ", "error");
-        }
-    })
-});
+
+$('#notif-reply a').click(function (e) {
+        if ($(this).attr('id') === 'accept-demande-doc') {
+            let notif_id = $(this).val();
+            $('#notification-detail-modal').modal('hide');
+            let csrf = window.CSRF_TOKEN;
+            $.ajax({
+                url: $(this).data("url"),
+                data: {
+                    'notif_id': notif_id,
+                    csrfmiddlewaretoken: csrf,
+                },
+                type: 'POST',
+                datatype: 'json',
+                success: function (result) {
+                    swal("Succès", "Le document est prêt sous format PDF", "success");
+                },
+                error: function (result) {
+                    swal("Echec", "Le document n'est pas prêt ", "error");
+                }
+            })
+        }}
+    );
 
 $("#accept-demande-doc-type a").click(function (e) {
     let doc_id = $(e.currentTarget).data("value");
+    let csrf = window.CSRF_TOKEN;
     $.ajax({
         url: $(this).data("url"),
         data:{
             'doc_id':doc_id,
         },
-        type: 'GET',
+        type: 'POST',
+        csrfmiddlewaretoken: csrf,
         datatype : 'json',
         success: function(result) {
              swal("Succès","Le document est prêt sous format PDF","success");
