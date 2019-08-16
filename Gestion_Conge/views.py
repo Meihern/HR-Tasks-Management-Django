@@ -198,8 +198,9 @@ def load_data(employe: Employe):
         for object in notification_objects_ids:
             demandes_conges_ids.append(object['object_id'])
 
-        demandes_conges = DemandeConge.objects.filter(pk__in=demandes_conges_ids)
-        demandes_conges = demandes_conges.all().values('id', 'employe', 'date_depart', 'date_retour')
+        demandes_conges = DemandeConge.objects.filter(pk__in=demandes_conges_ids).order_by('-date_envoi')
+
+    demandes_conges = demandes_conges.all().values('id', 'employe', 'date_depart', 'date_retour')
 
     data_in_conge = []
     data_upcoming_conge = []

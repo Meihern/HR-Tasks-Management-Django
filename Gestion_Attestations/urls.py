@@ -10,4 +10,5 @@ urlpatterns = [
     url('^accept_demande_doc$',login_required(views.accept_demande_doc), name='accept_demande_doc'),
     path('consultation_demandes_docs/<str:type_doc>',
          login_required(views.ConsultationDemandesDoc.as_view()), name='consultation_demandes_docs'),
+    url('^historique_demandes$', login_required(views.HistoriqueDemandesView.as_view()), name='historique_demandes'),
 ]

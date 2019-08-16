@@ -10,7 +10,7 @@ class DemandeCongeForm(forms.ModelForm):
     date_depart = forms.DateField(required=True, widget=forms.DateInput)
     date_retour = forms.DateField(required=True, widget=forms.DateInput)
     jours_ouvrables = forms.IntegerField(min_value=0, max_value=20, required=True, widget=forms.NumberInput)
-    interim = forms.CharField(widget=forms.TextInput, required=False)
+    interim = forms.CharField(widget=forms.TextInput, required=True)
     telephone = PhoneNumberField(required=False)
 
     def valid_date(self):
@@ -28,11 +28,21 @@ class DemandeCongeForm(forms.ModelForm):
         else:
             return True
 
+    def valid_jours_ouvrables(self):
+        self.errors['jours_ouvrables'] = ErrorList()
+
+        if self.cleaned_data['jours_ouvrables'] > self.cleaned_data['date_retour'].day - self.cleaned_data['date_depart'].day:
+            self.errors['jours_ouvrables'].append("Les jours ouvrables doivent être inférieurs aux différences des jours entre date départ et date de retour")
+            return False
+        else:
+            return True
+
     def is_valid(self):
         valid = super(DemandeCongeForm, self).is_valid()
         valid_date = self.valid_date()
+        valid_jours_ouvrables = self.valid_jours_ouvrables()
 
-        if valid and valid_date:
+        if valid and valid_date and valid_jours_ouvrables :
             return True
         else:
             return False

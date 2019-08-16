@@ -96,6 +96,28 @@ class ConsultationDemandesDoc(TemplateView):
             return HttpResponseForbidden()
 
 
+class HistoriqueDemandesView(TemplateView):
+    template_name = 'Gestion_Attestations/historique_demandes_attestations.html'
+
+    def get(self, request, *args, **kwargs):
+        employe = request.user
+        if employe:
+            demandes_docs = DemandeAttestation.objects.filter(employe=employe)
+            demandes_docs = demandes_docs.all().values('id', 'type', 'date_envoi', 'etat_validation')
+            data = []
+            for demande in demandes_docs:
+                demande_doc = {
+                    'id': demande['id'],
+                    'type': TypeDemandeAttestation.objects.get(id=demande['type']),
+                    'date_envoi': demande['date_envoi'],
+                    'etat': demande['etat_validation'],
+                }
+                data.append(demande_doc)
+            return render(request, template_name=self.template_name, context={'docs': data})
+        else:
+            return HttpResponseForbidden()
+
+
 
 
 

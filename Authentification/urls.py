@@ -10,5 +10,4 @@ urlpatterns = [
     re_path('^reset_password_confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
             views.ResetPasswordView.as_view(), name='reset_password_confirm'),
     url('^profile$', login_required(views.ProfileView.as_view()), name='profile'),
-    url('^historique_demandes$', login_required(views.HistoriqueDemandesView.as_view()), name='historique_demandes'),
 ]
