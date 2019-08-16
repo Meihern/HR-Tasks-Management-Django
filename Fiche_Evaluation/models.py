@@ -71,7 +71,7 @@ class Objectif(models.Model):
         return evaluation
 
     def __str__(self):
-        return self.description
+        return str(self.fiche_objectif)+'\n'+'Objectif : '+self.description
 
     def get_fiche_objectif_associe(self):
         return self.fiche_objectif
