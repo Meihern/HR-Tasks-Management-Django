@@ -3,4 +3,4 @@ venv
 Backup-template
 .idea
 *.pyc
-__pycache__
+*__pycache__
