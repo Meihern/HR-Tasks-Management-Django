@@ -25,6 +25,7 @@ urlpatterns = [
     url('^consultation$', login_required(views.ConsultationView.as_view()),name='consultation'),
     path('attestations/', include('Gestion_Attestations.urls')),
     path('conges/', include('Gestion_Conge.urls')),
+    path('fiche_evaluation/', include('Fiche_evaluation.urls')),
     path('pdfs/', include('Pdfs.urls')),
     path('notifications/', include('Notifications.urls'))
 ]

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'bootstrap4',
     'import_export',
     'phonenumber_field',
+    'Fiche_evaluation.apps.FicheEvaluationConfig'
 ]
 
 MIDDLEWARE = [
