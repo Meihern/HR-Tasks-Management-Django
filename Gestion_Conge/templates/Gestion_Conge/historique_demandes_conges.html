@@ -9,8 +9,11 @@
             <a class="nav-link" href="{% url 'profile' %}">Informations</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="#">Mes demandes de congé</a>
-        </li>
+          <a class="nav-link" href="{% url 'historique_demandes_attestations' %}">Mes demandes d'attestations</a>
+      </li>
+      <li class="nav-item">
+          <a class="nav-link active" href="{% url 'historique_demandes_conges' %}">Mes demandes de congés</a>
+      </li>
     </ul>
 </div>
 
