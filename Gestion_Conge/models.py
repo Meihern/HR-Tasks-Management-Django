@@ -33,7 +33,7 @@ class DemandeConge(models.Model):
     telephone = PhoneNumberField(null=True, blank=True, unique=False, verbose_name='Téléphone personnel')
     etat = models.PositiveSmallIntegerField(null=False, blank=False, default=ETAT_ENVOI,
                                             choices=CHOIX_ETATS, verbose_name='Etat Demande')
-    date_envoi = models.DateField(null=False, blank=False, default=now,
+    date_envoi = models.DateField(null=False, blank=False, default=now().date(),
                                   verbose_name='Date envoi de la demande du Congé')
     date_sup = models.DateField(null=True, blank=True, verbose_name='Date validation Hiérarchie')
     date_direction = models.DateField(null=True, blank=True, verbose_name='Date validation Direction Concernée')
