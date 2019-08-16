@@ -9,42 +9,35 @@
             <a class="nav-link" href="{% url 'profile' %}">Informations</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="#">Mes demandes d'attestations</a>
+            <a class="nav-link active" href="#">Mes demandes de congé</a>
         </li>
     </ul>
 </div>
 
 
 <!-- DataTales Example -->
-<!-- DataTales Example -->
 <div class="card shadow mb-4">
   <div class="card-header py-3">
-    <h6 class="m-0 font-weight-bold text-primary">Table des Demandes d'attestations</h6>
+    <h6 class="m-0 font-weight-bold text-primary">Table des Demandes </h6>
   </div>
   <div class="card-body">
     <div class="table-responsive">
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
         <thead>
           <tr>
-            <th>Type de demande</th>
-            <th>Date</th>
+            <th>Date d'envoi</th>
+            <th>Date de depart</th>
+            <th>Date de retour</th>
             <th>Etat</th>
           </tr>
         </thead>
         <tbody id="accept-demande-doc-type">
-        {% for doc in docs %}
+        {% for Demande in demandes_conges %}
           <tr>
-            <td>{{ doc.type }}</td>
-            <td>{{ doc.date_envoi}}</td>
-            <td>
-                {% if not doc.etat %}
-                <span class="text">En attente de validation</span>
-                {% else %}
-                    <span class="icon text-black-50">
-                    Validée
-                    </span>
-                {% endif %}
-            </td>
+            <td>{{ Demande.date_envoi }}</td>
+            <td>{{ Demande.date_depart }}</td>
+            <td>{{ Demande.date_retour }}</td>
+            <td>{{ Demande.etat }}</td>
           </tr>
         {% endfor %}
         </tbody>
