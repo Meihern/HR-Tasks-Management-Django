@@ -44,10 +44,10 @@ INSTALLED_APPS = [
     'Pdfs.apps.PdfsConfig',
     'Gestion_Conge.apps.GestionCongeConfig',
     'Gestion_Attestations.apps.GestionAttestationsConfig',
+    'Fiche_Evaluation.apps.FicheEvaluationConfig',
     'bootstrap4',
     'import_export',
     'phonenumber_field',
-    'Fiche_evaluation.apps.FicheEvaluationConfig'
 ]
 
 MIDDLEWARE = [

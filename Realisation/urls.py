@@ -20,12 +20,12 @@ from django.conf.urls import url
 from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('authentification/', include('Authentification.urls' )),
+    path('authentification/', include('Authentification.urls')),
     url('^$', login_required(views.DashboardView.as_view()), name='Dashboard'),
     url('^consultation$', login_required(views.ConsultationView.as_view()),name='consultation'),
     path('attestations/', include('Gestion_Attestations.urls')),
     path('conges/', include('Gestion_Conge.urls')),
-    path('fiche_evaluation/', include('Fiche_evaluation.urls')),
+    path('fiche_evaluation/', include('Fiche_Evaluation.urls')),
     path('pdfs/', include('Pdfs.urls')),
     path('notifications/', include('Notifications.urls'))
 ]

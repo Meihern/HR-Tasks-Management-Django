@@ -96,7 +96,7 @@ class ConsultationDemandesDoc(TemplateView):
             return HttpResponseForbidden()
 
 
-class HistoriqueDemandesView(TemplateView):
+class HistoriqueDemandesAttestationsView(TemplateView):
     template_name = 'Gestion_Attestations/historique_demandes_attestations.html'
 
     def get(self, request, *args, **kwargs):

@@ -240,3 +240,26 @@ class ConsultationEmployesConges(TemplateView):
                           context={'demandes': data_upcoming_conge, 'type': type_conge})
         else:
             return Http404()
+
+
+class HistoriqueDemandesCongesView(TemplateView):
+    template_name = 'Gestion_Conge/historique_demandes_conges.html'
+
+    def get(self, request, *args, **kwargs):
+        employe = request.user
+        if employe:
+            demandes_conges = DemandeConge.objects.filter(employe=employe)
+            demandes_conges = demandes_conges.all().values('id', 'date_envoi', 'date_depart', 'date_retour', 'etat')
+            data = []
+            for demande in demandes_conges:
+                demande_doc = {
+                    'id': demande['id'],
+                    'date_envoi': demande['date_envoi'],
+                    'etat': demande['etat'],
+                    'date_retour': demande['date_retour'],
+                    'date_depart': demande['date_depart'],
+                }
+                data.append(demande_doc)
+            return render(request, template_name=self.template_name, context={'demandes_conges': data})
+        else:
+            return HttpResponseForbidden()
