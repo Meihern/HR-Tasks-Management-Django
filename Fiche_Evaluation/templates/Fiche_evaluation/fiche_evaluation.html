@@ -1,14 +1,20 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    <h1>Identifier 5 objectifs SMART validés avec votre héarchie</h1>
+    <h1>Identifier des objectifs SMART validés avec votre héarchie</h1>
 <form >
+
+        <br>
+        <br>
      <div id="objectif-details" align="center"></div>
-     <div id="dynamicCheck">
-        <button type="button" id="ajout-objectif" class="btn btn-success">Ajouter un Objectif</button>
+     <div id="dynamicCheck" align="center">
+         <br>
+        <button type="button" id="ajout-objectif" class="btn btn-success" >Ajouter un Objectif</button>
      </div>
+     <br>
+        <br>
      <div align="right">
-        <button type="submit" class="btn btn-primary" >Envoyer</button>
+        <button type="submit" class="btn btn-primary" >Envoyer mes objectifs</button>
     </div>
   </form>
 </div>
@@ -20,7 +26,7 @@
       $("#ajout-objectif").click(function(e){
 
           let id_objectif_count = ++i;
-          let div_objectif_id_empty = 'div_objectif';
+          let div_objectif_id_empty = 'div-objectif';
           let div_objectif_id = div_objectif_id_empty+id_objectif_count;
           let objectif_id = '{{ form.objectif.id_for_label }}' + id_objectif_count;
           let poids_id = '{{ form.poids.id_for_label }}' + id_objectif_count;
@@ -28,11 +34,27 @@
           let button_sous_objectif_id = 'ajout-sous-objectif'+id_objectif_count;
           $('#objectif-details').append(objectif_div);
 
-        let objectif =   "<label for="+objectif_id+" >Objectif " + id_objectif_count + "</label>"
+        let objectif = "<div class='card'>"
+        +"<div class='container-fluid'>"
+        +"<br>"
+        +"<div class='row'>"
+        +"<div class='col-sm-8'>"
+        +"<label for="+objectif_id+" >Objectif " + id_objectif_count + "</label>"
         +"<textarea id="+objectif_id+" name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='3'></textarea>"
+        +"</div>"
+        +"<div class='col-sm-2'>"
         +"<label for="+poids_id+" >poids en %</label>"
         +"<input class='form-control' type='number' value='0' name='{{ form.FIELD_NAME_MAPPING.poids }}' id="+poids_id+">"
-        +"<button type='button' id="+button_sous_objectif_id+" data-value="+id_objectif_count+" class='btn btn-success'>Ajouter un Sous-Objectif</button>";
+        +"</div>"
+        +"</div>"
+        +"<br>"
+        +"<div>"
+        +"<button type='button' id="+button_sous_objectif_id+" data-value="+id_objectif_count+" class='btn btn-success'>Ajouter un Sous-Objectif</button>"
+        +"</div>"
+        +"<br>"
+        +"</div>"
+        +"</div>"
+        +"<br>";
         $('#' + div_objectif_id).append(objectif);
 
         // Ajout des sous objectifs
@@ -40,27 +62,26 @@
             $("#"+ button_sous_objectif_id).click(function(e){
                 let id_sous_objectif_count = ++j;
                 let sous_objectif_id = '{{ form.sous_objectif.id_for_label }}' + id_sous_objectif_count;
-                let sous_objectif = "<input id="+sous_objectif_id+" name='{{ form.FIELD_NAME_MAPPING.sous_objectif }}' class='form-control' type='text'>";
-                $('#'+ div_objectif_id_empty+$(this).data("value")).append(sous_objectif);
+                let div_sous_objectif_id_empty = 'sous-objectif';
+                let div_sous_objectif_id = div_sous_objectif_id_empty + id_sous_objectif_count;
+                let button_delete_id = 'delete-sous-objectif'+id_sous_objectif_count;
+                let sous_objectif_div = "<div id="+div_sous_objectif_id+"></div>";
+                $(sous_objectif_div).insertBefore($(this));
+                let sous_objectif =
+                "<div class='row'>"
+                +"<div class='col-sm-8'>"
+                +"<input id="+sous_objectif_id+" name='{{ form.FIELD_NAME_MAPPING.sous_objectif }}' class='form-control' type='text'>"
+                +"</div>"          
+                +"<button type='button' data-value="+id_sous_objectif_count+" id="+button_delete_id+" class='btn btn-danger'>Suprimer</button>"
+                +"</div>"
+                +"<br>";
+                console.log("test");
+                $("#" + div_sous_objectif_id).append(sous_objectif);
+                $("#" + button_delete_id ).click(function() {
+                $("#" + div_sous_objectif_id_empty + $(this).data('value')).remove();
+            });
             });
       });
 
-  /*
-    function createNewElement() {
-        let txtNewInputBox = document.createElement('div');
-        txtNewInputBox.innerHTML = "<label for='{{ form.objectif.id_for_label }}'>Objectif " + i++ + "</label>"
-        +"<textarea id='{{ form.objectif.id_for_label }}' name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='3'></textarea>"
-        +"<label for='{{ form.poids.id_for_label }}' >poids en %</label>"
-        +"<input class='form-control' type='number' value='0' name='{{ form.FIELD_NAME_MAPPING.poids }}' id='{{ form.poids.id_for_label }}'>"
-        +"<button type='button' class='btn btn-success' onclick='create();'>Ajouter un Sous-Objectif</button>";
-        document.getElementById("newElementId").appendChild(txtNewInputBox);
-    }
-
-    function create() {
-    	let txtNewInputBox = document.createElement('div');
-    	txtNewInputBox.innerHTML = "<input id='{{ form.sous_objectif.id_for_label }}' name='{{ form.FIELD_NAME_MAPPING.sous_objectif }}' class='form-control' type='text' id='newInputBox'>";
-    	document.getElementById("newElementId").appendChild(txtNewInputBox);
-    }
-    */
     </script>
-        {% endblock %}
+{% endblock %}
