@@ -3,59 +3,34 @@
 <div class="container-fluid">
     <h1>Identifier 5 objectifs SMART validés avec votre héarchie</h1>
 <form >
-    <div class="row">
-            <div class="col">
-      <label for="exampleTextarea">Objectif 1</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-        <div class="col">
-            <label for="">poids en %</label>
-            <input class="form-control" type="number" value="0" id="example-number-input">
-        </div>
-    </div>
-    <div class="row">
-            <div class="col">
-      <label for="exampleTextarea">Objectif 1</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-        <div class="col">
-            <label for="">poids en %</label>
-            <input class="form-control" type="number" value="0" id="example-number-input">
-        </div>
-    </div>
-    <div class="row">
-            <div class="col">
-      <label for="exampleTextarea">Objectif 1</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-        <div class="col">
-            <label for="">poids en %</label>
-            <input class="form-control" type="number" value="0" id="example-number-input">
-        </div>
-    </div>
-    <div class="row">
-            <div class="col">
-      <label for="exampleTextarea">Objectif 1</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-        <div class="col">
-            <label for="">poids en %</label>
-            <input class="form-control" type="number" value="0" id="example-number-input">
-        </div>
-    </div>
-    <div class="row">
-            <div class="col">
-      <label for="exampleTextarea">Objectif 1</label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-        <div class="col">
-            <label for="">poids en %</label>
-            <input class="form-control" type="number" value="0" id="example-number-input">
-        </div>
-    </div>
-    <div align="right">
+    
+   
+     
+     <div id="newElementId" align="center"></div>
+     <div id="dynamicCheck">
+        <button type="button" class="btn btn-success" onclick="createNewElement();">Ajouter un Objectif</button>
+     </div>
+     <div align="right">
         <button type="submit" class="btn btn-primary" >Envoyer</button>
     </div>
   </form>
+  <script type="text/JavaScript">
+    function createNewElement() {
+        var txtNewInputBox = document.createElement('div');
+        txtNewInputBox.innerHTML = "<label for='exampleTextarea'>Objectif 1</label>"
+        +"<textarea class='form-control' id='exampleTextarea' rows='3'></textarea>"
+        +"<label>poids en %</label>"
+        +"<input class='form-control' type='number' value='0' id='example-number-input'>"
+        +"<button type='button' class='btn btn-success' onclick='create();'>Ajouter un Sous-Objectif</button>";
+        document.getElementById("newElementId").appendChild(txtNewInputBox);
+    }
+
+    function create() {
+    	var txtNewInputBox = document.createElement('div');
+    	txtNewInputBox.innerHTML = "<input class='form-control' type='text' id='newInputBox'>";
+    	document.getElementById("newElementId").appendChild(txtNewInputBox);
+    }
+
+    </script>
 </div>
 {% endblock %}
