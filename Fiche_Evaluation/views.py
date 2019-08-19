@@ -1,12 +1,23 @@
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
+from .forms import FicheObjectifForm
 
 
-class FicheEvaluationView(TemplateView):
+class FicheEvaluationView(FormView):
+    form = FicheObjectifForm
     template_name = 'Fiche_Evaluation/fiche_evaluation.html'
+    success_url = '.'
 
     def get(self, request, *args, **kwargs):
-        return render(request, template_name=self.template_name)
+        if request.user.is_consultant:
+            return HttpResponseForbidden()
+        return render(request, template_name=self.template_name, context={'form': self.form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST or None)
+        employe = request.user
+        pass
 
 
 class EvaluationView(TemplateView):
