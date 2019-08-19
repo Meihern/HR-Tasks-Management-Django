@@ -14,14 +14,17 @@ class DemandeCongeForm(forms.ModelForm):
     telephone = PhoneNumberField(required=False)
 
     def valid_date(self):
-        self._errors['date_depart'] = ErrorList()
-        self._errors['date_retour'] = ErrorList()
+
         if self.cleaned_data['date_depart'] < now().date():
+            self._errors['date_depart'] = ErrorList()
             self.errors['date_depart'].append("La date de départ doit être supérieure à la date d'ajourd'hui")
             return False
         if self.cleaned_data['date_retour'] < now().date():
+            self._errors['date_retour'] = ErrorList()
             self.errors['date_retour'].append("La date de retour doit être supérieure à la date d'ajourd'hui")
         elif self.cleaned_data['date_depart'] >= self.cleaned_data['date_retour']:
+            self._errors['date_depart'] = ErrorList()
+            self._errors['date_retour'] = ErrorList()
             self._errors['date_depart'].append('La date de départ doit être inférieure à la date de retour')
             self._errors['date_retour'].append('La date de retour doit être supérieure à la date de départ')
             return False
@@ -29,9 +32,9 @@ class DemandeCongeForm(forms.ModelForm):
             return True
 
     def valid_jours_ouvrables(self):
-        self.errors['jours_ouvrables'] = ErrorList()
 
         if self.cleaned_data['jours_ouvrables'] > self.cleaned_data['date_retour'].day - self.cleaned_data['date_depart'].day:
+            self.errors['jours_ouvrables'] = ErrorList()
             self.errors['jours_ouvrables'].append("Les jours ouvrables doivent être inférieurs aux différences des jours entre date départ et date de retour")
             return False
         else:

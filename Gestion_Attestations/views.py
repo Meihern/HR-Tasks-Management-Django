@@ -60,7 +60,7 @@ def accept_demande_doc(request):
     notification.save()
     # send_mail(subject=demande_doc.get_type_demande(), message='Votre demande de %s a été acceptée !'%(demande_doc.get_type_demande())
     #         , from_email=DEFAULT_FROM_EMAIL, to=demande_doc.get_employe())
-    request.session['doc_id'] = demande_doc.id
+    #request.session['doc_id'] = demande_doc.id
     return JsonResponse({'Response': 'success'})
 
 

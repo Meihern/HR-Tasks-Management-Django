@@ -50,8 +50,7 @@
                         close_button.text("Fermer");
                         link.text("Valider");
                         link.attr("data-url","{% url 'accept_demande_doc' %}");
-                        link.attr("href","{% url 'generate_pdf' %}");
-
+                        link.attr("href","{% url 'generate_pdf' 0 %}".replace('0',data.doc_id.toString()));
                         break;
                     default:
                         link.hide();

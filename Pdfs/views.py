@@ -12,12 +12,10 @@ import datetime
 class GeneratePDF(TemplateView):
     template_name = 'Pdfs'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, doc_id, *args, **kwargs):
         if not request.user.can_consult_attestations:
             return HttpResponseForbidden()
-        if request.session['doc_id']:
-            doc_id = request.session['doc_id']
-            del request.session['doc_id']
+        if doc_id:
             demande_doc = DemandeAttestation.objects.get(id=doc_id)
             demande_doc_type = get_template_name(demande_doc.get_type_demande())
             self.template_name = self.template_name + '/' + get_template_name(demande_doc_type) + '.html'
