@@ -3,8 +3,28 @@
 <div class="container-fluid">
     <h1>Identifier des objectifs SMART validés avec votre héarchie</h1>
 <form >
+  <br>
+  <div class='card'>
+    <div class='container-fluid' align="center">
+    <br>
 
-        <br>
+    <div class='row'>
+    <div class='col-sm-8'>
+    <label for="+objectif_id+" >Objectif   </label>
+    <textarea id="+objectif_id+" name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='2'></textarea>
+    </div>
+    <div class='col-sm-2'>
+    <label for="+poids_id+" >poids en %</label>
+    <input class='form-control' type='number' value='0' name='{{ form.FIELD_NAME_MAPPING.poids }}' id="+poids_id+">
+    </div>
+    </div>
+    <br>
+    <div>
+    <button type='button' id="+button_sous_objectif_id+" data-value="+id_objectif_count+" class='btn btn-success'>Ajouter un Sous-Objectif</button>
+    </div>
+    <br>
+    </div>
+    </div>
         <br>
      <div id="objectif-details" align="center"></div>
      <div id="dynamicCheck" align="center">
@@ -30,6 +50,7 @@
           let div_objectif_id = div_objectif_id_empty+id_objectif_count;
           let objectif_id = '{{ form.objectif.id_for_label }}' + id_objectif_count;
           let poids_id = '{{ form.poids.id_for_label }}' + id_objectif_count;
+          let delete_id = 'delete-objectif'+id_objectif_count;
           let objectif_div = "<div id="+div_objectif_id+"></div>";
           let button_sous_objectif_id = 'ajout-sous-objectif'+id_objectif_count;
           $('#objectif-details').append(objectif_div);
@@ -37,10 +58,13 @@
         let objectif = "<div class='card'>"
         +"<div class='container-fluid'>"
         +"<br>"
+        +"<div align='right'>"
+        +"<button id="+delete_id+" data-value="+id_objectif_count+" class='far fa-times-circle' style='font-size:24px;color:red;background:none;border:none'></button>"
+        +"</div>"
         +"<div class='row'>"
         +"<div class='col-sm-8'>"
         +"<label for="+objectif_id+" >Objectif " + id_objectif_count + "</label>"
-        +"<textarea id="+objectif_id+" name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='3'></textarea>"
+        +"<textarea id="+objectif_id+" name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='2'></textarea>"
         +"</div>"
         +"<div class='col-sm-2'>"
         +"<label for="+poids_id+" >poids en %</label>"
@@ -56,6 +80,9 @@
         +"</div>"
         +"<br>";
         $('#' + div_objectif_id).append(objectif);
+        $("#" + delete_id ).click(function() {
+                $("#" + div_objectif_id_empty + $(this).data('value')).remove();
+        });
 
         // Ajout des sous objectifs
 
@@ -72,7 +99,7 @@
                 +"<div class='col-sm-8'>"
                 +"<input id="+sous_objectif_id+" name='{{ form.FIELD_NAME_MAPPING.sous_objectif }}' class='form-control' type='text'>"
                 +"</div>"          
-                +"<button type='button' data-value="+id_sous_objectif_count+" id="+button_delete_id+" class='btn btn-danger'>Suprimer</button>"
+                +"<button type='button' data-value="+id_sous_objectif_count+" id="+button_delete_id+" class='far fa-trash-alt' style='font-size:24px;color:red;background:none;border:none'></button>"
                 +"</div>"
                 +"<br>";
                 console.log("test");
@@ -84,4 +111,10 @@
       });
 
     </script>
+    <style>
+      .butto {
+        color: darkgray
+
+      }
+    </style>
 {% endblock %}
