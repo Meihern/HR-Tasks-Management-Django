@@ -15,13 +15,14 @@ class DemandeCongeForm(forms.ModelForm):
 
     def valid_date(self):
 
-        if self.cleaned_data['date_depart'] < now().date():
+        if self.cleaned_data['date_depart'] <= now().date():
             self._errors['date_depart'] = ErrorList()
             self.errors['date_depart'].append("La date de départ doit être supérieure à la date d'ajourd'hui")
             return False
-        if self.cleaned_data['date_retour'] < now().date():
+        if self.cleaned_data['date_retour'] <= now().date():
             self._errors['date_retour'] = ErrorList()
             self.errors['date_retour'].append("La date de retour doit être supérieure à la date d'ajourd'hui")
+            return False
         elif self.cleaned_data['date_depart'] >= self.cleaned_data['date_retour']:
             self._errors['date_depart'] = ErrorList()
             self._errors['date_retour'] = ErrorList()
@@ -45,7 +46,7 @@ class DemandeCongeForm(forms.ModelForm):
         valid_date = self.valid_date()
         valid_jours_ouvrables = self.valid_jours_ouvrables()
 
-        if valid and valid_date and valid_jours_ouvrables :
+        if valid and valid_date and valid_jours_ouvrables:
             return True
         else:
             return False

@@ -49,7 +49,7 @@ class DemandeCongeView(FormView):
                     notification.save()
                     # send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
                     #          recipient_list=[notif_receiver.get_email()])
-                    messages.success(request, "Vote Demande de Congé a été envoyé avec succés")
+                    messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
                 except:
                     result = self.form_invalid(form)
                     messages.error(request, "Echec de l'envoi de votre demande de congé")
