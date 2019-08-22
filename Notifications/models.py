@@ -5,6 +5,7 @@ from django.contrib.contenttypes.models import ContentType
 from Authentification.manager import CustomModelManager
 from django.contrib.contenttypes.fields import GenericForeignKey
 # Create your models here.
+from Fiche_Evaluation.models import FicheObjectif
 from Gestion_Attestations.models import DemandeAttestation
 from Gestion_Conge.models import DemandeConge
 
@@ -54,6 +55,9 @@ class Notification(models.Model):
 
     # Méthodes setters
 
+    def set_notif_receiver_fiche_objectif(self):
+        return self.get_content_object().get_employe().get_superieur_hierarchique()
+
     def set_notif_receiver_attestation(self):
         activite_mdlz = Activite.objects.safe_get(id=5)
         activite_shared = Activite.objects.safe_get(id=3)
@@ -95,6 +99,8 @@ class Notification(models.Model):
             self.receiver = self.set_notif_receiver_attestation()
         elif type(self.get_content_object()) == DemandeConge:
             self.receiver = self.set_notif_receiver_conge()
+        elif type(self.get_content_object()) == FicheObjectif:
+            self.receiver = self.set_notif_receiver_fiche_objectif()
         else:
             return None
 

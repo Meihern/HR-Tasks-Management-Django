@@ -23,5 +23,4 @@ class SousObjectifAdmin(admin.ModelAdmin):
 
 admin.site.register(FicheObjectif, FicheObjectifAdmin)
 admin.site.register(Objectif, ObjectifAdmin)
-admin.site.register(Evaluation, EvaluationAdmin)
 admin.site.register(SousObjectif, SousObjectifAdmin)
