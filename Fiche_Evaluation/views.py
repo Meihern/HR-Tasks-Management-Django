@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.shortcuts import render
-from django.utils.timezone import now
 from django.views.generic import TemplateView, FormView
-
+from .utils import fiche_evalutation_accessible
 from Fiche_Evaluation.models import Objectif, FicheObjectif
 from .forms import FicheObjectifForm, clean_poids
 
@@ -14,7 +13,7 @@ class FicheEvaluationView(FormView):
     success_url = '/fiche_evaluation/remplir_objectifs'
 
     def get(self, request, *args, **kwargs):
-        #if now().date().month != 1 or request.user.is_consultant:
+        # if not fiche_evaluation_accessible() or request.user.is_consultant:
         if request.user.is_consultant:
             return HttpResponseForbidden()
         return render(request, template_name=self.template_name, context={'form': self.form})
