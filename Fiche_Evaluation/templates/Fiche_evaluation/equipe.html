@@ -2,9 +2,12 @@
 {% block Content %}
 <div class="container fluide">
     <div class="list-group">
-            <a href="{% url 'evaluation' %}" class="list-group-item list-group-item-action">Abdellah METKAL</a>
-            <a href="#" class="list-group-item list-group-item-action">ACHIR Youssef</a>
-            <a href="#" class="list-group-item list-group-item-action">HABADI Siham</a>
+        {% if not fiche_objectifs %} <h1 class="text-primary"> Aucune Fiche d'objectifs n'est envoyé </h1>
+        {% else %}
+            {% for fiche in fiche_objectifs %}
+            <a href="{% url 'evaluation' %}" class="list-group-item list-group-item-action">{{ fiche.employe }}</a>
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

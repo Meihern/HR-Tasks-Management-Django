@@ -47,6 +47,13 @@ class FicheObjectif(models.Model):
         objectifs = Objectif.objects.filter(fiche_objectif=self).values()
         return objectifs
 
+    @property
+    def is_current(self):
+        if self.date_envoi.year == now().date().year:
+            return True
+        else:
+            return False
+
     class Meta:
         verbose_name_plural = 'Les fiches des objectifs'
         verbose_name = 'Fiche des objectifs'
@@ -59,16 +66,13 @@ class Objectif(models.Model):
     poids = models.DecimalField(max_digits=3, decimal_places=2, null=False, blank=False, verbose_name='Poids')
     notation_manager = models.DecimalField(max_digits=3, decimal_places=2,
                                            null=True, blank=True, verbose_name='Notation Manager')
-
+    evaluation_mi_annuelle = models.TextField(null=True, blank=True, verbose_name="Evalutation Mi-Annuelle")
+    evaluation_annuelle = models.TextField(null=True, blank=True, verbose_name="Evalutation Annuelle")
     objects = CustomModelManager()
 
     def get_sous_objectifs(self):
         sous_objectifs = SousObjectif.objects.filter(objectif=self).values()
         return sous_objectifs
-
-    def get_evaluation(self):
-        evaluation = Evaluation.objects.safe_get(objectif=self)
-        return evaluation
 
     def __str__(self):
         return str(self.fiche_objectif)+'\n'+'Objectif : '+self.description
@@ -88,24 +92,6 @@ class Objectif(models.Model):
     class Meta:
         verbose_name = 'Objectif'
         verbose_name_plural = 'Objectifs'
-
-
-class Evaluation(models.Model):
-    description = models.TextField(null=False, blank=False, verbose_name='Description')
-    objectif = models.OneToOneField(to=Objectif, blank=False, null=False, verbose_name='Objectif Associé',
-                                    on_delete=models.CASCADE)
-
-    objects = CustomModelManager()
-
-    def __str__(self):
-        return self.description
-
-    def get_objectif_associe(self):
-        return self.objectif
-
-    class Meta:
-        verbose_name_plural = 'Evaluations'
-        verbose_name = 'Evaluation'
 
 
 class SousObjectif(models.Model):

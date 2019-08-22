@@ -34,7 +34,7 @@ class DemandeCongeForm(forms.ModelForm):
 
     def valid_jours_ouvrables(self):
 
-        if self.cleaned_data['jours_ouvrables'] > self.cleaned_data['date_retour'].day - self.cleaned_data['date_depart'].day:
+        if self.cleaned_data['jours_ouvrables'] >= self.cleaned_data['date_retour'].day - self.cleaned_data['date_depart'].day:
             self.errors['jours_ouvrables'] = ErrorList()
             self.errors['jours_ouvrables'].append("Les jours ouvrables doivent être inférieurs aux différences des jours entre date départ et date de retour")
             return False

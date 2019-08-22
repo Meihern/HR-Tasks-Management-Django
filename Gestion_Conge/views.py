@@ -47,8 +47,8 @@ class DemandeCongeView(FormView):
                     notification.set_sender(employe)
                     notification.set_receiver()
                     notification.save()
-                    # send_mail(notif_subject, notif_msg, from_email=DEFAULT_FROM_EMAIL,
-                    #          recipient_list=[notif_receiver.get_email()])
+                    #send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
+                    #          recipient_list=[notification.get_receiver().get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
                 except:
                     result = self.form_invalid(form)
@@ -255,7 +255,7 @@ class HistoriqueDemandesCongesView(TemplateView):
                 demande_doc = {
                     'id': demande['id'],
                     'date_envoi': demande['date_envoi'],
-                    'etat': demande['etat'],
+                    'etat': DemandeConge.objects.safe_get(id=demande['id']).get_etat_display(),
                     'date_retour': demande['date_retour'],
                     'date_depart': demande['date_depart'],
                 }

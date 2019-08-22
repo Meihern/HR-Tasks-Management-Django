@@ -12,7 +12,7 @@ class FicheObjectifForm(forms.Form):
     FIELD_NAME_MAPPING = {
         'objectif': 'objectifs[]',
         'poids': 'poids[]',
-        'sous_objectif': 'sous_objectifs[]',
+        'sous_objectif': 'sous_objectifs_objectif_id[]',
     }
 
     objectif = forms.CharField(max_length=255,  widget=forms.TextInput, required=False)
@@ -24,7 +24,7 @@ class FicheObjectifForm(forms.Form):
             self.errors['poids'] = ErrorList()
             self.errors['poids'].append("Vous devez définir au moins un seul poids valide")
             return False
-
+        clean_poids(poids)
         for i in range(len(poids)):
             if not 10 <= poids[i] <= 100:
                 self.errors['poids'] = ErrorList()
@@ -46,7 +46,8 @@ class FicheObjectifForm(forms.Form):
             return True
 
     def is_valid(self, objectifs: list, poids: list, sous_objectifs: list=None):
-        if self.is_valid_objectifs(objectifs) and self.is_valid_poids(poids):
+        is_valid = super(FicheObjectifForm, self).is_valid()
+        if self.is_valid_objectifs(objectifs) and self.is_valid_poids(poids) and is_valid:
             return True
         else:
             return False
