@@ -13,7 +13,7 @@ class FicheEvaluationView(FormView):
     success_url = '/fiche_evaluation/remplir_objectifs'
 
     def get(self, request, *args, **kwargs):
-        # if not fiche_evaluation_accessible() or request.user.is_consultant:
+        #if not  fiche_evalutation_accessible() or request.user.is_consultant:
         if request.user.is_consultant:
             return HttpResponseForbidden()
         return render(request, template_name=self.template_name, context={'form': self.form})

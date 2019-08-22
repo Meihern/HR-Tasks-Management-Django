@@ -9,8 +9,8 @@ class DemandeCongeForm(forms.ModelForm):
 
     date_depart = forms.DateField(required=True, widget=forms.DateInput)
     date_retour = forms.DateField(required=True, widget=forms.DateInput)
-    jours_ouvrables = forms.IntegerField(min_value=0, max_value=20, required=True, widget=forms.NumberInput)
-    interim = forms.CharField(widget=forms.TextInput, required=True)
+    jours_ouvrables = forms.IntegerField(min_value=1, max_value=20, required=True, widget=forms.NumberInput)
+    interim = forms.CharField(widget=forms.TextInput, required=False)
     telephone = PhoneNumberField(required=False)
 
     def valid_date(self):
