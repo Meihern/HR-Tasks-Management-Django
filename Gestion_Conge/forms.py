@@ -9,8 +9,8 @@ class DemandeCongeForm(forms.ModelForm):
 
     date_depart = forms.DateField(required=True, widget=forms.DateInput)
     date_retour = forms.DateField(required=True, widget=forms.DateInput)
-    jours_ouvrables = forms.IntegerField(min_value=0, max_value=20, required=True, widget=forms.NumberInput)
-    interim = forms.CharField(widget=forms.TextInput, required=True)
+    jours_ouvrables = forms.IntegerField(min_value=1, max_value=20, required=True, widget=forms.NumberInput)
+    interim = forms.CharField(widget=forms.TextInput, required=False)
     telephone = PhoneNumberField(required=False)
 
     def valid_date(self):
@@ -22,6 +22,7 @@ class DemandeCongeForm(forms.ModelForm):
         if self.cleaned_data['date_retour'] <= now().date():
             self._errors['date_retour'] = ErrorList()
             self.errors['date_retour'].append("La date de retour doit être supérieure à la date d'ajourd'hui")
+            return False
         elif self.cleaned_data['date_depart'] >= self.cleaned_data['date_retour']:
             self._errors['date_depart'] = ErrorList()
             self._errors['date_retour'] = ErrorList()
@@ -45,7 +46,7 @@ class DemandeCongeForm(forms.ModelForm):
         valid_date = self.valid_date()
         valid_jours_ouvrables = self.valid_jours_ouvrables()
 
-        if valid and valid_date and valid_jours_ouvrables :
+        if valid and valid_date and valid_jours_ouvrables:
             return True
         else:
             return False

@@ -2,8 +2,17 @@
 {% block Content %}
 <div class="container-fluid">
     <h1>Identifier des objectifs SMART validés avec votre héarchie</h1>
-<form >
+<form method="POST">
   <br>
+  {% csrf_token %}
+    {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
   <div class='card'>
     <div class='container-fluid' align="center">
     <br>
@@ -26,17 +35,7 @@
     </div>
     </div>
         <br>
-     <div id="objectif-details" align="center"></div>
-     <div id="dynamicCheck" align="center">
-         <br>
-        <button type="button" id="ajout-objectif" class="btn btn-success" >Ajouter un Objectif</button>
-     </div>
-     <br>
-        <br>
-     <div align="right">
-        <button type="submit" class="btn btn-primary" >Envoyer mes objectifs</button>
-    </div>
-  </form>
+      </form>
 </div>
 {% endblock %}
 {% block fiche_objectif_jquery %}

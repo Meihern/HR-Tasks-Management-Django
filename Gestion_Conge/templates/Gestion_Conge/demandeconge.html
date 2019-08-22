@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    <h2>Nouvelle Demande</h2>
+    <h2 class="text-primary" >Nouvelle Demande de Congé</h2>
+    <br/>
     <form method='POST'>
         {% csrf_token %}
         {% for message in messages %}
@@ -30,7 +31,7 @@
                         
                           <label for="{{form.jours_ouvrables.id_for_label}}" class="col-2 col-form-label">Jours Ouvrables:</label>
                           <div class="col-10">
-                            <input required name="jours_ouvrables" class="form-control" type="number" id="{{form.jours_ouvrables.id_for_label}}">
+                            <input min="1" max="20" required name="jours_ouvrables" class="form-control" type="number" id="{{form.jours_ouvrables.id_for_label}}">
                             {{form.jours_ouvrables.errors}}
                           </div>
                         </div>
@@ -38,7 +39,7 @@
         
       <label for="{{form.interim.id_for_label}}" class="col-2 col-form-label">Intérim assuré par:</label>
       <div class="col-10">
-        <input name="interim" class="form-control" type="text" id="{{form.interim.id_for_label}}">
+        <input name="interim" placeholder="Remplir le Nom Complet de l'interim" class="form-control" type="text" id="{{form.interim.id_for_label}}">
         {{form.interim.errors}}
       </div>
     </div>
@@ -46,7 +47,7 @@
         
       <label for="{{form.telephone.id_for_label}}" class="col-2 col-form-label">Téléphone personnel ou n<sup>o</sup> du portable:</label>
       <div class="col-10">
-        <input name="telephone" class="form-control" type="tel" placeholder="+212 611 111 111" id="{{form.telephone.id_for_label}}" >
+        <input name="telephone" class="form-control" type="tel" placeholder="Ex : +212 611 111 111" id="{{form.telephone.id_for_label}}" >
         {{form.telephone.errors}}
       </div>
     </div>

@@ -49,7 +49,7 @@
 
         <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
-                    <a href="{% url 'remplir_objectifs' %}" class="btn">
+                    <a {% if is_fiche_disabled is True %} class="btn" href="{% url 'remplir_objectifs' %}" {% else %}class="btn disabled" {% endif %}>
                           <div class="card-body">
                               <div class="row no-gutters align-items-center">
                                   <div class="col mr-2">
