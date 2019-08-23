@@ -159,6 +159,12 @@ class Employe(AbstractBaseUser):
         else:
             return self.solde_conge
 
+    def is_superieur_to(self, employe):
+        if employe.get_superieur_hierarchique() == self:
+            return True
+        else:
+            return False
+
     # Properties
 
     @property

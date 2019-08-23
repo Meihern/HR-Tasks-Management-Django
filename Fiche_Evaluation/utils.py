@@ -9,14 +9,14 @@ def fiche_evalutation_accessible():
 
 
 def evaluation_mi_annuelle_accessible():
-    if now().date().month != 6:
+    if now().date().month != 8:
         return False
     else:
         return True
 
 
 def evaluation_annuelle_accessible():
-    if now().date().month != 12:
+    if now().date().month != 8:
         return False
     else:
         return True
