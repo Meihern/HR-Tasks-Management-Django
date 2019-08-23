@@ -3,28 +3,19 @@
 <div class="container-fluid">
     <h1>Evaluation mi année de Abdellah METKAL </h1>
 <form>
-    <div class="form-group">
-      <label for="exampleTextarea">Objectif 1{{data}} </label>
-      <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="exampleTextarea">obj{{data}} </label>
-        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="exampleTextarea">obj{{data}}</label>
-        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="exampleTextarea">obj{{data}}</label>
-        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-    <div class="form-group">
-        <label for="exampleTextarea">obj{{data}}</label>
-        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-    </div>
-    <div align="right">
-        <button type="submit" class="btn btn-primary" >Envoyer</button>
+    <div class="card">
+      <div class="container-fluid">
+        <div class="form-group">
+          <br>
+          <label for="exampleTextarea">Objectif 1: <br> {{objectif}} </label>
+          <label for="exampleTextarea">Commentaire mi_annuel: {{commentaire_mi_annuelle}} </label>
+          <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+          <br>
+          <div align='right'>
+            <button class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </div>
     </div>
   </form>
 </div>
