@@ -176,7 +176,17 @@ class EvaluationView(TemplateView):
                 objectif.save()
             fiche_objectif.bonus = sum(bonus_individuels)
             fiche_objectif.save()
-            messages.success(request, "La fiche a été évaluée avec succès")
+            try:
+                notification = Notification(content_object=fiche_objectif, no_reply=True)
+                notification.set_subject("Votre fiche d'objectif a été évaluée")
+                notification.set_message(str(fiche_objectif))
+                notification.set_sender(request.user)
+                notification.set_receiver()
+                notification.save()
+                messages.success(request, "Fiche d'objectif évaluée avec succès")
+            except:
+                result = self.form_invalid(form)
+                messages.error(request, "Une erreur est survenue")
         else:
             messages.error(request, "Echèc pendant l'évaluation de la fiche")
 
