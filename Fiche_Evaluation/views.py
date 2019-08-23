@@ -131,8 +131,8 @@ class EvaluationView(TemplateView):
         if not request.user.is_superieur_to(fiche_objectif.get_employe()):
             return HttpResponseForbidden()
 
-        # if evaluation_annuelle_accessible():        # Reminder to change the month condition to 6
-        #    self.get_template_annuelle()
+        if evaluation_annuelle_accessible():        # Reminder to change the month condition to 6
+            self.get_template_annuelle()
         elif evaluation_mi_annuelle_accessible():  # Reminder to change the month condition to 12
             self.get_template_mi_annuelle()
         else:
