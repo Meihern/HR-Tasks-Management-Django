@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block Content %}
+<div class="container-fluid">
+    <h1 class="text-primary">Evaluation Mi-Annuelle de {{ fiche.employe }} </h1>
+<form method="POST">
+    {% csrf_token %}
+{% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
+    {% for objectif in objectifs %}
+    <div class="card">
+      <div class="container-fluid">
+        <div class="form-group">
+          <br>
+          <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
+            {% for sous_objectif in objectif.sous_objectifs %}
+                <p> - {{ sous_objectif.description }} </p>
+                {% endfor %}
+                <p>evaluation mi annuelle</p>
+                {{ objectif.evaluation_mi_annuelle }}
+          <br>
+        </div>
+      </div>
+    </div>
+    
+        <br/>
+     {% endfor %}
+     <div class="container-fluid">
+     <div class="card">
+            <div class="container-fluid">
+                <br>
+     <p>Commentaire Performance Annuelle:</p> 
+     <textarea name="evaluation_mi_annuelle{{ forloop.counter }}" class="form-control" id="{{form.evaluation_mi_annuelle.id_for_label}}{{ forloop.counter }}" rows="3"></textarea>
+    <br>
+    </div>
+</div>
+     <div class="container-fluid" align='right'>
+        <br>
+            <button class="btn btn-primary">Submit</button>
+    </div>
+    <br/>
+  </form>
+</div>
+</div>
+
+{% endblock %}

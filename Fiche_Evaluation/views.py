@@ -174,4 +174,10 @@ class EvaluationView(TemplateView):
 
         return HttpResponseRedirect(self.request.path_info)
 
+class ConsultationObjectifsView(TemplateView):
+    template_name = 'Fiche_Evaluation/consultation_objectifs.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
 
