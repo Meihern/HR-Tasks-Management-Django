@@ -41,17 +41,18 @@ class FicheEvaluationView(FormView):
                         for desc_sous_objectif in sous_objectifs:
                             sous_objectif = SousObjectif(description=desc_sous_objectif, objectif=objectif)
                             sous_objectif.save()
-                    try:
-                        notification = Notification(content_object=fiche_objectif, no_reply=True)
-                        notification.set_subject("Nouvelle Fiche d'objectif")
-                        notification.set_message(str(fiche_objectif))
-                        notification.set_sender(employe)
-                        notification.set_receiver()
-                        notification.save()
-                        messages.success(request, "Votre fiche d'objectifs a été remplie avec succès")
-                    except:
-                        messages.error(request, "Une erreur est survenue")
-                    return result
+                try:
+                    notification = Notification(content_object=fiche_objectif, no_reply=True)
+                    notification.set_subject("Nouvelle Fiche d'objectif")
+                    notification.set_message(str(fiche_objectif))
+                    notification.set_sender(employe)
+                    notification.set_receiver()
+                    notification.save()
+                    messages.success(request, "Votre fiche d'objectifs a été remplie avec succès")
+                except:
+                    result = self.form_invalid(form)
+                    messages.error(request, "Une erreur est survenue")
+                return result
             else:
                 result = self.form_invalid(form)
                 messages.error(request, str(form.errors))
@@ -149,13 +150,14 @@ class EvaluationView(TemplateView):
                       context={'objectifs': data_objectifs, 'fiche': fiche, 'form': form})
 
     def post(self, request, fiche_id, *args, **kwargs):
+        fiche_objectif = FicheObjectif.objects.get(id=fiche_id)
         # if evaluation_mi_annuelle_accessible():                       # Reminder to Change month value to 6
         #    form = EvaluationMiAnnuelleForm(request.POST or None)
         if evaluation_annuelle_accessible():                            # Reminder to Change month value to 12
             form = EvaluationAnnuelleForm(request.POST or None)
+            fiche_objectif.date_validation_manager = now().date()
         else:
             form = None
-        fiche_objectif = FicheObjectif.objects.get(id=fiche_id)
         if form.is_valid():
             objectifs = fiche_objectif.get_objectifs()
             notations = request.POST.getlist('notation_manager[]')
@@ -169,10 +171,11 @@ class EvaluationView(TemplateView):
                     print('Annuelle')
                     objectif.set_notation_manager(notations[i])
                     objectif.set_evaluation_annuelle(request.POST.get('evaluation_annuelle' + str(i+1)))
-                    bonus_individuels.append(objectif.get_notation_manager()*objectif.get_poids())
+                    bonus_individuels.append(round(float(objectif.get_notation_manager())*float(objectif.get_poids()),2))
                     print('evaluation_annuelle' + str(i+1))
                 objectif.save()
             fiche_objectif.bonus = sum(bonus_individuels)
+            fiche_objectif.save()
             messages.success(request, "La fiche a été évaluée avec succès")
         else:
             messages.error(request, "Echèc pendant l'évaluation de la fiche")
