@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 {% block Content %}
+<style>
+    .pet-select{
+        background-color: rgb(255, 241, 241);
+        border-color: rgb(255, 241, 241);
+
+    }
+</style>
 <div class="container-fluid">
     <h1 class="text-primary">Evaluation année de Abdellah METKAL </h1>
 <form>
@@ -13,13 +20,12 @@
           <br>
         <div class="input-group">
                   <div class="dropup">
-                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                     Notation
-                    </button>
+                        <select class="pet-select" id="pet-select">  
                     <div class="dropdown-menu animated--fade-in" style="background-color: rgb(248, 230, 230)">
-                            <li><a class="dropdown-item" href="#">HP+</a></li>
-                            <li><a class="dropdown-item" href="#">BP</a></li>
+                            <li><option class="dropdown-item">HP+</option></li>
+                            <li><option class="dropdown-item">BP</option></li>                        
                     </div>
+                        </select>
                   </div>
                 </div>
               </div>
@@ -38,13 +44,7 @@
         <br>
             <button class="btn btn-primary">Submit</button>
     </div>
-    <br>
+    
   </form>
 </div>
-{% block dropdown %}
-<script>$('.dropdown-menu li a').on('click', function(){    
-        $('.dropup .dropdown-toggle').html($(this).html());    
-    })
-</script>
-{% endblock %}
 {% endblock %}
