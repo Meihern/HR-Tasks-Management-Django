@@ -27,13 +27,25 @@
         </div>
       </div>
     </div>
+    
         <br/>
      {% endfor %}
-    <div class="container-fluid" align='right'>
+     <div class="container-fluid">
+     <div class="card">
+            <div class="container-fluid">
+                <br>
+     <p>Commentaire Performance Annuelle:</p> 
+     <textarea name="evaluation_mi_annuelle{{ forloop.counter }}" class="form-control" id="{{form.evaluation_mi_annuelle.id_for_label}}{{ forloop.counter }}" rows="3"></textarea>
+    <br>
+    </div>
+</div>
+     <div class="container-fluid" align='right'>
         <br>
             <button class="btn btn-primary">Submit</button>
     </div>
     <br/>
   </form>
 </div>
+</div>
+
 {% endblock %}
