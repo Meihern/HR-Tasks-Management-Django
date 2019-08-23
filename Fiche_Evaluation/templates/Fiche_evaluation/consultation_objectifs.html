@@ -17,10 +17,9 @@
       <div class="container-fluid">
         <div class="form-group">
           <br>
-          <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
+          <h3 for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) :</h3>
+          <br><br> {{ objectif.description }} 
             {% if objectif.sous_objectifs %}
-            <span class="text-secondary"> Sous Objectifs :</span>
-            <br>
             {% endif %}
             {% for sous_objectif in objectif.sous_objectifs %}
                 <p> - {{ sous_objectif.description }} </p>
@@ -29,13 +28,15 @@
                 {{ objectif.evaluation_mi_annuelle }}
                 <p>Evaluation Annuelle : </p>
                 {{ objectif.evaluation_annuelle }}
+                <br>
+                <br>
                 <span class="text-primary">Notation Manager :</span>
                 <span style="color: red;" > {{ objectif.notation_manager }} </span>
           <br>
         </div>
       </div>
     </div>
-    
+</div>
         <br/>
      {% endfor %}
      <div class="container-fluid">
@@ -54,6 +55,6 @@
     <br/>
   </form>
 </div>
-</div>
+
 
 {% endblock %}
