@@ -102,7 +102,8 @@ def load_fiche_data(fiche_objectif: FicheObjectif):
             'sous_objectifs': data_sous_objectifs,
             'poids': get_percentage_value(objectif.get_poids()),
             'evaluation_mi_annuelle': objectif.get_evaluation_mi_annuelle(),
-            'evaluation_annuelle': objectif.get_evaluation_annuelle()
+            'evaluation_annuelle': objectif.get_evaluation_annuelle(),
+            'notation_manager': objectif.get_notation_manager()
         }
         data_objectifs.append(objectif)
     fiche = {
@@ -114,8 +115,6 @@ def load_fiche_data(fiche_objectif: FicheObjectif):
 
 class EvaluationView(TemplateView):
     template_name = 'Fiche_Evaluation/evaluation'
-    form_mi_annuelle = EvaluationMiAnnuelleForm
-    form_annuelle = EvaluationAnnuelleForm
 
     def get_template_mi_annuelle(self):
         self.template_name += '_mi_annuelle.html'
@@ -132,9 +131,11 @@ class EvaluationView(TemplateView):
         if not request.user.is_superieur_to(fiche_objectif.get_employe()):
             return HttpResponseForbidden()
 
-        if evaluation_annuelle_accessible():        # Reminder to change the month condition to 6
+        if evaluation_annuelle_accessible():  # Reminder to change the month condition to 6
+            form = EvaluationAnnuelleForm
             self.get_template_annuelle()
         elif evaluation_mi_annuelle_accessible():  # Reminder to change the month condition to 12
+            form = EvaluationMiAnnuelleForm
             self.get_template_mi_annuelle()
         else:
             return HttpResponseForbidden()
@@ -142,16 +143,30 @@ class EvaluationView(TemplateView):
         data_objectifs, fiche = load_fiche_data(fiche_objectif)
 
         return render(request, template_name=self.template_name,
-                      context={'objectifs': data_objectifs, 'fiche': fiche, 'form': self.form})
+                      context={'objectifs': data_objectifs, 'fiche': fiche, 'form': form})
 
     def post(self, request, fiche_id, *args, **kwargs):
-        form = self.form(request.POST or None)
+        # if evaluation_mi_annuelle_accessible():                       # Reminder to Change month value to 6
+        #    form = EvaluationMiAnnuelleForm(request.POST or None)
+        if evaluation_annuelle_accessible():                            # Reminder to Change month value to 12
+            form = EvaluationAnnuelleForm(request.POST or None)
+        else:
+            form = None
         fiche_objectif = FicheObjectif.objects.get(id=fiche_id)
         if form.is_valid():
             objectifs = fiche_objectif.get_objectifs()
+            notations = request.POST.getlist('notation_manager[]')
             for i, objectif in enumerate(objectifs):
                 objectif = Objectif.objects.get(id=objectif['id'])
-                objectif.set_evaluation_mi_annuelle(request.POST.get('evaluation_mi_annuelle' + str(i+1)))
+                if type(form) == EvaluationMiAnnuelleForm:
+                    objectif.set_evaluation_mi_annuelle(request.POST.get('evaluation_mi_annuelle' + str(i+1)))
+                    print("Mi-Annuelle")
+                elif type(form) == EvaluationAnnuelleForm:
+                    print('Annuelle')
+                    objectif.set_notation_manager(notations[i])
+                    objectif.set_evaluation_annuelle(request.POST.get('evaluation_annuelle' + str(i+1)))
+
+                    print('evaluation_annuelle' + str(i+1))
                 objectif.save()
             messages.success(request, "La fiche a été évaluée avec succès")
         else:

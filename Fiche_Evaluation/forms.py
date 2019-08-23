@@ -2,6 +2,7 @@ from django import forms
 from django.forms.utils import ErrorList
 from Fiche_Evaluation.models import Objectif
 
+
 def clean_poids(poids: list):
     for i in range(len(poids)):
         poids[i] = int(poids[i])
@@ -15,7 +16,7 @@ class FicheObjectifForm(forms.Form):
         'sous_objectif': 'sous_objectifs_objectif_id[]',
     }
 
-    objectif = forms.CharField(max_length=255,  widget=forms.TextInput, required=False)
+    objectif = forms.CharField(max_length=255, widget=forms.TextInput, required=False)
     poids = forms.IntegerField(min_value=10, max_value=100, widget=forms.NumberInput, required=False)
     sous_objectif = forms.CharField(max_length=255, widget=forms.TextInput, required=False)
 
@@ -45,7 +46,7 @@ class FicheObjectifForm(forms.Form):
         else:
             return True
 
-    def is_valid(self, objectifs: list, poids: list, sous_objectifs: list=None):
+    def is_valid(self, objectifs: list, poids: list, sous_objectifs: list = None):
         is_valid = super(FicheObjectifForm, self).is_valid()
         if self.is_valid_objectifs(objectifs) and self.is_valid_poids(poids) and is_valid:
             return True
@@ -54,7 +55,6 @@ class FicheObjectifForm(forms.Form):
 
 
 class EvaluationMiAnnuelleForm(forms.Form):
-
     evaluation_mi_annuelle = forms.CharField(required=False, widget=forms.Textarea)
 
     class Meta:
@@ -63,12 +63,21 @@ class EvaluationMiAnnuelleForm(forms.Form):
 
 
 class EvaluationAnnuelleForm(forms.Form):
+    FIELD_NAME_MAPPING = {
+        'notation_manager': 'notation_manager[]',
+    }
+
+    def add_prefix(self, field_name):
+        # look up field name; return original if not found
+        field_name = self.FIELD_NAME_MAPPING.get(field_name, field_name)
+        return super(EvaluationAnnuelleForm, self).add_prefix(field_name)
 
     evaluation_annuelle = forms.CharField(required=False, widget=forms.Textarea)
-    notation_manager = forms.ChoiceField(choices=Objectif.NOTATION_CHOICES, required=True, widget=forms.Select)
+    notation_manager = forms.ChoiceField(choices=Objectif.NOTATION_CHOICES, required=True,
+                                         widget=forms.Select(attrs={'style': 'background-color: rgb(248, 230, 230)',
+                                                                    'id': 'id_notation'
+                                                                    }))
 
     class Meta:
         model = Objectif
         fields = ('evaluation_annuelle', 'notation_manager')
-
-

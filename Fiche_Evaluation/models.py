@@ -84,10 +84,7 @@ class Objectif(models.Model):
         return self.poids
 
     def get_notation_manager(self):
-        if self.notation_manager is None:
-            return 0
-        else:
-            return self.notation_manager
+        return self.notation_manager
 
     def get_evaluation_mi_annuelle(self):
         return self.evaluation_mi_annuelle
@@ -100,6 +97,9 @@ class Objectif(models.Model):
 
     def set_evaluation_annuelle(self, evaluation):
         self.evaluation_annuelle = evaluation
+
+    def set_notation_manager(self, notation):
+        self.notation_manager = notation
 
     class Meta:
         verbose_name = 'Objectif'

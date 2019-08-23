@@ -8,38 +8,49 @@
     }
 </style>
 <div class="container-fluid">
-    <h1 class="text-primary">Evaluation année de Abdellah METKAL </h1>
-<form>
+    <h1 class="text-primary">Evaluation Annuelle de {{ fiche.employe }} </h1>
+<form method="POST">
+    {% csrf_token %}
+    {% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
+    {% for objectif in objectifs %}
     <div class="card">
       <div class="container-fluid">
         <div class="form-group">
           <br>
-          <p for="exampleTextarea">Objectif 1: <br> {{objectif}} </p>
-          <p for="exampleTextarea">Commentaire mi-annuel: <br> {{commentaire_mi_annuelle}} </p>
-          <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+          <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
+            {% for sous_objectif in objectif.sous_objectifs %}
+                <p> - {{ sous_objectif.description }} </p>
+                {% endfor %}
+
+            <p>Evaluation Mi-Annuelle : </p><p>{{ objectif.evaluation_mi_annuelle }}</p>
           <br>
+          <textarea class="form-control" rows="3" name="evaluation_annuelle{{ forloop.counter }}" >{{ objectif.evaluation_annuelle }}</textarea>
+            <br>
         <div class="input-group">
                   <div class="dropup">
-                        <select class="pet-select" id="pet-select">  
-                    <div class="dropdown-menu animated--fade-in" style="background-color: rgb(248, 230, 230)">
-                            <li><option class="dropdown-item">HP+</option></li>
-                            <li><option class="dropdown-item">BP</option></li>                        
-                    </div>
-                        </select>
+                      <span class="text-secondary">Notation Manager :</span>
+                           <br>
+                        <span class="text-info">notation courante : </span>
+                          {% if objectif.notation_manager  %}
+                              <span style="color: red;" > {{ objectif.notation_manager }} </span>
+                          {% else %}
+                              <span style="color: red;">Aucune Notation n'est définie Choisissez une</span>
+                          {% endif %}
+                      {{ form.notation_manager }}
                   </div>
                 </div>
               </div>
             </div>
         </div>
     <br>
-    <div class="card">
-        <div class="container-fluid">
-            <br>
-            <label for="">Commentaire Performance Annuelle:</label>
-            <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-            <br>
-        </div>
-    </div>
+    {% endfor %}
     <div class="container-fluid" align='right'>
         <br>
             <button class="btn btn-primary">Submit</button>
