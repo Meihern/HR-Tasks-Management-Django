@@ -110,7 +110,22 @@ class EvaluationView(TemplateView):
         objectifs = fiche_objectif.get_objectifs()
         data_objectifs = []
         for data in objectifs:
+            objectif = Objectif.objects.get(id=data['id'])
+            sous_objectifs = objectif.get_sous_objectifs()
+            data_sous_objectifs = []
+            for data2 in sous_objectifs:
+                sous_objectif = SousObjectif.objects.get(id=data2['id'])
+                sous_objectif = {
+                    'id_sous_objectif': sous_objectif.id,
+                    'description': sous_objectif.get_description()
+                }
+                data_sous_objectifs.append(sous_objectif)
             objectif = {
-                'id_objectif': data['id']
+                'id_objectif': objectif.id,
+                'description': objectif.get_description(),
+                'sous_objectifs': data_sous_objectifs,
+                'poids': objectif.get_poids()
             }
-        return render(request, template_name=self.template_name)
+            data_objectifs.append(objectif)
+
+        return render(request, template_name=self.template_name, context={'objectifs': data_objectifs})

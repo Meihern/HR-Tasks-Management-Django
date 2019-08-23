@@ -77,6 +77,9 @@ class Objectif(models.Model):
     def __str__(self):
         return str(self.fiche_objectif)+'\n'+'Objectif : '+self.description
 
+    def get_description(self):
+        return self.description
+
     def get_fiche_objectif_associe(self):
         return self.fiche_objectif
 
@@ -105,6 +108,9 @@ class SousObjectif(models.Model):
 
     def get_objectif_associe(self):
         return self.objectif
+
+    def get_description(self):
+        return self.description
 
     class Meta:
         verbose_name = 'Sous Objectif'
