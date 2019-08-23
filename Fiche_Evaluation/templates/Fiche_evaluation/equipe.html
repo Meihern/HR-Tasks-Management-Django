@@ -5,7 +5,7 @@
         {% if not fiche_objectifs %} <h1 class="text-primary"> Aucune Fiche d'objectifs n'est envoyé </h1>
         {% else %}
             {% for fiche in fiche_objectifs %}
-            <a href="{% url 'evaluation' %}" class="list-group-item list-group-item-action">{{ fiche.employe }}</a>
+            <a href="{% url 'evaluation' fiche.id %}" class="list-group-item list-group-item-action">{{ fiche.employe }}</a>
             {% endfor %}
         {% endif %}
     </div>

@@ -16,7 +16,7 @@ class FicheEvaluationView(FormView):
     success_url = '/fiche_evaluation/remplir_objectifs'
 
     def get(self, request, *args, **kwargs):
-        #if not  fiche_evalutation_accessible() or request.user.is_consultant:
+        # if not  fiche_evalutation_accessible() or request.user.is_consultant:
         if request.user.is_consultant:
             return HttpResponseForbidden()
         return render(request, template_name=self.template_name, context={'form': self.form})
@@ -36,7 +36,7 @@ class FicheEvaluationView(FormView):
                                         poids=poids[i] / 100)
                     objectif.save()
                     sous_objectifs = request.POST.getlist(
-                        form.FIELD_NAME_MAPPING['sous_objectif'].replace('_objectif_id', str(i+1)))
+                        form.FIELD_NAME_MAPPING['sous_objectif'].replace('_objectif_id', str(i + 1)))
                     if sous_objectifs:
                         for desc_sous_objectif in sous_objectifs:
                             sous_objectif = SousObjectif(description=desc_sous_objectif, objectif=objectif)
@@ -64,7 +64,7 @@ class EquipeView(TemplateView):
     template_name = 'Fiche_Evaluation/equipe.html'
 
     def get(self, request, *args, **kwargs):
-        #if not evaluation_mi_annuelle_accessible() or not evaluation_annuelle_accessible() or request.user.is_consultant:
+        # if not evaluation_mi_annuelle_accessible() or not evaluation_annuelle_accessible() or request.user.is_consultant:
         #    return HttpResponseForbidden()
         employe = request.user
         equipe = Employe.objects.filter(superieur_hierarchique=employe)
@@ -79,12 +79,38 @@ class EquipeView(TemplateView):
                     'employe': fiche.get_employe().get_full_name(),
                 }
                 data.append(fiche_objectif)
-        print(data)
         return render(request, template_name=self.template_name, context={'fiche_objectifs': data})
 
 
 class EvaluationView(TemplateView):
-    template_name = 'Fiche_Evaluation/evaluation.html'
+    template_name = 'Fiche_Evaluation/evaluation'
 
-    def get(self, request, *args, **kwargs):
+    def get_template_mi_annuelle(self):
+        self.template_name += '_mi_annuelle.html'
+
+    def get_template_annuelle(self):
+        self.template_name += '_annuelle.html'
+
+    def get(self, request, fiche_id, *args, **kwargs):
+        fiche_objectif = FicheObjectif.objects.get(id=fiche_id)
+
+        if request.user.is_consultant:
+            return HttpResponseForbidden()
+
+        if not request.user.is_superieur_to(fiche_objectif.get_employe()):
+            return HttpResponseForbidden()
+
+        if evaluation_annuelle_accessible():        # Reminder to change the month condition to 6
+            self.get_template_annuelle()
+        elif evaluation_mi_annuelle_accessible():   # Reminder to change the month condition to 12
+            self.get_template_mi_annuelle()
+        else:
+            return HttpResponseForbidden()
+
+        objectifs = fiche_objectif.get_objectifs()
+        data_objectifs = []
+        for data in objectifs:
+            objectif = {
+                'id_objectif': data['id']
+            }
         return render(request, template_name=self.template_name)

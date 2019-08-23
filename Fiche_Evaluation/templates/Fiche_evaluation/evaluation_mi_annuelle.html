@@ -1,21 +1,22 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    <h1>Evaluation mi année de Abdellah METKAL </h1>
+    <h1>Evaluation année de Abdellah METKAL </h1>
 <form>
     <div class="card">
       <div class="container-fluid">
         <div class="form-group">
           <br>
-          <label for="exampleTextarea">Objectif 1: <br> {{objectif}} </label>
-          <label for="exampleTextarea">Commentaire mi_annuel: {{commentaire_mi_annuelle}} </label>
+          <p for="exampleTextarea">Objectif 1: <br> {{objectif}} </p>
           <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
           <br>
-          <div align='right'>
-            <button class="btn btn-primary">Submit</button>
-          </div>
+          
         </div>
       </div>
+    </div>
+    <div class="container-fluid" align='right'>
+        <br>
+            <button class="btn btn-primary">Submit</button>
     </div>
   </form>
 </div>
