@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    <h1 class="text-primary">Evaluation Mi-Annuelle de {{ fiche.employe }} </h1>
+    <h1 class="text-primary"> Consultation de Votre Fiche d'objectifs </h1>
 <form method="POST">
     {% csrf_token %}
 {% for message in messages %}
@@ -18,11 +18,19 @@
         <div class="form-group">
           <br>
           <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
+            {% if objectif.sous_objectifs %}
+            <span class="text-secondary"> Sous Objectifs :</span>
+            <br>
+            {% endif %}
             {% for sous_objectif in objectif.sous_objectifs %}
                 <p> - {{ sous_objectif.description }} </p>
                 {% endfor %}
-                <p>evaluation mi annuelle</p>
+                <p class="text-primary">Evaluation Mi Annuelle : </p>
                 {{ objectif.evaluation_mi_annuelle }}
+                <p>Evaluation Annuelle : </p>
+                {{ objectif.evaluation_annuelle }}
+                <span class="text-primary">Notation Manager :</span>
+                <span style="color: red;" > {{ objectif.notation_manager }} </span>
           <br>
         </div>
       </div>
@@ -34,7 +42,7 @@
      <div class="card">
             <div class="container-fluid">
                 <br>
-     <p>Commentaire Performance Annuelle:</p> 
+     <p>Commentaire Performance Annuelle:</p>
      <textarea name="evaluation_mi_annuelle{{ forloop.counter }}" class="form-control" id="{{form.evaluation_mi_annuelle.id_for_label}}{{ forloop.counter }}" rows="3"></textarea>
     <br>
     </div>

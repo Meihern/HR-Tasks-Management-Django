@@ -108,7 +108,10 @@ def load_fiche_data(fiche_objectif: FicheObjectif):
         data_objectifs.append(objectif)
     fiche = {
         'id': fiche_objectif.id,
-        'employe': fiche_objectif.get_employe()
+        'employe': fiche_objectif.get_employe(),
+        'bonus': fiche_objectif.get_bonus(),
+        'commentaire_manager': fiche_objectif.get_commentaire_manager(),
+        'commentaire_employe': fiche_objectif.get_employe()
     }
     return data_objectifs, fiche
 
@@ -174,10 +177,19 @@ class EvaluationView(TemplateView):
 
         return HttpResponseRedirect(self.request.path_info)
 
+
 class ConsultationObjectifsView(TemplateView):
     template_name = 'Fiche_Evaluation/consultation_objectifs.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        if request.user.is_consultant:
+            return HttpResponseForbidden()
+        fiches_of_user = FicheObjectif.objects.filter(employe=request.user).values()
+        for fiche in fiches_of_user:
+            fiche_objectif = FicheObjectif.objects.get(id=fiche['id'])
+            if fiche_objectif.is_current:
+                data_objectifs, fiche = load_fiche_data(fiche_objectif)
+                break
+        return render(request, self.template_name, context={'fiche': fiche_objectif, 'objectifs': data_objectifs})
 
 

@@ -37,6 +37,12 @@ class FicheObjectif(models.Model):
         objectifs = Objectif.objects.filter(fiche_objectif=self).values()
         return objectifs
 
+    def get_commentaire_employe(self):
+        return self.commentaire_employe
+
+    def get_commentaire_manager(self):
+        return self.commentaire_manager
+    
     @property
     def is_current(self):
         if self.date_envoi.year == now().date().year:

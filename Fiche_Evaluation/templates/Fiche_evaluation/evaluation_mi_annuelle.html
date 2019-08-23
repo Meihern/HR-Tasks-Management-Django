@@ -18,6 +18,10 @@
         <div class="form-group">
           <br>
           <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
+            {% if objectif.sous_objectifs %}
+            <span class="text-secondary"> Sous Objectifs :</span>
+            <br>
+            {% endif %}
             {% for sous_objectif in objectif.sous_objectifs %}
                 <p> - {{ sous_objectif.description }} </p>
                 {% endfor %}
