@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from Authentification.models import Employe
 from Authentification.manager import CustomModelManager
 
+
 # Create your models here.
 
 
@@ -49,12 +50,19 @@ class FicheObjectif(models.Model):
 
 
 class Objectif(models.Model):
+    NOTATION_CHOICES = ((1.25, 'HP+'), (1.2, 'HP='), (1.15, 'HP-'),
+                        (1.1, 'EP+'), (1.05, 'EP='), (1.03, 'EP-'),
+                        (1, 'BP+'), (0.95, 'BP='), (0.85, 'BP-'),
+                        (0.75, 'MP+'), (0.5, 'MP'), (0, 'FP'),
+                        )
+
     description = models.TextField(null=False, blank=False, verbose_name="Description")
     fiche_objectif = models.ForeignKey(to=FicheObjectif, null=False, blank=False,
                                        on_delete=models.CASCADE, verbose_name="Fiche d'objectif associée")
     poids = models.DecimalField(max_digits=3, decimal_places=2, null=False, blank=False, verbose_name='Poids')
     notation_manager = models.DecimalField(max_digits=3, decimal_places=2,
-                                           null=True, blank=True, verbose_name='Notation Manager')
+                                           null=True, blank=True, verbose_name='Notation Manager',
+                                           choices=NOTATION_CHOICES)
     evaluation_mi_annuelle = models.TextField(null=True, blank=True, verbose_name="Evalutation Mi-Annuelle")
     evaluation_annuelle = models.TextField(null=True, blank=True, verbose_name="Evalutation Annuelle")
     objects = CustomModelManager()
@@ -64,7 +72,7 @@ class Objectif(models.Model):
         return sous_objectifs
 
     def __str__(self):
-        return str(self.fiche_objectif)+'\n'+'Objectif : '+self.description
+        return str(self.fiche_objectif) + '\n' + 'Objectif : ' + self.description
 
     def get_description(self):
         return self.description
@@ -100,7 +108,8 @@ class Objectif(models.Model):
 
 class SousObjectif(models.Model):
     description = models.TextField(null=False, blank=False, verbose_name='Description')
-    objectif = models.ForeignKey(to=Objectif, blank=False, null=False, verbose_name='Objectif_Associé', on_delete=models.CASCADE)
+    objectif = models.ForeignKey(to=Objectif, blank=False, null=False, verbose_name='Objectif_Associé',
+                                 on_delete=models.CASCADE)
 
     objects = CustomModelManager()
 
@@ -116,9 +125,3 @@ class SousObjectif(models.Model):
     class Meta:
         verbose_name = 'Sous Objectif'
         verbose_name_plural = 'Sous Objectifs'
-
-
-
-
-
-

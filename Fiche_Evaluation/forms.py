@@ -62,3 +62,13 @@ class EvaluationMiAnnuelleForm(forms.Form):
         fields = ('evaluation_mi_annuelle',)
 
 
+class EvaluationAnnuelleForm(forms.Form):
+
+    evaluation_annuelle = forms.CharField(required=False, widget=forms.Textarea)
+    notation_manager = forms.ChoiceField(choices=Objectif.NOTATION_CHOICES, required=True, widget=forms.Select)
+
+    class Meta:
+        model = Objectif
+        fields = ('evaluation_annuelle', 'notation_manager')
+
+

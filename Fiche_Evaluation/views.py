@@ -7,7 +7,7 @@ from Authentification.models import Employe
 from Notifications.models import Notification
 from .utils import *
 from Fiche_Evaluation.models import Objectif, FicheObjectif, SousObjectif
-from .forms import FicheObjectifForm, EvaluationMiAnnuelleForm
+from .forms import FicheObjectifForm, EvaluationMiAnnuelleForm, EvaluationAnnuelleForm
 
 
 class FicheEvaluationView(FormView):
@@ -114,7 +114,8 @@ def load_fiche_data(fiche_objectif: FicheObjectif):
 
 class EvaluationView(TemplateView):
     template_name = 'Fiche_Evaluation/evaluation'
-    form = EvaluationMiAnnuelleForm
+    form_mi_annuelle = EvaluationMiAnnuelleForm
+    form_annuelle = EvaluationAnnuelleForm
 
     def get_template_mi_annuelle(self):
         self.template_name += '_mi_annuelle.html'
