@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.employee th {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+  background-color: black;
+  -webkit-text-fill-color:white;
+}
+
+.objectifs th {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+}
+
+td {
+  border: 1px solid black;
+  text-align: left;
+  padding: 8px;
+}
+
+.notation table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.notation th, td {
+  padding: 5px;
+  text-align: left;    
+}
+
+</style>
+</head>
+<body>
+    <div class="row">
+        <div class="col">
+                <img src="../../Pdfs/static/Pdfs/img/emidlogo.png" alt="">
+        </div>
+        <div class="col" align='center'>
+            <h2>Fiche d'évaluation</h2>
+        </div>
+    </div>
+    <div class="employee">
+        <table>
+                <tr>
+                  <th>Matricule</th>
+                  <th>Nom et Prenom</th>
+                  <th>Fonction</th>
+                  <th>Departement</th>
+                  <th>Manager</th>
+                  <th>FonctionM</th>
+                  <th>Periode</th>
+                  <th>%Bonus IO</th>
+                </tr>
+                <tr>
+                  <td>{{Matricule}}</td>
+                  <td>{{Nom_Prenom}}</td>
+                  <td>{{Fonction}}</td>
+                  <td>{{Departement}}</td>
+                  <td>{{Manager}}</td>
+                  <td>{{FonctionM}}</td>
+                  <td>{{Periode}}</td>
+                  <td>{{%Bonus}}</td>
+                </tr>
+        </table>
+    </div>
+    <br>
+    <div class="objectifs">       
+        <table>
+                <tr>
+                  <th>objectifs</th>
+                  <th>Poids</th>
+                  <th>Evaluation mi-annuel: Manager</th>
+                  <th>Evaluation annuel: Manager</th>
+                  <th>Notation Manager</th>
+                  <th>en %</th>
+                </tr>
+                <tr>
+                  <td>{{objectifs}}</td>
+                  <td>{{Poids}}</td>
+                  <td>{{Evaluation mi-annuel: Manager}}</td>
+                  <td>{{Evaluation annuel}}</td>
+                  <td>{{Notation Manager}}</td>
+                  <td>{{Pourcentage}}</td>
+                </tr>
+        
+        </table>
+    </div>
+    <br>
+    <div class="notation">
+    <table>
+            <tr>
+                <th width="200">HP <br>Highest Performance</th>
+                <td>Dépasse significativement ses objectifs en avance sur le programme,démontre un grand sens
+                    de l'initiative, trés engagé dans son travail, s'autodirige directement et develope
+                    des solutions à impacts directs sur le bisness.
+                </td>
+            </tr>
+            <tr>
+                <th>EP <br> Excellente Performance</th>
+                <td>Dépasse ses objectifs et en avance sur le programme, démontre de l’initiative et nécessite
+                     un minimum de supervision, développe innovatives solutions qui servent au développement
+                      de la performance du business.</td>
+            </tr>
+            <tr>
+                <th>BP <br> Bonne Performance</th>
+                <td>Atteint ses objectifs et dépasse pour certains, habituellement respecte les dates limites
+                     et occasionnellement en avance sur son programme, démontre de l’initiative et nécessite
+                      une supervision normale, démontre de la créativité. </td>
+            </tr>
+            <tr>
+                <th>MP <br> Moyenne Performance</th>
+                <td>Atteint quelques résultats à travers ses objectifs, nécessite une proche supervision 
+                    démontre peu de créativité.</td>
+            </tr>
+            <tr>
+                <th>FP <br> Faible Performance </th>
+                <td>N’atteint pas les résultats à travers ses objectifs, manque d’initiative nécessite
+                    un seuil élevé de supervision.</td>
+            </tr>
+    </table>
+    </div>
+    <br>
+    <div class="objectifs">       
+            <table>
+                    <tr>
+                      <th>Commentaire du Manager Performance annuelle</th>
+                      <th>Commentaire employé Performance annuelle</th>
+                    </tr>
+                    <tr>
+                      <td>{{Commentaire_Manager}}</td>
+                      <td>{{Commentaire_Emplyé}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{Date_Comentaire_Manager}}</td>
+                        <td>{{Date_Commentaire_Employé}}</td>
+                    </tr>
+            </table>
+        </div>
+        <br>
+        <div id="performance">
+        <table>
+                <tr>
+                  <th colspan="2">Performance annuelle</th>
+                </tr>
+                <tr>
+                  <td>Resultat d'evaluation</td>
+                  <td width="100">{{Notation_Manager}}</td>
+                </tr>
+                <tr>
+                    <td>Bonus</td>
+                    <td width="100">{{%Bonus}}</td>
+                </tr>
+              </table>
+        </div>
+</body>
+</html>

@@ -22,6 +22,7 @@
             <th>Date de depart</th>
             <th>Date de retour</th>
             <th>Etat</th>
+            <th>Telecharger</th>
           </tr>
         </thead>
         <tbody id="accept-demande-doc-type">
@@ -32,6 +33,11 @@
             <td>{{ Demande.date_depart }}</td>
             <td>{{ Demande.date_retour }}</td>
             <td>{{ Demande.etat }}</td>
+            <td>
+                <div align='center'>
+                  <button type='button' data-value="+id_sous_objectif_count+" id="+button_delete_id+" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none'></button>
+                </div>
+            </td>
           </tr>
         {% endfor %}
         </tbody>
