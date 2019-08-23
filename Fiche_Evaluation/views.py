@@ -159,6 +159,7 @@ class EvaluationView(TemplateView):
         if form.is_valid():
             objectifs = fiche_objectif.get_objectifs()
             notations = request.POST.getlist('notation_manager[]')
+            bonus_individuels = []
             for i, objectif in enumerate(objectifs):
                 objectif = Objectif.objects.get(id=objectif['id'])
                 if type(form) == EvaluationMiAnnuelleForm:
@@ -168,9 +169,10 @@ class EvaluationView(TemplateView):
                     print('Annuelle')
                     objectif.set_notation_manager(notations[i])
                     objectif.set_evaluation_annuelle(request.POST.get('evaluation_annuelle' + str(i+1)))
-
+                    bonus_individuels.append(objectif.get_notation_manager()*objectif.get_poids())
                     print('evaluation_annuelle' + str(i+1))
                 objectif.save()
+            fiche_objectif.bonus = sum(bonus_individuels)
             messages.success(request, "La fiche a été évaluée avec succès")
         else:
             messages.error(request, "Echèc pendant l'évaluation de la fiche")
