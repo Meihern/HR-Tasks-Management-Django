@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    <h1>Evaluation année de Abdellah METKAL </h1>
+    <h1 class="text-primary">Evaluation année de Abdellah METKAL </h1>
 <form>
     <div class="card">
       <div class="container-fluid">
@@ -11,14 +11,40 @@
           <p for="exampleTextarea">Commentaire mi-annuel: <br> {{commentaire_mi_annuelle}} </p>
           <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
           <br>
-          
+        <div class="input-group">
+                  <div class="dropup">
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                     Notation
+                    </button>
+                    <div class="dropdown-menu animated--fade-in" style="background-color: rgb(248, 230, 230)">
+                            <li><a class="dropdown-item" href="#">HP+</a></li>
+                            <li><a class="dropdown-item" href="#">BP</a></li>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
-      </div>
+    <br>
+    <div class="card">
+        <div class="container-fluid">
+            <br>
+            <label for="">Commentaire Performance Annuelle:</label>
+            <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+            <br>
+        </div>
     </div>
     <div class="container-fluid" align='right'>
         <br>
             <button class="btn btn-primary">Submit</button>
     </div>
+    <br>
   </form>
 </div>
+{% block dropdown %}
+<script>$('.dropdown-menu li a').on('click', function(){    
+        $('.dropup .dropdown-toggle').html($(this).html());    
+    })
+</script>
+{% endblock %}
 {% endblock %}
