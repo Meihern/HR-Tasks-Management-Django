@@ -1,6 +1,6 @@
 from django import forms
 from django.forms.utils import ErrorList
-
+from Fiche_Evaluation.models import Objectif
 
 def clean_poids(poids: list):
     for i in range(len(poids)):
@@ -51,5 +51,14 @@ class FicheObjectifForm(forms.Form):
             return True
         else:
             return False
+
+
+class EvaluationMiAnnuelleForm(forms.Form):
+
+    evaluation_mi_annuelle = forms.CharField(required=False, widget=forms.Textarea)
+
+    class Meta:
+        model = Objectif
+        fields = ('evaluation_mi_annuelle',)
 
 

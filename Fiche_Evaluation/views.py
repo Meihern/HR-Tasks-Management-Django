@@ -1,13 +1,13 @@
 from django.contrib import messages
-from django.http import HttpResponseForbidden
-from django.shortcuts import render
+from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, FormView
 
 from Authentification.models import Employe
 from Notifications.models import Notification
 from .utils import *
 from Fiche_Evaluation.models import Objectif, FicheObjectif, SousObjectif
-from .forms import FicheObjectifForm, clean_poids
+from .forms import FicheObjectifForm, EvaluationMiAnnuelleForm
 
 
 class FicheEvaluationView(FormView):
@@ -82,8 +82,39 @@ class EquipeView(TemplateView):
         return render(request, template_name=self.template_name, context={'fiche_objectifs': data})
 
 
+def load_fiche_data(fiche_objectif: FicheObjectif):
+    objectifs = fiche_objectif.get_objectifs()
+    data_objectifs = []
+    for data in objectifs:
+        objectif = Objectif.objects.get(id=data['id'])
+        sous_objectifs = objectif.get_sous_objectifs()
+        data_sous_objectifs = []
+        for data2 in sous_objectifs:
+            sous_objectif = SousObjectif.objects.get(id=data2['id'])
+            sous_objectif = {
+                'id_sous_objectif': sous_objectif.id,
+                'description': sous_objectif.get_description()
+            }
+            data_sous_objectifs.append(sous_objectif)
+        objectif = {
+            'id_objectif': objectif.id,
+            'description': objectif.get_description(),
+            'sous_objectifs': data_sous_objectifs,
+            'poids': get_percentage_value(objectif.get_poids()),
+            'evaluation_mi_annuelle': objectif.get_evaluation_mi_annuelle(),
+            'evaluation_annuelle': objectif.get_evaluation_annuelle()
+        }
+        data_objectifs.append(objectif)
+    fiche = {
+        'id': fiche_objectif.id,
+        'employe': fiche_objectif.get_employe()
+    }
+    return data_objectifs, fiche
+
+
 class EvaluationView(TemplateView):
     template_name = 'Fiche_Evaluation/evaluation'
+    form = EvaluationMiAnnuelleForm
 
     def get_template_mi_annuelle(self):
         self.template_name += '_mi_annuelle.html'
@@ -92,7 +123,7 @@ class EvaluationView(TemplateView):
         self.template_name += '_annuelle.html'
 
     def get(self, request, fiche_id, *args, **kwargs):
-        fiche_objectif = FicheObjectif.objects.get(id=fiche_id)
+        fiche_objectif = get_object_or_404(FicheObjectif, pk=fiche_id)
 
         if request.user.is_consultant:
             return HttpResponseForbidden()
@@ -100,32 +131,31 @@ class EvaluationView(TemplateView):
         if not request.user.is_superieur_to(fiche_objectif.get_employe()):
             return HttpResponseForbidden()
 
-        if evaluation_annuelle_accessible():        # Reminder to change the month condition to 6
-            self.get_template_annuelle()
-        elif evaluation_mi_annuelle_accessible():   # Reminder to change the month condition to 12
+        # if evaluation_annuelle_accessible():        # Reminder to change the month condition to 6
+        #    self.get_template_annuelle()
+        elif evaluation_mi_annuelle_accessible():  # Reminder to change the month condition to 12
             self.get_template_mi_annuelle()
         else:
             return HttpResponseForbidden()
 
-        objectifs = fiche_objectif.get_objectifs()
-        data_objectifs = []
-        for data in objectifs:
-            objectif = Objectif.objects.get(id=data['id'])
-            sous_objectifs = objectif.get_sous_objectifs()
-            data_sous_objectifs = []
-            for data2 in sous_objectifs:
-                sous_objectif = SousObjectif.objects.get(id=data2['id'])
-                sous_objectif = {
-                    'id_sous_objectif': sous_objectif.id,
-                    'description': sous_objectif.get_description()
-                }
-                data_sous_objectifs.append(sous_objectif)
-            objectif = {
-                'id_objectif': objectif.id,
-                'description': objectif.get_description(),
-                'sous_objectifs': data_sous_objectifs,
-                'poids': objectif.get_poids()
-            }
-            data_objectifs.append(objectif)
+        data_objectifs, fiche = load_fiche_data(fiche_objectif)
 
-        return render(request, template_name=self.template_name, context={'objectifs': data_objectifs})
+        return render(request, template_name=self.template_name,
+                      context={'objectifs': data_objectifs, 'fiche': fiche, 'form': self.form})
+
+    def post(self, request, fiche_id, *args, **kwargs):
+        form = self.form(request.POST or None)
+        fiche_objectif = FicheObjectif.objects.get(id=fiche_id)
+        if form.is_valid():
+            objectifs = fiche_objectif.get_objectifs()
+            for i, objectif in enumerate(objectifs):
+                objectif = Objectif.objects.get(id=objectif['id'])
+                objectif.set_evaluation_mi_annuelle(request.POST.get('evaluation_mi_annuelle' + str(i+1)))
+                objectif.save()
+            messages.success(request, "La fiche a été évaluée avec succès")
+        else:
+            messages.error(request, "Echèc pendant l'évaluation de la fiche")
+
+        return HttpResponseRedirect(self.request.path_info)
+
+

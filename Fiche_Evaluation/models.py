@@ -7,17 +7,6 @@ from Authentification.manager import CustomModelManager
 # Create your models here.
 
 
-def get_percentage_value(value: float):
-    if value is None:
-        return 0
-    else:
-        return value*100
-
-
-def get_resultat_evaluation(value: float):
-    pass
-
-
 class FicheObjectif(models.Model):
     employe = models.ForeignKey(to=Employe, null=False, blank=False, on_delete=None, verbose_name='Employé')
     date_envoi = models.DateField(null=False, blank=False, default=now)
@@ -91,6 +80,18 @@ class Objectif(models.Model):
             return 0
         else:
             return self.notation_manager
+
+    def get_evaluation_mi_annuelle(self):
+        return self.evaluation_mi_annuelle
+
+    def get_evaluation_annuelle(self):
+        return self.evaluation_annuelle
+
+    def set_evaluation_mi_annuelle(self, evaluation):
+        self.evaluation_mi_annuelle = evaluation
+
+    def set_evaluation_annuelle(self, evaluation):
+        self.evaluation_annuelle = evaluation
 
     class Meta:
         verbose_name = 'Objectif'
