@@ -38,6 +38,9 @@ class FicheObjectif(models.Model):
         objectifs = Objectif.objects.filter(fiche_objectif=self).order_by('id').values()
         return objectifs
 
+    def get_date_envoi(self):
+        return self.date_envoi
+
     def get_commentaire_employe(self):
         return self.commentaire_employe
 

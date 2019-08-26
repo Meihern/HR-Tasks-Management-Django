@@ -3,23 +3,26 @@ $("#demande-doc-Modal").on('show.bs.modal',function(e) {
     let matricule = $(e.relatedTarget).data("matricule");
     console.log(matricule);
     let confirm_modal_button = $("#confirm-demande-doc");
-    let url = confirm_modal_button.data("url");
-    console.log(url);
+    window.url = confirm_modal_button.data("url");
+    console.log(window.url);
     if(type_demande === 'domiciliation') $("#demande-doc-Modal .modal-body").text("Selectionnez \"Confirmer\" si vous êtes sûr de l'envoi de votre demande de "+type_demande);
     else $("#demande-doc-Modal .modal-body").text("Selectionnez \"Confirmer\" si vous êtes sûr de l'envoi de votre demande d'attestation de "+type_demande);
     confirm_modal_button.val(type_demande);
     if(matricule !== ''){
-       url = $(e.relatedTarget).data("url");
+       window.url = $(e.relatedTarget).data("url");
     }
-    $(confirm_modal_button).click(function(e) {
+});
+
+$("#confirm-demande-doc").click(function(e) {
     e.preventDefault();
+    console.log("test");
     $('#demande-doc-Modal').modal('hide');
     let csrf = window.CSRF_TOKEN;
-    if(url === undefined){
+    if(window.url === undefined){
         console.log("TESTSSGDJDSMK");
-        url = $(this).data('url');
+        window.url = $(this).data('url');
     }
-    console.log(url);
+    let type_demande = $(this).val();
     $.ajax({
         type: 'POST',
         url: url,
@@ -37,7 +40,6 @@ $("#demande-doc-Modal").on('show.bs.modal',function(e) {
            else swal("Echec","Demande d'attestation de "+type_demande+" non envoyé","error");
         }
     });
-});
 });
 
 

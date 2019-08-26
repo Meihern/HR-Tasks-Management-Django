@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from django.contrib.messages import constants as messages
-from celery.schedules import crontab
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,7 +24,7 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 SECRET_KEY = 'g!676-1(#^34fj)rl6$@d2__)rk6*5n8shbfcmb$7kqu^fc!&a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -158,16 +157,6 @@ STATICFILES_DIRS = (
 MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media/')
 MEDIA_URL = '/media/'
 
-# Rest Framework Api Configuration
-
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
-
 # Messages configuration
 
 MESSAGE_TAGS = {
@@ -201,20 +190,7 @@ CACHES = {
     }
 }
 
-# Celery Settings
 
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-CELERY_BEAT_SCHEDULE = {
-    'hello': {
-        'task': 'Realisation.tasks.hello',
-        'schedule': crontab()  # execute every minute
-    }
-}
 
 
 

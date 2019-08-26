@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}Vous recevez cet email suite à la réception d'une nouvelle fiche d'objectif d'un membre de votre équipe envoyée le {{ date_envoi }} à {{ site_name }}.{% endblocktrans %}
+
+{% trans "La fiche d'objectif est envoyée par : " %} {{ employe.get_full_name }}
+{% trans "Son matricule est : " %} {{ employe.get_matricule }}
+{% trans "Veuillez visiter ce lien et s'authentifier pour consulter les fiches des objectifs de votre équipe" %}
+    {% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'consultation_objectifs_equipe'  %}
+    {% endblock %}
+{% trans "Thanks for using our site!" %}
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+
+{% endautoescape %}

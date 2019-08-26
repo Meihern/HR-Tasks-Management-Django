@@ -1,0 +1,19 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}Vous recevez cet email suite à la réception d'une nouvelle demande de congé envoyée le {{ date_envoi }} à {{ site_name }}.{% endblocktrans %}
+
+{% trans "La Demande de Congé est envoyée par : " %} {{ employe.get_full_name }}
+{% trans "Son matricule est : " %} {{ employe.get_matricule }}
+{% trans "L'intérim sera assuré par : " %} {{ demande_conge.get_interim }}
+{% trans "Son numéro de téléphone est : " %} {{ demande_conge.get_telephone }}
+{% trans "La date de départ en congé souhaitée est : " %} {{ demande_conge.get_date_depart }}
+{% trans "La date de retour du congé souhaitée est : " %} {{ demande_conge.get_date_retour }}
+{% trans "Les Jours ouvravles sont : " %} {{ demande_conge.get_jours_ouvrables }}
+{% trans "Veuillez visiter ce lien et s'authentifier pour accepter ou refuser cette demande" %}
+    {% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'Dashboard'  %}
+    {% endblock %}
+{% trans "Thanks for using our site!" %}
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+
+{% endautoescape %}

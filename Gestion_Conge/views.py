@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView, FormView
 from django.http import HttpResponseForbidden, Http404, JsonResponse
 from Notifications.models import Notification
@@ -10,9 +10,20 @@ from .models import DemandeConge
 from .forms import DemandeCongeForm
 from django.core.mail import send_mail
 from Realisation.settings import DEFAULT_FROM_EMAIL
+from django.template import loader
 
 
 # Create your views here.
+
+def get_email_context(employe: Employe, demande_conge: DemandeConge, request):
+    context = {
+        'site_name': 'EMID Digitalisation Services RH',
+        'employe': employe,
+        'demande_conge': demande_conge,
+        'date_envoi': demande_conge.get_date_envoi(),
+        'protocol': 'http',
+    }
+    return context
 
 
 class DemandeCongeView(FormView):
@@ -20,14 +31,21 @@ class DemandeCongeView(FormView):
     template_name = 'Gestion_Conge/demandeconge.html'
     success_url = '/conges/demande_conge'
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, matricule_employe=None, *args, **kwargs):
         # if request.user.is_consultant:
         #    return HttpResponseForbidden()
+        if matricule_employe is not None:
+            employe = get_object_or_404(Employe, pk=matricule_employe)
+            if request.user != employe.get_superieur_hierarchique():
+                return HttpResponseForbidden()
         return render(request, template_name=self.template_name, context={'form': self.form})
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, matricule_employe=None, *args, **kwargs):
         form = self.form(request.POST or None)
-        employe = request.user
+        if matricule_employe is not None:
+            employe = get_object_or_404(Employe, pk=matricule_employe)
+        else:
+            employe = request.user
         if employe:
             if form.is_valid():
                 result = self.form_valid(form)
@@ -47,8 +65,11 @@ class DemandeCongeView(FormView):
                     notification.set_sender(employe)
                     notification.set_receiver()
                     notification.save()
-                    send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
-                             recipient_list=[notification.get_receiver().get_email()])
+                    context = get_email_context(employe, demande_conge, request)
+                    context['domain'] = request.META['HTTP_HOST']
+                    email = loader.render_to_string('Gestion_Conge/email_demande_conge.html', context)
+                    send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
+                              recipient_list=[notification.get_receiver().get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
                 except:
                     demande_conge.delete()
@@ -97,7 +118,7 @@ def accept_demande_conge(request):
             no_reply = False
 
         notification = Notification(content_object=demande_conge, no_reply=no_reply)
-        notification.set_subject("Demande de Congé")
+        notification.set_subject("Une nouvelle sur votre demande de congé")
         notification.set_sender(employe)
         notification.set_receiver()
         if no_reply is False:
@@ -106,10 +127,14 @@ def accept_demande_conge(request):
             notif_msg = "Votre demande de congé a été acceptée"
         notification.set_message(notif_msg)
         notification.save()
-        ''' Uncomment to apply sending emails
-        send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
+        context = get_email_context(employe, demande_conge, request)
+        context['domain'] = request.META['HTTP_HOST']
+        if demande_conge.get_etat() == DemandeConge.ETAT_DIRECTION_RH:
+            email = loader.render_to_string("Gestion_Conge/email_accept_demande_conge.html", context)
+        else:
+            email = loader.render_to_string("Gestion_Conge/email_demande_conge.html")
+        send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
                   recipient_list=[notification.get_receiver().get_email()])
-        '''
     except ValueError:
         return JsonResponse({'Response': 'error'})
 
@@ -134,12 +159,15 @@ def refuser_demande_conge(request):
         demande_conge.update_etat(DemandeConge.ETAT_REFUS)
         demande_conge = DemandeConge.objects.safe_get(id=demande_conge.get_id())
         notification = Notification(content_object=demande_conge)
-        notification.set_subject("Demande de Congé")
+        notification.set_subject("Une nouvelle sur votre demande de congé")
         notification.set_sender(employe)
         notification.set_receiver()
         notification.set_message("Votre demande de Congé a été refusée")
         notification.save()
-        send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
+        context = get_email_context(employe, demande_conge, request)
+        context['domain'] = request.META['HTTP_HOST']
+        email = loader.render_to_string("Gestion_Conge/email_refuser_demande_conge.html", context)
+        send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
                   recipient_list=[notification.get_receiver().get_email()])
     except ValueError:
         return JsonResponse({'Response': 'error'})
@@ -188,7 +216,6 @@ class ConsultationDemandeConges(TemplateView):
 def load_data(employe: Employe):
     if employe.can_consult_conges:
         activite_mdlz = Activite.objects.safe_get(id=5)
-        activite_shared = Activite.objects.safe_get(id=4)
         if employe.can_consult_mdlz:
             demandes_conges = DemandeConge.objects.filter(employe__activite=activite_mdlz).order_by('-date_envoi')
         elif employe.can_consult_shared_tabac_fmcg:

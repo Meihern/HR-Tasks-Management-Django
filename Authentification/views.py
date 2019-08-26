@@ -81,7 +81,7 @@ class SendPasswordResetEmail(FormView):
                 context = {
                     'email': employe.get_email(),
                     'domain': request.META['HTTP_HOST'],
-                    'site_name': 'Digitalisation Services RH',
+                    'site_name': 'EMID Digitalisation Services RH',
                     'uid': urlsafe_base64_encode(force_bytes(employe.get_matricule())),
                     'user': employe,
                     'token': default_token_generator.make_token(employe),
