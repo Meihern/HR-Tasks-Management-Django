@@ -16,3 +16,15 @@ class ConsultationView(TemplateView, LoginRequiredMixin):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+class ErrorView(TemplateView, LoginRequiredMixin):
+    template_name = '404.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+class ErrorTView(TemplateView, LoginRequiredMixin):
+    template_name = '403.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
