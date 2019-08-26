@@ -39,6 +39,7 @@ class DemandeCongeView(FormView):
                 demande_conge = DemandeConge(employe=employe, date_depart=date_depart,
                                              date_retour=date_retour, interim=interim, telephone=telephone,
                                              jours_ouvrables=jours_ouvrables)
+                demande_conge.save()
                 try:
                     notification = Notification(content_object=demande_conge, no_reply=False)
                     notification.set_subject("Demande de Congé")
@@ -46,11 +47,11 @@ class DemandeCongeView(FormView):
                     notification.set_sender(employe)
                     notification.set_receiver()
                     notification.save()
-                    demande_conge.save()
                     #send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
                     #          recipient_list=[notification.get_receiver().get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
                 except:
+                    demande_conge.delete()
                     result = self.form_invalid(form)
                     messages.error(request, "Echec de l'envoi de votre demande de congé")
                 return result

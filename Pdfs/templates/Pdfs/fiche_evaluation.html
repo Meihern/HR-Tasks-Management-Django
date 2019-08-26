@@ -62,12 +62,12 @@ td {
                 </tr>
                 <tr>
                   <td>{{matricule}}</td>
-                  <td>{{nom_Prenom}}</td>
+                  <td>{{nom_prenom}}</td>
                   <td>{{fonction}}</td>
                   <td>{{departement}}</td>
                   <td>{{manager}}</td>
                   <td>{{fonctionM}}</td>
-                  <td>{{periode}}</td>
+                  <td>01/01/{{periode}}<br>31/12/{{ periode }}</td>
                   <td>{{bonus}}</td>
                 </tr>
         </table>
@@ -76,22 +76,23 @@ td {
     <div class="objectifs">       
         <table>
                 <tr>
-                  <th>objectifs</th>
-                  <th>Poids</th>
-                  <th>Evaluation mi-annuel: Manager</th>
-                  <th>Evaluation annuel: Manager</th>
-                  <th>Notation Manager</th>
-                  <th>en %</th>
+                  <th width="50">objectifs</th>
+                  <th width="20">Poids</th>
+                  <th width="300">Evaluation mi-annuel: Manager</th>
+                  <th width="300">Evaluation annuel: Manager</th>
+                  <th width="20">Notation Manager</th>
+                  <th width="30">en %</th>
                 </tr>
+                {% for objectif in objectifs %}
                 <tr>
-                  <td>{{objectifs}}</td>
-                  <td>{{Poids}}</td>
-                  <td>{{Evaluation mi-annuel: Manager}}</td>
-                  <td>{{Evaluation annuel}}</td>
-                  <td>{{Notation Manager}}</td>
-                  <td>{{Pourcentage}}</td>
+                  <td>{{objectif.description}}</td>
+                  <td>{{objectif.poids}}</td>
+                  <td>{{objectif.evaluation_mi_annuelle}}</td>
+                  <td>{{objectif.evaluation_annuelle}}</td>
+                  <td>{{objectif.notation_manager}}</td>
+                  <td>{{objectif.notation_manager_value}}</td>
                 </tr>
-        
+                {% endfor %}
         </table>
     </div>
     <br>
@@ -136,12 +137,12 @@ td {
                       <th>Commentaire employé Performance annuelle</th>
                     </tr>
                     <tr>
-                      <td>{{Commentaire_Manager}}</td>
-                      <td>{{Commentaire_Emplyé}}</td>
+                      <td>{{commentaire_manager}}</td>
+                      <td>{{commentaire_employe}}</td>
                     </tr>
                     <tr>
-                        <td>{{Date_Comentaire_Manager}}</td>
-                        <td>{{Date_Commentaire_Employé}}</td>
+                        <td>{{date_comentaire_manager}}</td>
+                        <td>{{date_commentaire_employé}}</td>
                     </tr>
             </table>
         </div>
@@ -153,11 +154,11 @@ td {
                 </tr>
                 <tr>
                   <td>Resultat d'evaluation</td>
-                  <td width="100">{{Notation_Manager}}</td>
+                  <td width="100">{{resultat_evaluation}}</td>
                 </tr>
                 <tr>
                     <td>Bonus</td>
-                    <td width="100">{{%Bonus}}</td>
+                    <td width="100">{{bonus}}</td>
                 </tr>
               </table>
         </div>

@@ -44,6 +44,12 @@ class FicheObjectif(models.Model):
     def get_commentaire_manager(self):
         return self.commentaire_manager
 
+    def get_date_validation_employe(self):
+        return self.date_validation_employe
+
+    def get_date_validation_manager(self):
+        return self.date_validation_manager
+
     @property
     def is_current(self):
         if self.date_envoi.year == now().date().year:
@@ -172,6 +178,8 @@ class AccessibiliteFicheObjectif(models.Model):
 
     @property
     def fiche_evalutation_accessible(self):
+        if self is None:
+            return False
         if self.remplir_exceptionnelle_is_accessible:
             return True
         if self.mois_accessibilite_remplir_fiche:
@@ -184,6 +192,8 @@ class AccessibiliteFicheObjectif(models.Model):
 
     @property
     def evaluation_mi_annuelle_accessible(self):
+        if self is None:
+            return False
         if self.evaluation_mi_annee_exceptionnelle_is_accessible:
             return True
         if self.mois_accessibilite_evaluation_mi_annuelle:
@@ -196,6 +206,8 @@ class AccessibiliteFicheObjectif(models.Model):
 
     @property
     def evaluation_annuelle_accessible(self):
+        if self is None:
+            return False
         if self.evaluation_annee_exceptionnelle_is_accessible:
             return True
         if self.mois_accessibilite_evaluation_annuelle:
