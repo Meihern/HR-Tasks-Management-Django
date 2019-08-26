@@ -117,7 +117,11 @@ class GeneratePDFDemandeConge(TemplateView):
             'date_depart': demande_conge.get_date_depart(),
             'date_retour': demande_conge.get_date_retour(),
             'jours_ouvrables': demande_conge.get_jours_ouvrables(),
-            'telephone': demande_conge.get_telephone()
+            'telephone': demande_conge.get_telephone(),
+            'date_demande': demande_conge.get_date_envoi(),
+            'date_validation_superieur': demande_conge.get_date_sup(),
+            'date_validation_direction': demande_conge.get_date_direction(),
+            'date_validation_direction_rh': demande_conge.get_date_direction_rh()
         }
         if context:
             template = get_template(self.template_name)

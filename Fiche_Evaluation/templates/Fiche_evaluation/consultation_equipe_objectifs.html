@@ -16,16 +16,18 @@
             </tr>
           </thead>
           <tbody>
+          {% for fiche in fiche_objectifs %}
             <tr>
-              <td>Edinburgh</td>
-              <td>Python Developer</td>
+              <td>{{fiche.employe}}</td>
+              <td>{{ fiche.fonction }}</td>
               <td>
                 <div align='center'>
-                  <button type='button' class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></button>
+                  <a type='button' href="{% url 'generate_pdf_fiche_objectif' fiche.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
                 </div>
               </td>
 
             </tr>
+          {% endfor %}
           </tbody>
         </table>
       </div>

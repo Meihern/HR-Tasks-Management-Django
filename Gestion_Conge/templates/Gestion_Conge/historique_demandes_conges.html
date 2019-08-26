@@ -44,7 +44,7 @@
             <td>{{ Demande.etat }}</td>
             <td>
               <div align='center'>
-                <button type='button' class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></button>
+                <a type='button' href="{% url 'generate_pdf_demande_conge' Demande.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
               </div>
             </td>
           </tr>

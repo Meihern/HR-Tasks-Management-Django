@@ -11,7 +11,7 @@
   <meta name="author" content="">
 
   <title>{% block title %}Département RH{% endblock %}</title>
-
+  <link  rel="icon" href="{% static 'Authentification/images/emidlogo.png' %}">
   <!-- Custom fonts for this template-->
   <link href="{% static 'Realisation/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -88,7 +88,10 @@
               </div>
             <h6 class="collapse-header">Demande des services:</h6>
             <a class="collapse-item" href="{% url 'demande_conge' %}">Congés</a>
-            <a class="collapse-item" href="cards.html">Recrutements</a>
+            <!--<a class="collapse-item" href="cards.html">Recrutements</a>-->
+              <h6 class="collapse-header">Congés</h6>
+              <a class="collapse-item" href="{% url 'consultation_conges_valides' 'courant' %}">Employés en Congés</a>
+              <a class="collapse-item" href="{% url 'consultation_conges_valides' 'prochain' %}">Prochains Congés</a>
           </div>
         </div>
       </li>
@@ -115,9 +118,10 @@
               <a class="collapse-item" href="{% url 'consultation_conges_valides' 'courant' %}">Employés en Congés</a>
               <a class="collapse-item" href="{% url 'consultation_conges_valides' 'prochain' %}">Prochains Congés</a>
               {% endif %}
+          <!--
           {% if request.user.can_consult_recrutements is True %}
             <h6 class="collapse-header">Recrutements</h6>
-            <a class="collapse-item" href="cards.html">Demandes de Recrutements</a>
+            <a class="collapse-item" href="cards.html">Demandes de Recrutements</a>-->
           </div>
         </div>
       </li>
@@ -134,38 +138,34 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-          {% if is_fiche_accessible is True %}
-        <a class="nav-link" href="{% url 'remplir_objectifs' %}">
+        <a class="nav-link" {% if is_fiche_accessible is True %}
+           href="{% url 'remplir_objectifs' %}"
+            {% else %}
+            id="remplir-fiche-objectif-non-accessible" href="#"
+            {% endif %}>
             <i class="far fa-file-alt"></i>
           <span>Remplir la fiche des objectifs</span></a>
-          {% else %}
-          <a id="remplir-fiche-objectif-non-accessible" class="nav-link" href="#">
-            <i class="far fa-file-alt"></i>
-          <span>Remplir la fiche des objectifs</span></a>
-          {% endif %}
       </li>
       <li class="nav-item">
-          {% if is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %}
-        <a class="nav-link" href="{% url 'equipe' %}">
+        <a class="nav-link"
+           {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'equipe' %}"
+            {% else %}
+            id="evaluation-non-accessible" href="#"
+            {% endif %}>
             <i class="fas fa-tasks"></i>
           <span>Evaluer les objectifs</span></a>
-          {% else %}
-          <a id="evaluation-non-accessible" class="nav-link" href="#">
-            <i class="fas fa-tasks"></i>
-          <span>Evaluer les objectifs</span></a>
-          {% endif %}
         </li>
 
       <!-- Nav Item - Tables -->
       <li class="nav-item">
         <a class="nav-link" href="{% url 'consultation_objectifs' %}">
             <i class="far fa-eye"></i>
-          <span>Consulter la fiche des objectifs</span></a>
+          <span>Consulter Ma Fiche des Objectifs</span></a>
       </li>
     <li class="nav-item">
         <a class="nav-link" href="{% url 'consultation_objectifs_equipe' %}">
             <i class="far fa-eye"></i>
-          <span>Consulter la fiche des objectifs de l'equipe</span></a>
+          <span>Consulter Les Fiche Des Objectifs de Mon équipe</span></a>
       </li>
 
       <!-- Divider -->

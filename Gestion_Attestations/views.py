@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseForbidden
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponseForbidden, Http404
 from .models import DemandeAttestation, TypeDemandeAttestation
 from Notifications.models import Notification
 from Authentification.models import Activite
@@ -41,6 +41,30 @@ def envoyer_demande_doc(request):
             demande_doc.delete()
             return JsonResponse({'Response': 'error'})
         return JsonResponse({'Response': 'Success'})
+    else:
+        return JsonResponse({'Response': 'error'})
+
+
+def envoyer_demande_doc_superieur(request, matricule_employe):
+    type_demande = request.POST.get("type_demande")
+    if type_demande:
+        type_demande = TypeDemandeAttestation.objects.get(nom_type_demande=type_demande)
+        employe = get_object_or_404(Employe, pk=matricule_employe)
+        demande_doc = DemandeAttestation(employe=employe, type=type_demande)
+        try:
+            demande_doc.save()
+            notification = Notification(content_object=demande_doc, no_reply=False)
+            notification.set_subject(str(type_demande))
+            notification.set_message(str(demande_doc))
+            notification.set_sender(request.user)
+            notification.set_receiver()
+            notification.save()
+            send_mail(notification.get_subject(), notification.get_message(),
+                      from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
+        except ValueError:
+            demande_doc.delete()
+            return JsonResponse({'Response': 'error'})
+        return JsonResponse({'Response': 'success'})
     else:
         return JsonResponse({'Response': 'error'})
 

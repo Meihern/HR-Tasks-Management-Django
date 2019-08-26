@@ -33,9 +33,14 @@
             <td>{{ Demande.date_depart }}</td>
             <td>{{ Demande.date_retour }}</td>
             <td>{{ Demande.etat }}</td>
+
             <td>
                 <div align='center'>
-                  <button type='button' data-value="+id_sous_objectif_count+" id="+button_delete_id+" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none'></button>
+                    {% if Demande.etat == 4 %}
+                  <a type='button' href="{% url 'generate_pdf_demande_conge' Demande.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
+                    {% else %}
+                       Congé Non Validé
+                    {% endif %}
                 </div>
             </td>
           </tr>

@@ -177,6 +177,7 @@ class ConsultationDemandeConges(TemplateView):
                     'etat': DemandeConge.objects.safe_get(id=demande['id']).get_etat_display(),
                     'date_depart': demande['date_depart'],
                     'date_retour': demande['date_retour'],
+                    'etat_code': demande['etat']
                 }
                 data.append(demande_conge)
             return render(request, template_name=self.template_name, context={'demandes': data})
