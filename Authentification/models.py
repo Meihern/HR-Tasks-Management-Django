@@ -112,9 +112,6 @@ class Employe(AbstractBaseUser):
         else:
             return None
 
-    def get_equipe(self):
-        return Employe.objects.filter(superieur_hierachique=self).values('id')
-
     def get_date_entree(self):
         return self.date_entree
 

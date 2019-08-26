@@ -12,4 +12,5 @@ urlpatterns = [
     path('consultation_conges_valides/<str:type_conge>',
          login_required(views.ConsultationEmployesConges.as_view()), name='consultation_conges_valides'),
     url('^historique_demandes$', login_required(views.HistoriqueDemandesCongesView.as_view()), name='historique_demandes_conges'),
+    #path('demande_conge_employe/<str:employe_id>'),
 ]

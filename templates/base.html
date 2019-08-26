@@ -154,7 +154,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link"
-           {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'equipe' %}"
+           {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'evaluation_equipe' %}"
             {% else %}
             id="evaluation-non-accessible" href="#"
             {% endif %}>

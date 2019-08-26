@@ -35,7 +35,7 @@
             <th>Telecharger</th>
           </tr>
         </thead>
-        <tbody id="accept-demande-doc-type">
+        <tbody>
         {% for Demande in demandes_conges %}
           <tr>
             <td>{{ Demande.date_envoi }}</td>
@@ -44,7 +44,11 @@
             <td>{{ Demande.etat }}</td>
             <td>
               <div align='center'>
+                  {% if Demande.etat == 4 %}
                 <a type='button' href="{% url 'generate_pdf_demande_conge' Demande.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
+                  {% else %}
+                      Congé Non Validé
+                  {% endif %}
               </div>
             </td>
           </tr>
