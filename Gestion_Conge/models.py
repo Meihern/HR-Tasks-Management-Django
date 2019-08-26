@@ -137,3 +137,15 @@ class DemandeConge(models.Model):
     class Meta:
         verbose_name = "Demande Congé"
         verbose_name_plural = "Demandes des Congés"
+
+
+class SoldeConge(models.Model):
+    solde = models.IntegerField(null=False, blank=False, verbose_name='Solde de Congé')
+    matricule_paie = models.OneToOneField(to=Employe, null=False, blank=False, verbose_name='Employé', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Solde de % est : %s"%(self.matricule_paie.get_full_name(), self.solde)
+
+    class Meta:
+        verbose_name = 'Solde de Congé'
+        verbose_name_plural = 'Les soldes des congés'

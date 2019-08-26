@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.timezone import now
 
@@ -11,7 +12,7 @@ from Authentification.manager import CustomModelManager
 class FicheObjectif(models.Model):
     employe = models.ForeignKey(to=Employe, null=False, blank=False, on_delete=None, verbose_name='Employé')
     date_envoi = models.DateField(null=False, blank=False, default=now)
-    bonus = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True, verbose_name='Bonus')
+    bonus = models.FloatField(null=True, blank=True, verbose_name='Bonus')
     commentaire_manager = models.TextField(null=True, blank=True,
                                            verbose_name='Commentaire du Manager Performance Annuelle')
     commentaire_employe = models.TextField(null=True, blank=True,
@@ -34,7 +35,7 @@ class FicheObjectif(models.Model):
         return self.employe
 
     def get_objectifs(self):
-        objectifs = Objectif.objects.filter(fiche_objectif=self).values()
+        objectifs = Objectif.objects.filter(fiche_objectif=self).order_by('id').values()
         return objectifs
 
     def get_commentaire_employe(self):
@@ -42,7 +43,7 @@ class FicheObjectif(models.Model):
 
     def get_commentaire_manager(self):
         return self.commentaire_manager
-    
+
     @property
     def is_current(self):
         if self.date_envoi.year == now().date().year:
@@ -65,16 +66,15 @@ class Objectif(models.Model):
     description = models.TextField(null=False, blank=False, verbose_name="Description")
     fiche_objectif = models.ForeignKey(to=FicheObjectif, null=False, blank=False,
                                        on_delete=models.CASCADE, verbose_name="Fiche d'objectif associée")
-    poids = models.DecimalField(max_digits=3, decimal_places=2, null=False, blank=False, verbose_name='Poids')
-    notation_manager = models.DecimalField(max_digits=3, decimal_places=2,
-                                           null=True, blank=True, verbose_name='Notation Manager',
-                                           choices=NOTATION_CHOICES)
+    poids = models.FloatField(null=False, blank=False, verbose_name='Poids')
+    notation_manager = models.FloatField(null=True, blank=True, verbose_name='Notation Manager',
+                                         choices=NOTATION_CHOICES)
     evaluation_mi_annuelle = models.TextField(null=True, blank=True, verbose_name="Evalutation Mi-Annuelle")
     evaluation_annuelle = models.TextField(null=True, blank=True, verbose_name="Evalutation Annuelle")
     objects = CustomModelManager()
 
     def get_sous_objectifs(self):
-        sous_objectifs = SousObjectif.objects.filter(objectif=self).values()
+        sous_objectifs = SousObjectif.objects.filter(objectif=self).order_by('id').values()
         return sous_objectifs
 
     def __str__(self):
@@ -131,3 +131,106 @@ class SousObjectif(models.Model):
     class Meta:
         verbose_name = 'Sous Objectif'
         verbose_name_plural = 'Sous Objectifs'
+
+
+class AccessibiliteFicheObjectif(models.Model):
+    MOIS_CHOICES = ((1, 'Janvier'), (2, 'Février'), (3, 'Mars'), (4, 'Avril'), (5, 'Mai'), (6, 'Juin'),
+                    (7, 'Juillet'), (8, 'Août'), (9, 'Septembre'), (10, 'Octobre'), (11, 'Novembre'), (12, 'Décembre')
+                    )
+
+    mois_accessibilite_remplir_fiche = models.IntegerField(null=True, blank=True, choices=MOIS_CHOICES,
+                                                           verbose_name="Mois d'accessibilité pour remplir les fiches "
+                                                                        "d'objectifs")
+    mois_accessibilite_evaluation_mi_annuelle = models.IntegerField(null=True, blank=True, choices=MOIS_CHOICES,
+                                                                    verbose_name="Mois d'accessibilité pour "
+                                                                                 "évaluation mi-annuelle des "
+                                                                                 " fiches d'objectifs")
+    mois_accessibilite_evaluation_annuelle = models.IntegerField(null=True, blank=True, choices=MOIS_CHOICES,
+                                                                 verbose_name="Mois d'accessibilité pour "
+                                                                              "évaluation Annuelle des "
+                                                                              " fiches d'objectifs"
+                                                                 )
+
+    remplir_exceptionnelle_is_accessible = models.BooleanField(null=False, blank=False, default=False,
+                                                               verbose_name="Etat exceptionnel d'accessibilité pour "
+                                                                            "remplir les "
+                                                                            "fiche des objectifs")
+
+    evaluation_mi_annee_exceptionnelle_is_accessible = models.BooleanField(null=False, blank=False, default=False,
+                                                                           verbose_name="Etat exceptionnel "
+                                                                                        "d'accessibilité pour "
+                                                                                        "evaluation mi-annuelle des "
+                                                                                        "fiche d'objectifs")
+
+    evaluation_annee_exceptionnelle_is_accessible = models.BooleanField(null=False, blank=False, default=False,
+                                                                        verbose_name="Etat exceptionnel "
+                                                                                     "d'accessibilité pour "
+                                                                                     "evaluation annuelle des "
+                                                                                     "fiche d'objectifs")
+
+    objects = CustomModelManager()
+
+    @property
+    def fiche_evalutation_accessible(self):
+        if self.remplir_exceptionnelle_is_accessible:
+            return True
+        if self.mois_accessibilite_remplir_fiche:
+            if self.mois_accessibilite_remplir_fiche == now().month:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    @property
+    def evaluation_mi_annuelle_accessible(self):
+        if self.evaluation_mi_annee_exceptionnelle_is_accessible:
+            return True
+        if self.mois_accessibilite_evaluation_mi_annuelle:
+            if self.mois_accessibilite_evaluation_mi_annuelle == now().month:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    @property
+    def evaluation_annuelle_accessible(self):
+        if self.evaluation_annee_exceptionnelle_is_accessible:
+            return True
+        if self.mois_accessibilite_evaluation_annuelle:
+            if self.mois_accessibilite_evaluation_annuelle == now().month:
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def __str__(self):
+        message = ""
+        if self.fiche_evalutation_accessible:
+            message += "Remplir les fiches des objectifs est accessible \n"
+        else:
+            message += "Remplir les fiches des objectifs est inaccessible \n"
+        if self.evaluation_mi_annuelle_accessible:
+            message += "Evaluation Mi-Annuelle est accessible \n"
+        else:
+            message += "Evaluation Mi-Annuelle est inaccessible \n"
+        if self.evaluation_annuelle_accessible:
+            message += "Evaluation Annuelle est accessible \n"
+        else:
+            message += "Evaluation Annuelle est inaccessible \n"
+        return message
+
+    def save(self, *args, **kwargs):
+        if AccessibiliteFicheObjectif.objects.exists() and not self.pk:
+            # if you'll not check for self.pk
+            # then error will also raised in update of exists model
+            raise ValidationError("Une seule permission d'accessibilité est possible")
+        return super(AccessibiliteFicheObjectif, self).save(*args, **kwargs)
+
+
+    class Meta:
+        verbose_name = "Permission d'accesibilité aux fonctionnalités Fiche Objectif"
+        verbose_name_plural = "Permissions d'accesibilité aux fonctionnalités Fiche Objectif"
+

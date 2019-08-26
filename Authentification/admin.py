@@ -7,7 +7,7 @@ from import_export.admin import ImportExportModelAdmin
 
 from Gestion_Attestations.models import Salaire
 from .models import Departement, Service, Activite, Agence, CostCenter
-from .ressources import EmployeResource, SalaireResource, ServiceResource, CostCenterResource, AgenceResource, \
+from .ressources import EmployeResource, ServiceResource, CostCenterResource, AgenceResource, \
     DepartmentResource, ActiviteResource
 
 Employe = get_user_model()
@@ -85,12 +85,6 @@ class ServiceAdmin(ImportExportModelAdmin):
     resource_class = ServiceResource
 
 
-class SalaireAdmin(ImportExportModelAdmin):
-    list_display = ('valeur_brute', 'matricule_paie')
-    search_fields = ('matricule_paie__full_name',)
-    resource_class = SalaireResource
-
-
 class AgenceAdmin(ImportExportModelAdmin):
     list_display = ('nom_agence',)
     list_filter = ('nom_agence',)
@@ -107,7 +101,6 @@ class CostCenterAdmin(ImportExportModelAdmin):
 
 admin.site.register(Employe, CustomUserAdmin)
 admin.site.register(Departement, DepartmentAdmin)
-admin.site.register(Salaire, SalaireAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Activite, ActiviteAdmin)
 admin.site.register(Agence, AgenceAdmin)

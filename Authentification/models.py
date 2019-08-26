@@ -31,20 +31,9 @@ class Employe(AbstractBaseUser):
     nationalite_paie = models.CharField(max_length=3, null=True, blank=True, verbose_name='Nationalité Paie')
     situation_famille = models.CharField(max_length=1, null=True, blank=True, verbose_name='Situation de famille',
                                          choices=CHOIX_SITUATION_FAMILLE)
-    nb_enfant = models.IntegerField(null=True, blank=True)
-    nb_enfant_deduction = models.IntegerField(null=True, blank=True)
     date_entree = models.DateField(verbose_name='Date Entrée', blank=True, null=True)
     date_anciennete = models.DateField(verbose_name='Date Ancienneté', blank=True, null=True)
-    type_base_salariale = models.CharField(verbose_name='Type base salariale', max_length=1, default='F', null=True,
-                                           blank=True)
-    mode_reglement = models.CharField(verbose_name='Mode de règlement', max_length=1, default='V', null=True,
-                                      blank=True)
-    type_cp = models.IntegerField(verbose_name='Type CP.', null=True, blank=True)
     n_cnss = models.IntegerField(verbose_name='Numéro CNSS', blank=True, null=True, unique=True)
-    section = models.IntegerField(verbose_name='Section', null=True, blank=True)
-    code_edition_comm = models.IntegerField(verbose_name='Code edition comm.', null=True, blank=True)
-    code_agent = models.IntegerField(verbose_name='Code agent', null=True, blank=True)
-    commentaire = models.TextField(verbose_name='Commentaire', blank=True, null=True)
     agence = models.ForeignKey('Agence', on_delete=models.SET_NULL, verbose_name='Agence', null=True, blank=True)
     date_sortie = models.DateField(verbose_name='Date de Sortie', blank=True, null=True)
     superieur_hierarchique = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True,
@@ -68,7 +57,7 @@ class Employe(AbstractBaseUser):
     consultant_attestations = models.BooleanField(default=False)
     consultant_conges = models.BooleanField(default=False)
     consultant_recrutements = models.BooleanField(default=False)
-    solde_conge = models.IntegerField(null=True, blank=True, verbose_name='Solde Jours Possibles Congés')
+    consultant_fiches_objectifs = models.BooleanField(default=False)
 
     # Django User Model Settings
     USERNAME_FIELD = 'matricule_paie'
@@ -200,8 +189,16 @@ class Employe(AbstractBaseUser):
             return False
 
     @property
+    def can_consult_shared_tabac_fmcg(self):
+        activite_shared_tabac_fmcg = Activite.objects.safe_get(id=3)
+        if self.activite == activite_shared_tabac_fmcg:
+            return True
+        else:
+            return False
+
+    @property
     def can_consult_shared(self):
-        activite_shared = Activite.objects.safe_get(id=3)
+        activite_shared = Activite.objects.safe_get(id=4)
         if self.activite == activite_shared:
             return True
         else:

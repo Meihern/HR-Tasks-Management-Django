@@ -74,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Realisation.context_processors.fiche_evaluation_permissions_processor'
             ],
         },
     },
@@ -150,7 +151,7 @@ LOGIN_REDIRECT_URL = '/'
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "static") # 'https:www.emid.ma'
 STATICFILES_DIRS = (
   os.path.join(SITE_ROOT, 'static/'),
 )
@@ -188,7 +189,7 @@ EMAIL_HOST_USER = 'django.app.digitalisation@gmail.com'
 EMAIL_HOST_PASSWORD = 'Testapp@258'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = 'django.app.digitalisation@gmail.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Cache configuration
@@ -214,5 +215,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab()  # execute every minute
     }
 }
+
+
 
 

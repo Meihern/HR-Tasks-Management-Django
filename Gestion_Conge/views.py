@@ -21,8 +21,8 @@ class DemandeCongeView(FormView):
     success_url = '/conges/demande_conge'
 
     def get(self, request, *args, **kwargs):
-        if request.user.is_consultant:
-            return HttpResponseForbidden()
+        # if request.user.is_consultant:
+        #    return HttpResponseForbidden()
         return render(request, template_name=self.template_name, context={'form': self.form})
 
     def post(self, request, *args, **kwargs):
@@ -39,7 +39,6 @@ class DemandeCongeView(FormView):
                 demande_conge = DemandeConge(employe=employe, date_depart=date_depart,
                                              date_retour=date_retour, interim=interim, telephone=telephone,
                                              jours_ouvrables=jours_ouvrables)
-                demande_conge.save()
                 try:
                     notification = Notification(content_object=demande_conge, no_reply=False)
                     notification.set_subject("Demande de Congé")
@@ -47,6 +46,7 @@ class DemandeCongeView(FormView):
                     notification.set_sender(employe)
                     notification.set_receiver()
                     notification.save()
+                    demande_conge.save()
                     #send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
                     #          recipient_list=[notification.get_receiver().get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
@@ -107,7 +107,7 @@ def accept_demande_conge(request):
         notification.save()
         ''' Uncomment to apply sending emails
         send_mail(notification.get_subject(), notification.get_message(), from_email=DEFAULT_FROM_EMAIL,
-                  recipient_list=[notification.get_receiver()])
+                  recipient_list=[notification.get_receiver().get_email()])
         '''
     except ValueError:
         return JsonResponse({'Response': 'error'})
@@ -152,12 +152,17 @@ class ConsultationDemandeConges(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.can_consult_conges:
             activite_mdlz = Activite.objects.safe_get(id=5)
+            activite_shared = Activite.objects.safe_get(id=4)
             if request.user.can_consult_mdlz:
                 demandes_conges = DemandeConge.objects.filter(employe__activite=activite_mdlz).order_by('-date_envoi')
                 demandes_conges = demandes_conges.all().values('id', 'employe', 'date_envoi',
                                                                'date_depart', 'date_retour', 'etat')
-            elif request.user.can_consult_shared:
+            elif request.user.can_consult_shared_tabac_fmcg:
                 demandes_conges = DemandeConge.objects.exclude(employe__activite=activite_mdlz).order_by('-date_envoi')
+                demandes_conges = demandes_conges.all().values('id', 'employe', 'date_envoi',
+                                                               'date_depart', 'date_retour', 'etat')
+            elif request.user.can_consult_shared:
+                demandes_conges = DemandeConge.objects.all().order_by('-date_envoi')
                 demandes_conges = demandes_conges.all().values('id', 'employe', 'date_envoi',
                                                                'date_depart', 'date_retour', 'etat')
             else:
@@ -181,11 +186,13 @@ class ConsultationDemandeConges(TemplateView):
 def load_data(employe: Employe):
     if employe.can_consult_conges:
         activite_mdlz = Activite.objects.safe_get(id=5)
-
+        activite_shared = Activite.objects.safe_get(id=4)
         if employe.can_consult_mdlz:
             demandes_conges = DemandeConge.objects.filter(employe__activite=activite_mdlz).order_by('-date_envoi')
-        elif employe.can_consult_shared:
+        elif employe.can_consult_shared_tabac_fmcg:
             demandes_conges = DemandeConge.objects.exclude(employe__activite=activite_mdlz).order_by('-date_envoi')
+        elif employe.can_consult_shared:
+            demandes_conges = DemandeConge.objects.all().order_by('-date_envoi')
 
     else:
 

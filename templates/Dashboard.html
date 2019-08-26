@@ -8,6 +8,14 @@
 
 </style>
 <div class="container-fluid">
+{% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
     <div class="row">
 
         <div class="col-xl-3 col-md-6 mb-4">
@@ -49,7 +57,8 @@
 
         <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
-                    <a {% if is_fiche_disabled is True %} class="btn" href="{% url 'remplir_objectifs' %}" {% else %}class="btn disabled" {% endif %}>
+                    {% if is_fiche_accessible is True %}
+                    <a class="btn" href="{% url 'remplir_objectifs' %}">
                           <div class="card-body">
                               <div class="row no-gutters align-items-center">
                                   <div class="col mr-2">
@@ -63,6 +72,22 @@
                                </div>
                           </div>
                     </a>
+                    {% else %}
+                    <a id="remplir-fiche-objectif-card-non-accessible" class="btn" href="#">
+                          <div class="card-body">
+                              <div class="row no-gutters align-items-center">
+                                  <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            <h6>Remplir la fiche des objectifs</h6>
+                                        </div>
+                                  </div>
+                                  <div class="col-auto">
+                                  <i class="far fa-file-alt fa-2x text-gray-300"></i>
+                                </div>
+                               </div>
+                          </div>
+                    </a>
+                    {% endif %}
                 </div>
         </div>
         <div class="col-xl-3 col-md-6 mb-4">

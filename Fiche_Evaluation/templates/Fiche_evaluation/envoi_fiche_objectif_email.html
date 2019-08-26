@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}You're receiving this email because you have received a new fiche d'objectif at {{ site_name }}.{% endblocktrans %}
+
+{% trans "Please go to the following page and see the new fiche d'objectif:" %}
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'Dashboard'%}
+{% endblock %}
+{% trans "The name of the employe who sent the new fiche d'objectif is : " %} {{ user.get_username }}
+
+{% trans "Thanks for using our site!" %}
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+
+{% endautoescape %}

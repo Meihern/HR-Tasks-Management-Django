@@ -24,8 +24,8 @@ class Notification(models.Model):
     message = models.TextField(null=True, blank=True)
     time_sent = models.DateTimeField(default=timezone.now)
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
 
     objects = CustomModelManager()
@@ -60,11 +60,14 @@ class Notification(models.Model):
 
     def set_notif_receiver_attestation(self):
         activite_mdlz = Activite.objects.safe_get(id=5)
-        activite_shared = Activite.objects.safe_get(id=3)
+        activite_shared_tabac_fmcg = Activite.objects.safe_get(id=3)
+        activite_shared = Activite.objects.safe_get(id=4)
         if self.get_content_object().get_employe().get_activite() in list(Activite.objects.all().exclude(id=5)):
-            return Employe.objects.safe_get(activite=activite_shared, consultant_attestations=True)
+            return Employe.objects.safe_get(activite=activite_shared_tabac_fmcg, consultant_attestations=True)
         elif self.get_content_object().get_employe().get_activite() == activite_mdlz:
             return Employe.objects.safe_get(activite=activite_mdlz, consultant_attestations=True)
+        elif self.get_content_object().get_employe().get_activite() == activite_shared:
+            return Employe.objects.safe_get(activite=activite_shared, consultant_attestations=True)
         else:
             return None
 

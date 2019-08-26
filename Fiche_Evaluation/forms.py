@@ -67,15 +67,18 @@ class EvaluationAnnuelleForm(forms.Form):
         'notation_manager': 'notation_manager[]',
     }
 
+    NOTATION_CHOICES = (('', '---------'),) + Objectif.NOTATION_CHOICES
+
     def add_prefix(self, field_name):
         # look up field name; return original if not found
         field_name = self.FIELD_NAME_MAPPING.get(field_name, field_name)
         return super(EvaluationAnnuelleForm, self).add_prefix(field_name)
 
     evaluation_annuelle = forms.CharField(required=False, widget=forms.Textarea)
-    notation_manager = forms.ChoiceField(choices=Objectif.NOTATION_CHOICES, required=True,
-                                         widget=forms.Select(attrs={'style': 'background-color: rgb(248, 230, 230)',
-                                                                    'id': 'id_notation'
+    notation_manager = forms.ChoiceField(choices=NOTATION_CHOICES, required=True,
+                                         widget=forms.Select(attrs={'class': 'form-control',
+                                                                    'style': 'background-color: rgb(248, 230, 230)',
+                                                                    'id': 'id_notation',
                                                                     }))
 
     class Meta:

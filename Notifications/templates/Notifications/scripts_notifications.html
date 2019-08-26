@@ -10,8 +10,10 @@
                     if (data.notifications_count > 0) {
                         $('#notification-logo').text(data.notifications_count);
                         $('#notification-logo').attr('class', 'badge badge-danger badge-counter');
+                        $('#notification-none').hide();
                     }
                     else {
+                        $('#notification-none').show();
                          $('#notification-logo').text('');
                     }
             }

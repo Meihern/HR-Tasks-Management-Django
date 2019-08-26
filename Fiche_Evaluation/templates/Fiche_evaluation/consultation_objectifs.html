@@ -1,60 +1,99 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    <h1 class="text-primary"> Consultation de Votre Fiche d'objectifs </h1>
-<form method="POST">
-    {% csrf_token %}
-{% for message in messages %}
-                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                    </button>
-                    {{ message }}
+    {% if not fiche %} <h1 class="text-primary"> Vous n'avez pas encore rempli votre fiche d'objectifs </h1>
+    {% else %}
+        <h1 class="text-primary"> Consultation de Votre Fiche d'objectif </h1>
+        {% for objectif in objectifs %}
+            <div class="card">
+                <div class="container-fluid">
+                    <div class="form-group">
+                        <br>
+                        <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
+                        {% if objectif.sous_objectifs %}
+                        <span class="text-secondary"> Sous Objectifs :</span>
+                        <br>
+                        {% endif %}
+                        {% for sous_objectif in objectif.sous_objectifs %}
+                            <p> - {{ sous_objectif.description }} </p>
+                        {% endfor %}
+                        <p class="text-primary">Evaluation Mi Annuelle : </p>
+                        {{ objectif.evaluation_mi_annuelle }}
+                        <p>Evaluation Annuelle : </p>
+                        {{ objectif.evaluation_annuelle }}
+                        <br>
+                        <br>
+                        <span class="text-primary">Notation Manager :</span>
+                        <span style="color: red;" > {{ objectif.notation_manager }} </span>
+                        <br>
+                    </div>
                 </div>
-                {% endfor %}
-    {% for objectif in objectifs %}
-    <div class="card">
-      <div class="container-fluid">
-        <div class="form-group">
-          <br>
-          <h3 for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) :</h3>
-          <br><br> {{ objectif.description }} 
-            {% if objectif.sous_objectifs %}
-            {% endif %}
-            {% for sous_objectif in objectif.sous_objectifs %}
-                <p> - {{ sous_objectif.description }} </p>
-                {% endfor %}
-                <p class="text-primary">Evaluation Mi Annuelle : </p>
-                {{ objectif.evaluation_mi_annuelle }}
-                <p>Evaluation Annuelle : </p>
-                {{ objectif.evaluation_annuelle }}
-                <br>
-                <br>
-                <span class="text-primary">Notation Manager :</span>
-                <span style="color: red;" > {{ objectif.notation_manager }} </span>
-          <br>
-        </div>
-      </div>
-    </div>
-</div>
-        <br/>
-     {% endfor %}
-     <div class="container-fluid">
-     <div class="card">
+            </div>
+            <br/>
+        {% endfor %}
+        <div class="container-fluid">
+        {% if fiche.commentaire_employe %}
+        <div class="card">
             <div class="container-fluid">
                 <br>
-     <p>Commentaire Performance Annuelle:</p>
-     <textarea name="evaluation_mi_annuelle{{ forloop.counter }}" class="form-control" id="{{form.evaluation_mi_annuelle.id_for_label}}{{ forloop.counter }}" rows="3"></textarea>
-    <br>
-    </div>
+                <p>Votre Commentaire de Performance Annuelle :</p>
+                <p name="commentaire_employe" id="commentaire_employe_courant">{{ fiche.commentaire_employe }}</p>
+                <br>
+            </div>
+        </div>
+            {% endif %}
+        <div class="container-fluid" align='right'>
+            <br>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#ajout-commentaire-employe-modal">Mettre Un Commentaire</button>
+        </div>
+        <br/>
+        <!-- Ajouter Commentaire Employé Modal -->
+        <div class="modal fade" id="ajout-commentaire-employe-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                         <h5 class="modal-title" id="modal-title">Choisissez votre commentaire annuelle</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                    <div class="modal-body" id="modal-body">
+                        <textarea name="commentaire_employe" class="form-control" id="commentaire_employe_value" rows="3">{{ fiche.commentaire_employe }}</textarea>
+                    </div>
+                <div class="modal-footer">
+                    <div id="notif-reply">
+                        <button id="close"  class="btn btn-secondary" type="button" data-dismiss="modal">Fermer</button>
+                        <a name="envoie-commentaire" class="btn btn-primary" id="envoie-commentaire-employe" href="" target="_blank" data-value="{{ fiche.id }}">Envoyer Commentaire</a>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+    {% endif %}
 </div>
-     <div class="container-fluid" align='right'>
-        <br>
-            <button class="btn btn-primary">Submit</button>
-    </div>
-    <br/>
-  </form>
 </div>
-
-
+{% block commentaire_js_employe %}
+    <script>
+    $("#envoie-commentaire-employe").click(function (e) {
+        e.preventDefault();
+        let commentaire = $.trim($('#commentaire_employe_value').val());
+        $('#envoie-commentaire-employe').modal('hide');
+        $.ajax({
+            url: '{% url 'envoi_commentaire_employe' %}',
+            data:{
+            'commentaire_employe': commentaire,
+            'fiche_id': $(this).data("value"),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+        type: 'POST',
+        datatype : 'json',
+        success: function(result) {
+             swal("Succès", "Votre Commentaire a été envoyée", "success");
+             $('#commentaire_employe_courant').empty().text(commentaire);
+        },
+        error: function(result) {
+            swal("Echec", "Une erreur est survenue ", "error");
+        }
+    })
+});
+    </script>
+    {% endblock %}
 {% endblock %}

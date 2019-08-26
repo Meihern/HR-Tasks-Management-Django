@@ -20,7 +20,7 @@ from django.contrib.auth import (
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.core.mail import send_mail
 
-from Gestion_Attestations.models import Salaire, DemandeAttestation, TypeDemandeAttestation
+from Gestion_Attestations.models import Salaire
 from . import forms
 from Realisation.settings import LOGIN_REDIRECT_URL, LOGIN_URL, DEFAULT_FROM_EMAIL
 

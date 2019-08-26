@@ -55,11 +55,69 @@
         </div>
     <br>
     {% endfor %}
+    {% if fiche.commentaire_employe %}
+        <div class="card">
+            <div class="container-fluid">
+                <br>
+                <p>Votre Commentaire de Performance Annuelle :</p>
+                <p name="commentaire_manager" id="commentaire_manager_courant">{{ fiche.commentaire_manager }}</p>
+                <br>
+            </div>
+        </div>
+            {% endif %}
     <div class="container-fluid" align='right'>
         <br>
-            <button class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#ajout-commentaire-manager-modal">Mettre Un Commentaire</button>
+            <button type="submit" class="btn btn-primary">Evaluer</button>
     </div>
-    
+    <br>
   </form>
 </div>
+    <!-- Ajouter Commentaire Employé Modal -->
+        <div class="modal fade" id="ajout-commentaire-manager-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                         <h5 class="modal-title" id="modal-title">Choisissez votre commentaire annuelle</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                    <div class="modal-body" id="modal-body">
+                        <textarea name="commentaire_manager" class="form-control" id="commentaire_manager_value" rows="3">{{ fiche.commentaire_manager }}</textarea>
+                    </div>
+                <div class="modal-footer">
+                    <div id="notif-reply">
+                        <button id="close"  class="btn btn-secondary" type="button" data-dismiss="modal">Fermer</button>
+                        <a name="envoie-commentaire" class="btn btn-primary" id="envoie-commentaire-manager" href="" target="_blank" data-value="{{ fiche.id }}">Envoyer Commentaire</a>
+                    </div>
+                </div>
+                </div>
+                </div>
+            </div>
+    {% block commentaire_js_manager %}
+    <script>
+    $("#envoie-commentaire-manager").click(function (e) {
+        e.preventDefault();
+        let commentaire = $.trim($('#commentaire_manager_value').val());
+        $('#envoie-commentaire-manager').modal('hide');
+        console.log($(this).data("value"));
+        $.ajax({
+            url: '{% url 'envoi_commentaire_manager' %}',
+            data:{
+            'commentaire_employe': commentaire,
+            'fiche_id': $(this).data("value"),
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+        type: 'POST',
+        datatype : 'json',
+        success: function(result) {
+             swal("Succès", "Votre Commentaire a été envoyée", "success");
+             $('#commentaire_manager_courant').empty().text(commentaire);
+        },
+        error: function(result) {
+            swal("Echec", "Une erreur est survenue ", "error");
+        }
+    })
+});
+    </script>
+    {% endblock %}
 {% endblock %}
