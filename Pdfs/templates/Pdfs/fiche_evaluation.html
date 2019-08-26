@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <script src="script.js"></script>
+      </head>
 <head>
 <style>
 table {
@@ -10,17 +14,18 @@ table {
 
 .employee th {
   border: 1px solid black;
-  text-align: left;
-  padding: 8px;
+  text-align: center;
+  padding: 1px;
   background-color: black;
-  -webkit-text-fill-color:white;
+  color: white;
 }
-
-.objectifs th {
+.employee td {
   border: 1px solid black;
   text-align: left;
-  padding: 8px;
+  padding: 1px;
 }
+
+
 
 td {
   border: 1px solid black;
@@ -31,10 +36,16 @@ td {
 .notation table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+  text-align: center;
+
 }
 .notation th, td {
   padding: 5px;
-  text-align: left;    
+  text-align: center; 
+  font-size: 10px;   
+}
+img {
+  width: 100px;
 }
 
 </style>
@@ -76,21 +87,21 @@ td {
     <div class="objectifs">       
         <table>
                 <tr>
-                  <th width="50">objectifs</th>
-                  <th width="20">Poids</th>
-                  <th width="300">Evaluation mi-annuel: Manager</th>
-                  <th width="300">Evaluation annuel: Manager</th>
-                  <th width="20">Notation Manager</th>
-                  <th width="30">en %</th>
+                  <th width="150" height="1000">objectifs</th>
+                  <th width="30" height="1000">Poids</th>
+                  <th width="150" height="1000">Evaluation mi-annuel: Manager</th>
+                  <th width="150" height="1000">Evaluation annuel: Manager</th>
+                  <th width="35" height="1000">Notation Manager</th>
+                  <th width="30" height="1000">en %</th>
                 </tr>
                 {% for objectif in objectifs %}
                 <tr>
-                  <td>{{objectif.description}}</td>
-                  <td>{{objectif.poids}}</td>
-                  <td>{{objectif.evaluation_mi_annuelle}}</td>
-                  <td>{{objectif.evaluation_annuelle}}</td>
-                  <td>{{objectif.notation_manager}}</td>
-                  <td>{{objectif.notation_manager_value}}</td>
+                  <td width="150">{{objectif.description}}</td>
+                  <td width="30">{{objectif.poids}}</td>
+                  <td width="150">{{objectif.evaluation_mi_annuelle}}</td>
+                  <td width="150">{{objectif.evaluation_annuelle}}</td>
+                  <td width="35">{{objectif.notation_manager}}</td>
+                  <td width="30">{{objectif.notation_manager_value}}</td>
                 </tr>
                 {% endfor %}
         </table>
@@ -99,7 +110,7 @@ td {
     <div class="notation">
     <table>
             <tr>
-                <th width="200">HP <br>Highest Performance</th>
+                <th width="150">HP <br>Highest Performance</th>
                 <td>Dépasse significativement ses objectifs en avance sur le programme,démontre un grand sens
                     de l'initiative, très engagé dans son travail, s'autodirige directement et develope
                     des solutions à impacts directs sur le business.
@@ -133,16 +144,16 @@ td {
     <div class="objectifs">       
             <table>
                     <tr>
-                      <th>Commentaire du Manager Performance annuelle</th>
-                      <th>Commentaire employé Performance annuelle</th>
+                      <th width="500">Commentaire du Manager Performance annuelle</th>
+                      <th width="500">Commentaire employé Performance annuelle</th>
                     </tr>
                     <tr>
-                      <td>{{commentaire_manager}}</td>
-                      <td>{{commentaire_employe}}</td>
+                      <td width="500">{{commentaire_manager}}</td>
+                      <td width="500">{{commentaire_employe}}</td>
                     </tr>
                     <tr>
-                        <td>{{date_comentaire_manager}}</td>
-                        <td>{{date_commentaire_employé}}</td>
+                        <td width="500">{{date_comentaire_manager}}</td>
+                        <td width="500">{{date_commentaire_employé}}</td>
                     </tr>
             </table>
         </div>

@@ -88,18 +88,29 @@
               </div>
             <h6 class="collapse-header">Demande des services:</h6>
             <a class="collapse-item" href="{% url 'demande_conge' %}">Congés</a>
-            <!--<a class="collapse-item" href="cards.html">Recrutements</a>-->
-              <h6 class="collapse-header">Congés</h6>
-              <a class="collapse-item" href="{% url 'consultation_conges_valides' 'courant' %}">Employés en Congés</a>
-              <a class="collapse-item" href="{% url 'consultation_conges_valides' 'prochain' %}">Prochains Congés</a>
-          </div>
+            </div>
         </div>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'equipe' %}">
-            <i class="far fas fa-envelope-open-text"></i>
-          <span>Demander pour mon equipe</span></a>
-      </li>
+          <a class="nav-link" href="{% url 'equipe' %}">
+              <i class="far fas fa-envelope-open-text"></i>
+            <span>Demander pour mon equipe</span></a>
+        </li>
+      <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultation" aria-expanded="true" aria-controls="collapseConsultation">
+            <i class="fas fa-envelope-open-text"></i>
+            <span>Consulter</span>
+          </a>
+          <div id="collapseConsultation" class="collapse" aria-labelledby="headingConsultation" data-parent="#accordionSidebar">
+            <div class="bg-light py-2 collapse-inner rounded">
+              <!--<a class="collapse-item" href="cards.html">Recrutements</a>-->
+                <h6 class="collapse-header">Congés</h6>
+                <a class="collapse-item" href="{% url 'consultation_conges_valides' 'courant' %}">Employés en Congés</a>
+                <a class="collapse-item" href="{% url 'consultation_conges_valides' 'prochain' %}">Prochains Congés</a>
+            </div>
+          </div>
+        </li>
+      
 
       <!-- Nav Item - Utilities Collapse Menu -->
        <!-- Menu gestion des demandes // En attente d'application de restrictions sur cette partie -->
@@ -154,7 +165,7 @@
       </li>
       <li class="nav-item">
         <a class="nav-link"
-           {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'equipe' %}"
+           {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'evaluation_equipe' %}"
             {% else %}
             id="evaluation-non-accessible" href="#"
             {% endif %}>
