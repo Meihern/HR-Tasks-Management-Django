@@ -181,6 +181,10 @@ class Employe(AbstractBaseUser):
         return self.consultant_recrutements
 
     @property
+    def can_consult_fiches_objectifs(self):
+        return self.consultant_fiches_objectifs
+
+    @property
     def can_consult_mdlz(self):
         activite_mdlz = Activite.objects.safe_get(id=5)
         if self.activite == activite_mdlz:

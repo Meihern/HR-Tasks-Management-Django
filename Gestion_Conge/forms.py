@@ -1,4 +1,5 @@
 from django import forms
+from django.template.defaultfilters import date
 from phonenumber_field.formfields import PhoneNumberField
 from .models import DemandeConge
 from django.utils.timezone import now
@@ -33,10 +34,10 @@ class DemandeCongeForm(forms.ModelForm):
             return True
 
     def valid_jours_ouvrables(self):
-
-        if self.cleaned_data['jours_ouvrables'] >= self.cleaned_data['date_retour'].day - self.cleaned_data['date_depart'].day:
+        if self.cleaned_data['jours_ouvrables'] >= (self.cleaned_data['date_retour'] - self.cleaned_data['date_depart']).days:
             self.errors['jours_ouvrables'] = ErrorList()
-            self.errors['jours_ouvrables'].append("Les jours ouvrables doivent être inférieurs aux différences des jours entre date départ et date de retour")
+            self.errors['jours_ouvrables'].append("Les jours ouvrables doivent être inférieurs aux différences des "
+                                                  "jours entre date départ et date de retour")
             return False
         else:
             return True
