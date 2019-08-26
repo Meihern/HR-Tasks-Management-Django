@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %} Attestations {% endblock %}
+{% block Content %}
+<style>
+    .container-fluid{
+        margin-top: 15%;
+        margin-left: 13%;
+    }
+    .row{
+        margin-top: 15%;
+        
+    }
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+    
+            <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-primary shadow h-100 py-2">
+                        <a data-toggle="modal" data-target="" data-value="travail" href="#" class="btn">
+                          
+                              <div class="card-body">
+                                  <div class="row no-gutters align-items-center">
+                                      <div class="col mr-2">
+                                              <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                  <h6>Attestation de travail</h6> 
+                                                  
+                                                </div>    
+                                      </div>
+                                      <div class="col-auto">
+                                      <i class="fas fa-envelope-open-text fa-2x text-gray-300"></i>
+                                  </div>
+                                   </div>
+                              </div>
+                          
+                      </a>
+                    </div>
+                  </div>
+          
+                  <div class="col-xl-3 col-md-6 mb-4">
+                          <div class="card border-left-success shadow h-100 py-2">
+                              <a data-toggle="modal" data-target="" data-value="salaire" href="#" class="btn">
+                                
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                  <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                      <h6>Attestation de salaire</h6>      
+                                                  </div>   
+                                            </div>
+                                            <div class="col-auto">
+                                                  <i class="fas fa-money-check-alt fa-2x text-gray-300"></i>
+                                                </div>
+                                         </div>
+                                    </div>
+                                
+                              </a>
+                          </div>
+                  </div>
+                  <div class="col-xl-3 col-md-6 mb-4">
+                          <div class="card border-left-warning shadow h-100 py-2">
+                              <a data-toggle="modal" data-target="" data-value="domiciliation" href="#" class="btn">
+                                
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                  <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                      <h6>Domiciliation de salaire</h6> 
+                                                  </div>        
+                                            </div>
+                                            <div class="col-auto" >
+                                            <i class="fas fa-file-invoice-dollar fa-2x text-gray-300"></i>
+                                          </div>
+                                         </div>
+                                    </div>
+                                
+                              </a>
+                          </div>
+                  </div>
+        
+    
+    </div>
+</div>
+{% endblock %}

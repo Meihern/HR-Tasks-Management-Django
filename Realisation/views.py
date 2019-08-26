@@ -28,3 +28,15 @@ class ErrorTView(TemplateView, LoginRequiredMixin):
 
     def get(self, request, *args, **kwargs):
         return render(request, self.template_name)
+
+class EquipeView(TemplateView, LoginRequiredMixin):
+    template_name = 'equipe.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+class DashboardEquipeView(TemplateView, LoginRequiredMixin):
+    template_name = 'Dashboard_equipe.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
