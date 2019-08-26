@@ -42,10 +42,10 @@
                       <span class="text-secondary">Notation Manager :</span>
                            <br>
                         <span class="text-info">notation courante : </span>
-                          {% if objectif.notation_manager  %}
-                              <span style="color: red;" > {{ objectif.notation_manager }} </span>
-                          {% else %}
-                              <span style="color: red;">Aucune Notation n'est définie Choisissez une</span>
+                              <span style="color: red;" >  {% if objectif.notation_manager  %}
+                                  {{ objectif.notation_manager }}
+                                  {% else %}
+                                  Aucune Notation n'est définie Choisissez une</span>
                           {% endif %}
                       {{ form.notation_manager }}
                   </div>
@@ -56,7 +56,7 @@
     <br>
     {% endfor %}
     {% if fiche.commentaire_employe %}
-        <div class="card">
+        <div class="card" id="commentaire_manager_courant_div_id">
             <div class="container-fluid">
                 <br>
                 <p>Votre Commentaire de Performance Annuelle :</p>
@@ -112,6 +112,7 @@
         success: function(result) {
              swal("Succès", "Votre Commentaire a été envoyée", "success");
              $('#commentaire_manager_courant').empty().text(commentaire);
+             $('#commentaire_manager_courant_div_id').show();
         },
         error: function(result) {
             swal("Echec", "Une erreur est survenue ", "error");
