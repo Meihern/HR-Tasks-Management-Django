@@ -12,12 +12,13 @@
     }
 
 </style>
+    <h1 class="text-primary">Demander pour {{ nom_prenom }} </h1>
 <div class="container-fluid">
     <div class="row">
     
             <div class="col-xl-3 col-md-6 mb-4">
                     <div class="card border-left-primary shadow h-100 py-2">
-                        <a data-toggle="modal" data-target="" data-value="travail" href="#" class="btn">
+                        <a data-toggle="modal" data-url="{% url 'demande_doc_superieur' matricule %}" data-target="#demande-doc-Modal" data-matricule="{{ matricule }}" data-value="travail" href="#" class="btn">
                           
                               <div class="card-body">
                                   <div class="row no-gutters align-items-center">
@@ -39,7 +40,7 @@
           
                   <div class="col-xl-3 col-md-6 mb-4">
                           <div class="card border-left-success shadow h-100 py-2">
-                              <a data-toggle="modal" data-target="" data-value="salaire" href="#" class="btn">
+                              <a data-toggle="modal" data-url="{% url 'demande_doc_superieur' matricule %}" data-target="#demande-doc-Modal" data-matricule="{{ matricule }}" data-value="salaire" href="#" class="btn">
                                 
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">
@@ -59,7 +60,7 @@
                   </div>
                   <div class="col-xl-3 col-md-6 mb-4">
                           <div class="card border-left-warning shadow h-100 py-2">
-                              <a data-toggle="modal" data-target="" data-value="domiciliation" href="#" class="btn">
+                              <a data-toggle="modal" data-url="{% url 'demande_doc_superieur' matricule %}" data-target="#demande-doc-Modal" data-matricule="{{ matricule }}" data-value="domiciliation" href="#" class="btn">
                                 
                                     <div class="card-body">
                                         <div class="row no-gutters align-items-center">

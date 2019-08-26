@@ -153,8 +153,13 @@ class HistoriqueDemandesAttestationsView(TemplateView):
         else:
             return HttpResponseForbidden()
 
-class AttestaionEquipeView(TemplateView):
+
+class AttestationEquipeView(TemplateView):
     template_name = 'Gestion_Attestations/equipe_demande_attestation.html'
 
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+    def get(self, request, employe_id, *args, **kwargs):
+        current_employe = get_object_or_404(Employe, pk=employe_id)
+        if current_employe.get_superieur_hierarchique() != request.user:
+            return HttpResponseForbidden()
+        return render(request, self.template_name, context={'nom_prenom': current_employe.get_full_name(),
+                                                            'matricule': employe_id})

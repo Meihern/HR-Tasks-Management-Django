@@ -6,8 +6,9 @@ from . import views
 
 urlpatterns = [
     url('^demande_doc$', login_required(views.envoyer_demande_doc), name='demande_doc'),
+    path('demande_doc_employe/<str:matricule_employe>', login_required(views.envoyer_demande_doc_superieur), name='demande_doc_superieur'),
     url('^demande_attestations$', login_required(views.DemandeAttestationView.as_view()), name='demande_attestations'),
-    url('^equipe_demande_attestation$', login_required(views.AttestaionEquipeView.as_view()), name='equipe_demande_attestation'),
+    path('equipe_demande_attestation/<str:employe_id>', login_required(views.AttestationEquipeView.as_view()), name='equipe_demande_attestation'),
     url('^accept_demande_doc$',login_required(views.accept_demande_doc), name='accept_demande_doc'),
     path('consultation_demandes_docs/<str:type_doc>',
          login_required(views.ConsultationDemandesDoc.as_view()), name='consultation_demandes_docs'),
