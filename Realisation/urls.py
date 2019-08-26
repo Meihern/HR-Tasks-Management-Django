@@ -22,6 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('authentification/', include('Authentification.urls')),
     url('^$', login_required(views.DashboardView.as_view()), name='Dashboard'),
+    url('^Error404$', login_required(views.ErrorView.as_view()), name='Error404'),
+    url('^Error403$', login_required(views.ErrorTView.as_view()), name='Error403'),
     url('^consultation$', login_required(views.ConsultationView.as_view()),name='consultation'),
     path('attestations/', include('Gestion_Attestations.urls')),
     path('conges/', include('Gestion_Conge.urls')),

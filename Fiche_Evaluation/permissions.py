@@ -11,19 +11,22 @@ def get_accessibilite_permission_object():
 def get_accessibilite_remplir():
     if get_accessibilite_permission_object() is None:
         return False
-    return get_accessibilite_permission_object().fiche_evalutation_accessible
+    else:    
+        return get_accessibilite_permission_object().fiche_evalutation_accessible
 
 
 def get_accessibilite_evaluation_mi_annuelle():
     if get_accessibilite_permission_object() is None:
         return False
-    return get_accessibilite_permission_object().evaluation_mi_annuelle_accessible
+    else:    
+        return get_accessibilite_permission_object().evaluation_mi_annuelle_accessible
 
 
 def get_accessibilite_evaluation_annuelle():
     if get_accessibilite_permission_object() is None:
         return False
-    return get_accessibilite_permission_object().evaluation_annuelle_accessible
+    else:    
+        return get_accessibilite_permission_object().evaluation_annuelle_accessible
 
 
 def can_add_fiche_objectif(employe: Employe):
