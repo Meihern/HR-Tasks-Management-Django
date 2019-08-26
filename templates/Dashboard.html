@@ -2,20 +2,26 @@
 {% block title %} Dashboard {% endblock %}
 {% block Content %}
 <style>
+    .container-fluid{
+        margin-top: 15%;
+        margin-left: 13%;
+    }
     .row{
         margin-top: 15%;
+        
     }
 
 </style>
-<div class="container-fluid">
 {% for message in messages %}
-                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                    </button>
-                    {{ message }}
-                </div>
-                {% endfor %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+     <span aria-hidden="true">&times;</span>
+    </button>
+    {{ message }}
+</div>
+{% endfor %}
+<div class="container-fluid">
+
     <div class="row">
 
         <div class="col-xl-3 col-md-6 mb-4">
