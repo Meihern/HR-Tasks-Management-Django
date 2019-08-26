@@ -152,3 +152,9 @@ class HistoriqueDemandesAttestationsView(TemplateView):
             return render(request, template_name=self.template_name, context={'docs': data})
         else:
             return HttpResponseForbidden()
+
+class AttestaionEquipeView(TemplateView):
+    template_name = 'Gestion_Attestations/equipe_demande_attestation.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
