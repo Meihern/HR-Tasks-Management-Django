@@ -15,6 +15,10 @@ $("#demande-doc-Modal").on('show.bs.modal',function(e) {
     e.preventDefault();
     $('#demande-doc-Modal').modal('hide');
     let csrf = window.CSRF_TOKEN;
+    if(url === undefined){
+        console.log("TESTSSGDJDSMK");
+        url = $(this).data('url');
+    }
     console.log(url);
     $.ajax({
         type: 'POST',
