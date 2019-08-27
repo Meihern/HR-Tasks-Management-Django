@@ -11,6 +11,9 @@ class FicheObjectifAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def has_change_permission(self, request, obj=None):
+        return False
+
 
 class ObjectifAdmin(admin.ModelAdmin):
     list_display = ('fiche_objectif', 'description', 'poids', 'notation_manager')
@@ -18,11 +21,23 @@ class ObjectifAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class SousObjectifAdmin(admin.ModelAdmin):
     list_display = ('objectif', 'description')
 
     def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
         return False
 
 
