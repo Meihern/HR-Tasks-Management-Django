@@ -1,6 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
-from Authentification.models import Employe, Activite
+from Authentification.models import Employe
 from django.utils.timezone import now
 from django.contrib.contenttypes.fields import GenericRelation
 from Authentification.manager import CustomModelManager

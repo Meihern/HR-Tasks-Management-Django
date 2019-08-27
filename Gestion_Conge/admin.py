@@ -13,6 +13,15 @@ class DemandeCongeAdmin(admin.ModelAdmin):
     list_filter = ('etat',)
     search_fields = ('employe__full_name',)
 
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
 
 class SoldeCongeAdmin(ImportExportModelAdmin):
     list_display = ('solde', 'matricule_paie')

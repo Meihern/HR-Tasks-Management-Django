@@ -119,9 +119,10 @@ class GeneratePDFDemandeConge(TemplateView):
             'telephone': demande_conge.get_telephone() if demande_conge.get_telephone() else 'Aucun',
             'interim': demande_conge.get_interim() if demande_conge.get_interim() else 'Aucun',
             'date_demande': demande_conge.get_date_envoi(),
-            'date_validation_superieur': demande_conge.get_date_sup(),
-            'date_validation_direction': demande_conge.get_date_direction(),
-            'date_validation_direction_rh': demande_conge.get_date_direction_rh()
+            'date_validation_superieur': demande_conge.get_date_sup() if demande_conge.get_date_sup() else '',
+            'date_validation_direction': demande_conge.get_date_direction() if demande_conge.get_date_direction() else '',
+            'date_validation_direction_rh': demande_conge.get_date_direction_rh() if demande_conge.get_date_direction_rh() else '',
+            'annee_courante': now().year
         }
         if context:
             template = get_template(self.template_name)

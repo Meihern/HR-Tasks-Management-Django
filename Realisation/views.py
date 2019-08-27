@@ -28,7 +28,7 @@ class DemandeMonEquipeView(TemplateView, LoginRequiredMixin):
 
     def get(self, request, *args, **kwargs):
         current_employe = request.user
-        equipe = Employe.objects.filter(superieur_hierarchique=current_employe).values('matricule_paie')
+        equipe = Employe.objects.filter(superieur_hierarchique=current_employe, email=current_employe.email).values('matricule_paie')
         data_equipe = []
         for e in equipe:
             e = Employe.objects.get(matricule_paie=e['matricule_paie'])
