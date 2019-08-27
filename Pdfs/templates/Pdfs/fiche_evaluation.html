@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <script src="script.js"></script>
+        <title>Fiche d'objectifs de {{ nom_prenom }}</title>
       </head>
 <head>
 <style>
@@ -96,7 +96,12 @@ img {
                 </tr>
                 {% for objectif in objectifs %}
                 <tr>
-                  <td width="150">{{objectif.description}}</td>
+                  <td width="150">{{objectif.description}}
+                  {% for sous_objectif in objectif.sous_objectifs %}
+                      <br>
+                      - {{ sous_objectif.description }}
+                      {% endfor %}
+                  </td>
                   <td width="30">{{objectif.poids}}</td>
                   <td width="150">{{objectif.evaluation_mi_annuelle}}</td>
                   <td width="150">{{objectif.evaluation_annuelle}}</td>
@@ -152,8 +157,8 @@ img {
                       <td width="500">{{commentaire_employe}}</td>
                     </tr>
                     <tr>
-                        <td width="500">{{date_comentaire_manager}}</td>
-                        <td width="500">{{date_commentaire_employé}}</td>
+                        <td width="500">{{date_commentaire_manager}}</td>
+                        <td width="500">{{date_commentaire_employe}}</td>
                     </tr>
             </table>
         </div>

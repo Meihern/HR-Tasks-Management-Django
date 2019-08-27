@@ -155,8 +155,10 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" {% if is_fiche_accessible is True %}
+        <a class="nav-link" {% if is_fiche_accessible is True and can_add_fiche is True %}
            href="{% url 'remplir_objectifs' %}"
+            {% elif is_fiche_accessible is True and can_add_fiche is False %}
+            id="remplir-fiche-objectif-complete" href="#"
             {% else %}
             id="remplir-fiche-objectif-non-accessible" href="#"
             {% endif %}>
@@ -310,6 +312,10 @@
     $("#remplir-fiche-objectif-non-accessible, #remplir-fiche-objectif-card-non-accessible, #evaluation-non-accessible").click(function(e){
        e.preventDefault();
        swal("Non Accessible", "Cette fonctionnalité n'est pas accessible pour le moment", "error");
+    });
+    $("#remplir-fiche-objectif-complete, #remplir-fiche-objectif-card-complete").click(function(e){
+       e.preventDefault();
+       swal("Non Accessible", "Vous avez déjà rempli votre fiche d'objectifs", "error");
     });
     </script>
 </body>

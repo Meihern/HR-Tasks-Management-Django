@@ -45,7 +45,7 @@ class CustomUserAdmin(BaseUserAdmin, ImportExportModelAdmin):
         None, {'fields': ('full_name', 'matricule_paie', 'password', 'email', 'n_cin', 'n_cnss', 'n_compte', 'fonction',
                           'date_naissance', 'last_login', 'superieur_hierarchique', 'department', 'activite')}),
         # ('Full name', {'fields': ()}),
-        ('Permissions', {'fields': ('staff', 'admin', 'active', 'consultant_recrutements',
+        ('Permissions', {'fields': ('staff', 'admin', 'active', 'consultant_fiches_objectifs',
                                     'consultant_attestations', 'consultant_conges')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin

@@ -9,7 +9,11 @@ class DashboardView(TemplateView, LoginRequiredMixin):
     template_name = 'Dashboard.html'
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        if can_add_fiche_objectif(request.user):
+            can_add_fiche = True
+        else:
+            can_add_fiche = False
+        return render(request, self.template_name, context={'can_add_fiche': can_add_fiche})
 
 
 class ConsultationView(TemplateView, LoginRequiredMixin):
