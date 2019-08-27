@@ -31,7 +31,7 @@ def load_fiche_data(fiche_objectif: FicheObjectif):
             'evaluation_mi_annuelle': objectif.get_evaluation_mi_annuelle() if objectif.get_evaluation_mi_annuelle() else '',
             'evaluation_annuelle': objectif.get_evaluation_annuelle() if objectif.get_evaluation_annuelle() else '',
             'notation_manager': objectif.get_notation_manager_display() if objectif.get_notation_manager_display() else '',
-            'notation_manager_value': objectif.get_notation_manager() if objectif.get_notation_manager() else 0,
+            'notation_manager_value': int(objectif.get_notation_manager()*100) if objectif.get_notation_manager() else 0,
         }
         data_objectifs.append(objectif)
     fiche = {

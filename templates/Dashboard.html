@@ -64,9 +64,11 @@
         <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-warning shadow h-100 py-2">
 
-                    <a class="btn" {% if is_fiche_accessible is True %}
+                    <a class="btn" {% if is_fiche_accessible is True and can_add_fiche is True %}
                        href="{% url 'remplir_objectifs' %}"
-                        {% else %}
+                       {% elif is_fiche_accessible is True and can_add_fiche is False %}
+                        id="remplir-fiche-objectif-card-complete" href="#"
+                       {% else %}
                         id="remplir-fiche-objectif-card-non-accessible" href="#"
                         {% endif %}>
                           <div class="card-body">

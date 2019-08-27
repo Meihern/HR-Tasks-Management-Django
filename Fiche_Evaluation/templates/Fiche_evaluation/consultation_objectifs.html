@@ -44,11 +44,13 @@
             </div>
         </div>
             {% endif %}
+        {% if is_evaluation_annuelle_accessible %}
         <div class="container-fluid" align='right'>
             <br>
             <button class="btn btn-primary" data-toggle="modal" data-target="#ajout-commentaire-employe-modal">Mettre Un Commentaire</button>
             <a href="#" class="btn btn-primary"><i class="fas fa-download fa-sm text-white-50"></i> Génèrer pdf</a>
         </div>
+            {% endif %}
         <br/>
         <!-- Ajouter Commentaire Employé Modal -->
         <div class="modal fade" id="ajout-commentaire-employe-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

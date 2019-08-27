@@ -75,11 +75,11 @@ class GeneratePDFFichesObjectifs(TemplateView):
             'manager': employe.get_superieur_hierarchique().get_full_name(),
             'fonctionM': employe.get_superieur_hierarchique().get_fonction(),
             'periode': now().date().year,
-            'bonus': fiche_objectif.get_bonus(),
-            'commentaire_manager': fiche_objectif.get_commentaire_manager(),
-            'commentaire_employe': fiche_objectif.get_commentaire_employe(),
-            'date_commentaire_employe': fiche_objectif.get_date_validation_employe(),
-            'date_commentaire_manager': fiche_objectif.get_date_validation_manager(),
+            'bonus': int(fiche_objectif.get_bonus()*100),
+            'commentaire_manager': fiche_objectif.get_commentaire_manager() if fiche_objectif.get_commentaire_manager() else '',
+            'commentaire_employe': fiche_objectif.get_commentaire_employe() if fiche_objectif.get_commentaire_employe() else '',
+            'date_commentaire_employe': fiche_objectif.get_date_validation_employe() if fiche_objectif.get_date_validation_employe() else '',
+            'date_commentaire_manager': fiche_objectif.get_date_validation_manager() if fiche_objectif.get_date_validation_manager() else '',
             'objectifs': objectifs
         }
         if context:
