@@ -5,36 +5,42 @@
   <meta charset="utf-8">
   <title>Demande de congé de {{ nom_prenom }}</title>
     <style>
-        h3{
-            font-size: 25px;
-            font-weight: bold;
+        p , h3, h2{
+            font-size: 15px;   
             color: black;
         }
-        h4{
-            font-size: 20px;
-            font-weight: bold;
-            color: black;
-            margin-left: 200px;
-            margin-top: 100px;
+        th {
+          border: 1px solid black;
+          text-align: center;
+          padding: 1px;
+          background-color: rgb(117, 117, 117);
+          color: black;
+          font-size: 16px;
         }
-        h6{
-            margin-top: 235px; /* moitié de la hauteur */
+        td {
+          border: 1px solid black;
+          text-align: center;
+          padding: 1px;
+          font-size: 16px;
         }
-        p{
-            font-size: 16px;   
-            color: black;
-        }
+        img {
+  width: 200px;
+}
     </style>
 </head>
 <body>
 
   <!-- Le reste du contenu -->
-    <div align ="center" align ="top">
+    <div align ="top">
         <img src="../../Pdfs/static/Pdfs/img/emidlogo.png" alt="">
     </div>
+    <ul>
+    <p>D.R.H</p>
+</ul>
     <div align ="center" > 
-        <h3><u>DEMANDE DE DEPART EN CONGE</u></h3>
+        <h3><u>DEMANDE DE DEPART EN CONGE <br>(Année {{annee_courante}}) </u></h3>
     </div>
+    <br>
         <ul>
             <p>Nom et Prénom : {{nom_prenom}} </p>
             <p>Direction : {{departement}} </p>
@@ -46,10 +52,23 @@
             <p>Interim assuré par : {{interim}} </p>
             <p>Téléphone : {{telephone}}</p>
         </ul>
-        <div class="validation" align="right">
-            <h3><u>Validé</u></h3>
-        </div>
-        <h1><u>Rappel :</u></h1>
+        <br>
+        <table>
+            <tr>
+                <th>Demandeur</th>
+                <th>Supérieur hiérarchique</th>
+                <th>Direction concernés</th>
+                <th>Direction RH</th>
+            </tr>
+            <tr>
+                <td>validé <br> le: {{ date_demande }} </td>
+                <td>validé <br> le: {{ date_validation_superieur }} </td>
+                <td>validé <br> le: {{ date_validation_direction }} </td>
+                <td>validé <br> le: {{ date_validation_direction_rh }} </td>
+            </tr>
+        </table>
+        <br>
+        <h2><u>Rappel :</u></h2>
         <p> - Les congés doivent être épuisés en totalité dans l'année ;<br>
             - Toute demande doivent parvenir au DRH, 30 jours à l'avance pour exploitation ;<br>
             - Cette décision de congé devra après visa de la DIRECTION, être remise au collaborateur
@@ -57,7 +76,7 @@
         </p>
         <p>
             LE RESPECT DE LA VALIDATION DE LA DEMANDE EST OBLIGATOIRE FAUTE DE QUOI L'ABSCENCE SERA CONSIDEREE
-            COMME Abandon de poste conformément au code du travail en vigueur
+            COMME Abandon de poste conformément au code du travail en vigueur.
         </p>
 </body>
 </html>
