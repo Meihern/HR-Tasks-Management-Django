@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 {% block Content %}
 <div class="container-fluid">
-    {% if not fiche %} <h1 class="text-primary"> Vous n'avez pas encore rempli votre fiche d'objectifs </h1>
-    {% else %}
+    {% if fiche %}
         <h1 class="text-primary"> Consultation de Votre Fiche d'objectif </h1>
         {% for objectif in objectifs %}
             <div class="card">
@@ -14,7 +13,9 @@
                                     <th>Objectif</th>
                                     <th>Poids</th>
                                     <th>Evaluation Mi-Annuelle :</th>
+                                    <th>Evaluation Annuelle</th>
                                     <th>Notation Manager</th>
+                                    <th>EN %</th>
                                 </tr>
                                 <tr>
                                     <td>{{ objectif.description }} <br>
@@ -24,7 +25,9 @@
                                          </td>
                                     <td>{{ objectif.poids }}%</td>
                                     <td>{{ objectif.evaluation_mi_annuelle }}</td>
+                                    <td>{{ objectif.evaluation_annuelle }} </td>
                                     <td>{{ objectif.notation_manager }}</td>
+                                    <td>{{ objectif.notation_manager_value }} </td>
                                 </tr>
                             </table>
                         <br>
@@ -46,8 +49,10 @@
             {% endif %}
         <div class="container-fluid" align='right'>
             <br>
+            {% if is_evaluation_annuelle_accessible %}
             <button class="btn btn-primary" data-toggle="modal" data-target="#ajout-commentaire-employe-modal">Mettre Un Commentaire</button>
-            <a href="#" class="btn btn-primary"><i class="fas fa-download fa-sm text-white-50"></i> Génèrer pdf</a>
+                {% endif %}
+            <a href="{% url 'generate_pdf_fiche_objectif' fiche.id %}" target="_blank" class="btn btn-primary"><i class="fas fa-download fa-sm text-white-50"></i> Génèrer pdf</a>
         </div>
         <br/>
         <!-- Ajouter Commentaire Employé Modal -->
@@ -70,8 +75,10 @@
                 </div>
                 </div>
             </div>
-    {% endif %}
 </div>
+{% else %}
+    <h1 class="text-primary"> Vous n'avez pas encore rempli votre fiche d'objectifs </h1>
+        {% endif %}
 </div>
 {% block commentaire_js_employe %}
     <script>

@@ -21,6 +21,7 @@
             <th>Type de demande</th>
             <th>Date</th>
             <th>Etat</th>
+            <th>Générer PDF</th>
           </tr>
         </thead>
         <tbody id="accept-demande-doc-type">
@@ -29,8 +30,12 @@
             <td>{{ doc.employe }}</td>
             <td>{{ doc.type }}</td>
             <td>{{ doc.date_envoi}}</td>
+              <td>
+                  <span class="icon text-black-50">
+                   {% if doc.etat %} Validée {% else %} En attente {% endif %}
+                    </span>
+              </td>
             <td>
-                {% if not doc.etat %}
                 <a  value="{{ doc.id }}" data-url="{% url 'accept_demande_doc' %}" href="{% url 'generate_pdf' doc.id %}" target="_blank" data-value="{{ doc.id }}" class="btn btn-success btn-icon-split">
                 <span class="text">Valider</span>
                 <span class="icon text-white-50">
@@ -38,11 +43,6 @@
                     <i class="far fa-file-pdf"></i>
                   </span>
               </a>
-                {% else %}
-                    <span class="icon text-black-50">
-                    Validée
-                    </span>
-                {% endif %}
             </td>
           </tr>
         {% endfor %}
