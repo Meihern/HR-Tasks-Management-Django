@@ -51,7 +51,7 @@
         <p><strong>{{sexe}}.</strong>{{nom_prenom|yesno:''}}</p>
     </div>
     <div>
-        <p>Est employé au sein de notre société depuis le {{date_entre|yesno:''}} et qu'il a perçu en {{mois_precedant|yesno:''}}</p>
+        <p>Est employé au sein de notre société depuis le {{date_entre|yesno:''}} et qu'{% if sexe_value == 'M' %}il{% endif %}{% if sexe_value == 'F' %}elle{% endif %} a perçu en {{mois_precedant|yesno:''}}</p>
     </div>
     <div>
         <p>- Un salaire brut de : {{salaire|yesno:''}} dh</p>
