@@ -13,7 +13,9 @@
                                     <th>Objectif</th>
                                     <th>Poids</th>
                                     <th>Evaluation Mi-Annuelle :</th>
+                                    <th>Evaluation Annuelle</th>
                                     <th>Notation Manager</th>
+                                    <th>EN %</th>
                                 </tr>
                                 <tr>
                                     <td>{{ objectif.description }} <br>
@@ -23,10 +25,12 @@
                                          </td>
                                     <td>{{ objectif.poids }}%</td>
                                     <td>{{ objectif.evaluation_mi_annuelle }}</td>
+                                    <td>{{ objectif.evaluation_annuelle }} </td>
                                     <td>{{ objectif.notation_manager }}</td>
+                                    <td>{{ objectif.notation_manager_value }} </td>
                                 </tr>
                             </table>
-                        
+                        <br>
                     </div>
                 </div>
             </div>
@@ -50,7 +54,6 @@
                 {% endif %}
             <a href="{% url 'generate_pdf_fiche_objectif' fiche.id %}" target="_blank" class="btn btn-primary"><i class="fas fa-download fa-sm text-white-50"></i> Génèrer pdf</a>
         </div>
-
         <br/>
         <!-- Ajouter Commentaire Employé Modal -->
         <div class="modal fade" id="ajout-commentaire-employe-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

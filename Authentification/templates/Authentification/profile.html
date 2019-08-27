@@ -18,12 +18,16 @@
                 <a class="nav-link" href="{% url 'historique_demandes_conges' %}">Mes demandes de congés</a>
             </li>
         </ul>
+        <div class="card">
+                <div class="container-fluid">
         <br>
         <h4>Matricule:  {{Matricule}}</h4><br>
         <h4>Fonction:  {{Fonction}}</h4><br>
         {% if salaire %}<h4>Salaire brute: {{salaire}}dhs </h4>{% else %}<h4>Salaire non défini</h4>{% endif %}<br>
         <h4>C.N.S.S N<sup>o</sup>: {{cnss}}</h4><br>
         <h4>Departement: {{Departement}}</h4><br>
+    </div>
+    </div>
 </div>
 
 {% endblock %}
