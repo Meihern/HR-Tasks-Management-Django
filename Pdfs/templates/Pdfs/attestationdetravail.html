@@ -53,7 +53,7 @@
         <p>Est employé au sein de notre société depuis le {{date_entree}}</p>
     </div>
     <div>
-        <p>Actuellement, il occupe la fonction de {{fonction}}</p>
+        <p>Actuellement, {% if sexe_value == 'M' %} il {% endif %} {% if sexe_value == 'F' %} elle {% endif %} occupe la fonction de {{fonction}}</p>
     </div>
     <div>
         <p>La présente attestation est délivrée à l'intéressé sur sa demande pour servir et valoir ce que de droit.</p>

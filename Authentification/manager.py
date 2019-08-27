@@ -2,10 +2,11 @@ from django.contrib.auth.models import BaseUserManager
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
+
 class EmployeManager(BaseUserManager):
 
     def create_user(self, matricule_paie, password='azerty258', is_active=True, is_staff=False, is_admin=False,
-                    can_consult_attestations=False, can_consult_conges=False, can_consult_recrutements=False,**kwargs):
+                    can_consult_attestations=False, can_consult_conges=False, can_consult_recrutements=False, **kwargs):
 
         if not matricule_paie:
             raise ValueError("Le matricule est nécessaire")
@@ -62,5 +63,3 @@ class CustomModelManager(models.Manager):
             return self.get(**kwargs)
         except ObjectDoesNotExist:
             return None
-
-

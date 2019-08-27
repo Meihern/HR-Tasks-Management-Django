@@ -35,11 +35,11 @@ def envoyer_demande_doc(request):
             notification.set_sender(employe)
             notification.set_receiver()
             notification.save()
-            send_mail(notification.get_subject(), notification.get_message(),
-                      from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
         except ValueError:
             demande_doc.delete()
             return JsonResponse({'Response': 'error'})
+        send_mail(notification.get_subject(), notification.get_message(),
+                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
         return JsonResponse({'Response': 'Success'})
     else:
         return JsonResponse({'Response': 'error'})
@@ -59,11 +59,11 @@ def envoyer_demande_doc_superieur(request, matricule_employe):
             notification.set_sender(request.user)
             notification.set_receiver()
             notification.save()
-            send_mail(notification.get_subject(), notification.get_message(),
-                      from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
         except ValueError:
             demande_doc.delete()
             return JsonResponse({'Response': 'error'})
+        send_mail(notification.get_subject(), notification.get_message(),
+                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
         return JsonResponse({'Response': 'success'})
     else:
         return JsonResponse({'Response': 'error'})
@@ -88,9 +88,8 @@ def accept_demande_doc(request):
                                 message='Votre demande de %s a été acceptée !' % (demande_doc.get_type_demande()),
                                 content_object=demande_doc)
     notification.save()
-    # send_mail(subject=demande_doc.get_type_demande(), message='Votre demande de %s a été acceptée !'%(demande_doc.get_type_demande())
-    #         , from_email=DEFAULT_FROM_EMAIL, to=demande_doc.get_employe())
-    # request.session['doc_id'] = demande_doc.id
+    send_mail(notification.get_subject(), notification.get_message(),
+              from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
     return JsonResponse({'Response': 'success'})
 
 
