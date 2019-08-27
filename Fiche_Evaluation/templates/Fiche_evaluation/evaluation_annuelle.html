@@ -24,16 +24,22 @@
       <div class="container-fluid">
         <div class="form-group">
           <br>
-          <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
-            {% if objectif.sous_objectifs %}
-            <span class="text-secondary"> Sous Objectifs :</span>
-            <br>
-            {% endif %}
-            {% for sous_objectif in objectif.sous_objectifs %}
-                <p> - {{ sous_objectif.description }} </p>
-                {% endfor %}
-
-            <p>Evaluation Mi-Annuelle : </p><p>{{ objectif.evaluation_mi_annuelle }}</p>
+          <table class="table table-bordered">
+            <tr>
+                <th>Objectif</th>
+                <th>Poids</th>
+                <th>Evaluation Mi-Annuelle :</th>
+            </tr>
+            <tr>
+                <td>{{ objectif.description }} <br>
+                    {% for sous_objectif in objectif.sous_objectifs %}
+                     - {{ sous_objectif.description }} <br>
+                     {% endfor %}
+                     </td>
+                <td>{{ objectif.poids }}%</td>
+                <td>{{ objectif.evaluation_mi_annuelle }}</td>
+            </tr>
+        </table>
           <br>
             Evaluation Annuelle : <br>
           <textarea class="form-control" rows="3" name="evaluation_annuelle{{ forloop.counter }}" >{{ objectif.evaluation_annuelle }}</textarea>

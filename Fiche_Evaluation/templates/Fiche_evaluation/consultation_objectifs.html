@@ -9,23 +9,25 @@
                 <div class="container-fluid">
                     <div class="form-group">
                         <br>
-                        <p for="exampleTextarea">Objectif {{ forloop.counter }} ({{ objectif.poids }}%) : <br><br> {{ objectif.description }} </p>
-                        {% if objectif.sous_objectifs %}
-                        <span class="text-secondary"> Sous Objectifs :</span>
-                        <br>
-                        {% endif %}
-                        {% for sous_objectif in objectif.sous_objectifs %}
-                            <p> - {{ sous_objectif.description }} </p>
-                        {% endfor %}
-                        <p class="text-primary">Evaluation Mi Annuelle : </p>
-                        {{ objectif.evaluation_mi_annuelle }}
-                        <p>Evaluation Annuelle : </p>
-                        {{ objectif.evaluation_annuelle }}
-                        <br>
-                        <br>
-                        <span class="text-primary">Notation Manager :</span>
-                        <span style="color: red;" > {{ objectif.notation_manager }} </span>
-                        <br>
+                        <table class="table table-bordered">
+                                <tr>
+                                    <th>Objectif</th>
+                                    <th>Poids</th>
+                                    <th>Evaluation Mi-Annuelle :</th>
+                                    <th>Notation Manager</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ objectif.description }} <br>
+                                        {% for sous_objectif in objectif.sous_objectifs %}
+                                         - {{ sous_objectif.description }} <br>
+                                         {% endfor %}
+                                         </td>
+                                    <td>{{ objectif.poids }}%</td>
+                                    <td>{{ objectif.evaluation_mi_annuelle }}</td>
+                                    <td>{{ objectif.notation_manager }}</td>
+                                </tr>
+                            </table>
+                        
                     </div>
                 </div>
             </div>
@@ -45,6 +47,7 @@
         <div class="container-fluid" align='right'>
             <br>
             <button class="btn btn-primary" data-toggle="modal" data-target="#ajout-commentaire-employe-modal">Mettre Un Commentaire</button>
+            <a href="#" class="btn btn-primary"><i class="fas fa-download fa-sm text-white-50"></i> Génèrer pdf</a>
         </div>
         <br/>
         <!-- Ajouter Commentaire Employé Modal -->
