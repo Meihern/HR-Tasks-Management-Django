@@ -158,7 +158,7 @@ class EvaluationView(TemplateView):
                 notification.save()
                 context = get_email_context(fiche_objectif, employe=fiche_objectif.get_employe())
                 context['domain'] = request.META['HTTP_HOST']
-                email = loader.render_to_string("Fiche_evaluation/email_remplir_fiche_objectif.html", context)
+                email = loader.render_to_string("Fiche_evaluation/email_evaluation_fiche_objectif.html", context)
                 send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
                           [notification.get_receiver().get_email()], fail_silently=False)
                 messages.success(request, "Fiche d'objectif évaluée avec succès")
