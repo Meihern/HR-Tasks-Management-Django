@@ -85,20 +85,18 @@
             <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="salaire" href="#">Attestation de salaire</a>
             <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="travail"  href="#">Attestation de travail</a>
             <a class="collapse-item" data-toggle="modal" data-target="#demande-doc-Modal" data-value="domiciliation" href="#">Domiciliation</a>
-              </div>
-            <h6 class="collapse-header">Demande des services:</h6>
+               
+          </div>
+            <h6 class="collapse-header">Demande des services :</h6>
             <a class="collapse-item" href="{% url 'demande_conge' %}">Congés</a>
+            <h6 class="collapse-header">Equipe :</h6>
+            <a class="collapse-item" href="{% url 'equipe' %}">Demander pour <br> mon equipe</a> 
             </div>
         </div>
       </li>
       <li class="nav-item">
-          <a class="nav-link" href="{% url 'equipe' %}">
-              <i class="far fas fa-envelope-open-text"></i>
-            <span>Demander pour mon equipe</span></a>
-        </li>
-      <li class="nav-item">
           <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseConsultation" aria-expanded="true" aria-controls="collapseConsultation">
-            <i class="fas fa-envelope-open-text"></i>
+            <i class="far fa-eye"></i>
             <span>Consulter les congés de l'equipe</span>
           </a>
           <div id="collapseConsultation" class="collapse" aria-labelledby="headingConsultation" data-parent="#accordionSidebar">
@@ -155,37 +153,39 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" {% if is_fiche_accessible is True and can_add_fiche is True %}
-           href="{% url 'remplir_objectifs' %}"
-            {% elif is_fiche_accessible is True and can_add_fiche is False %}
-            id="remplir-fiche-objectif-complete" href="#"
-            {% else %}
-            id="remplir-fiche-objectif-non-accessible" href="#"
-            {% endif %}>
-            <i class="far fa-file-alt"></i>
-          <span>Remplir la fiche des objectifs</span></a>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#fiche_objectifs" aria-expanded="true" aria-controls="collapseUtilities">
+          <i class="far fa-file-alt"></i>
+          <span>Fiche des objectifs </span></a>
+          <div id="fiche_objectifs" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div class="bg-light py-2 collapse-inner rounded">
+                
+                <a class="collapse-item" {% if is_fiche_accessible is True and can_add_fiche is True %}
+                href="{% url 'remplir_objectifs' %}"
+                 {% elif is_fiche_accessible is True and can_add_fiche is False %}
+                 id="remplir-fiche-objectif-complete" href="#"
+                 {% else %}
+                 id="remplir-fiche-objectif-non-accessible" href="#"
+                 {% endif %}>Remplir la fiche <br> des objectifs</a>
+                 <a class="collapse-item"
+                   {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'evaluation_equipe' %}"
+                    {% else %}
+                    id="evaluation-non-accessible" href="#"
+                    {% endif %}>Evaluer les objectifs</a>
+              </div>
+            </div>
+        
       </li>
       <li class="nav-item">
-        <a class="nav-link"
-           {% if  is_evaluation_annuelle_accessible or is_evaluation_mi_annuelle_accessible %} href="{% url 'evaluation_equipe' %}"
-            {% else %}
-            id="evaluation-non-accessible" href="#"
-            {% endif %}>
-            <i class="fas fa-tasks"></i>
-          <span>Evaluer les objectifs</span></a>
-        </li>
-
-      <!-- Nav Item - Tables -->
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'consultation_objectifs' %}">
+          <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#consultation_fiche_objectifs" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="far fa-eye"></i>
-          <span>Consulter Ma Fiche des Objectifs</span></a>
-      </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{% url 'consultation_objectifs_equipe' %}">
-            <i class="far fa-eye"></i>
-          <span>Consulter Les Fiche Des Objectifs de Mon équipe</span></a>
-      </li>
+            <span>Consultation objectifs </span></a>
+            <div id="consultation_fiche_objectifs" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="bg-light py-2 collapse-inner rounded">
+                    <a class="collapse-item" href="{% url 'consultation_objectifs' %}">Consulter Ma Fiche <br> des Objectifs</a>
+                    <a class="collapse-item" href="{% url 'consultation_objectifs_equipe' %}">Consulter Les Fiche <br> des Objectifs de Mon <br> équipe</a>
+                  </div>
+        </div>
+  </li>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
