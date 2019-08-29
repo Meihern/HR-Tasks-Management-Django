@@ -3,7 +3,7 @@
 
 {% trans "Veuillez visiter ce lien pour consulter votre fiche d'objectifs :" %}
 {% block reset_link %}
-{{ full_domain }}{% url 'consultation_objectifs'%}
+{{ protocol }}://{{ domain }}{% url 'consultation_objectifs'%}
 {% endblock %}
 {% trans "Le nom de votre supérieur hiérarchique est : " %} {{ employe.get_full_name }}
 

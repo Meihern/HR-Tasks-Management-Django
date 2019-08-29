@@ -10,7 +10,7 @@
 {% trans "Les Jours ouvravles sont : " %} {{ demande_conge.get_jours_ouvrables }}
 {% trans "Veuillez visiter ce lien et s'authentifier pour accepter ou refuser cette demande" %}
     {% block reset_link %}
-{{ full_domain }}{% url 'Dashboard'  %}
+{{ protocol }}://{{ domain }}{% url 'Dashboard'  %}
     {% endblock %}
 {% trans "Thanks for using our site!" %}
 

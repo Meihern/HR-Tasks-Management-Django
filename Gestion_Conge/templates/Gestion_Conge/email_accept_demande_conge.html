@@ -9,7 +9,7 @@
 {% trans "Vos Jours ouvravles sont : " %} {{ demande_conge.get_jours_ouvrables }}
 {% trans "Veuillez visiter ce lien pour voir plus de détails sur toutes vos demandes de congés" %}
     {% block reset_link %}
-{{ full_domain }}{% url 'historique_demandes_conges'  %}
+{{ protocol }}://{{ domain }}{% url 'historique_demandes_conges'  %}
     {% endblock %}
 {% trans "Thanks for using our site!" %}
 

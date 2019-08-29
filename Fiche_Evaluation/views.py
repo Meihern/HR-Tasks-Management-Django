@@ -20,6 +20,7 @@ def get_email_context(fiche_objectif: FicheObjectif, employe: Employe):
         'employe': employe,
         'site_name': 'EMID Digitalisation Services RH',
         'date_envoi': fiche_objectif.get_date_envoi(),
+        'protocol': 'http'
     }
     return context
 
@@ -57,7 +58,7 @@ class FicheEvaluationView(FormView):
                     notification.save()
                     messages.success(request, "Votre fiche d'objectifs a été remplie avec succès")
                     context = get_email_context(fiche_objectif, employe)
-                    context['full_domain'] = request.META['HTTP_ORIGIN']
+                    context['domain'] = request.META['HTTP_POST']
                     email = loader.render_to_string("Fiche_evaluation/email_remplir_fiche_objectif.html", context)
                 except ValueError:
                     result = self.form_invalid(form)
@@ -157,7 +158,7 @@ class EvaluationView(TemplateView):
                 notification.set_message("Evaluée par %s" % (notification.get_sender().get_full_name()))
                 notification.save()
                 context = get_email_context(fiche_objectif, employe=fiche_objectif.get_employe())
-                context['full_domain'] = request.META['HTTP_ORIGIN']
+                context['domain'] = request.META['HTTP_HOST']
                 email = loader.render_to_string("Fiche_evaluation/email_evaluation_fiche_objectif.html", context)
                 send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
                           [notification.get_receiver().get_email()], fail_silently=True)
@@ -248,7 +249,7 @@ class UpdateFicheObjectifSuperieurView(TemplateView):
             messages.success(request,
                              "La fiche des objectifs de %s a été modifiée avec succès" % (employe.get_full_name()))
             context = get_email_context(fiche_objectif, request.user)
-            context['full_domain'] = request.META['HTTP_ORIGIN']
+            context['domain'] = request.META['HTTP_HOST']
             email = loader.render_to_string("Fiche_evaluation/email_modification_fiche_objectif.html", context)
             send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
                       [notification.get_receiver().get_email()], fail_silently=True)

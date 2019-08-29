@@ -21,6 +21,7 @@ def get_email_context(employe: Employe, demande_conge: DemandeConge, request):
         'employe': employe,
         'demande_conge': demande_conge,
         'date_envoi': demande_conge.get_date_envoi(),
+        'protocol': 'http',
     }
     return context
 
@@ -65,10 +66,10 @@ class DemandeCongeView(FormView):
                     notification.set_receiver()
                     notification.save()
                     context = get_email_context(employe, demande_conge, request)
-                    context['full_domain'] = request.META['HTTP_ORIGIN']
+                    context['domain'] = request.META['HTTP_HOST']
                     email = loader.render_to_string('Gestion_Conge/email_demande_conge.html', context)
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
-                except:
+                except ValidationError:
                     demande_conge.delete()
                     result = self.form_invalid(form)
                     messages.error(request, "Echec de l'envoi de votre demande de congé")
@@ -129,7 +130,7 @@ def accept_demande_conge(request):
         notification.set_message(notif_msg)
         notification.save()
         context = get_email_context(employe, demande_conge, request)
-        context['full_domain'] = request.META['HTTP_ORIGIN']
+        context['domain'] = request.META['HTTP_HOST']
     except ValueError:
         return JsonResponse({'Response': 'error'})
     if demande_conge.get_etat() == DemandeConge.ETAT_DIRECTION_RH:
@@ -165,7 +166,7 @@ def refuser_demande_conge(request):
         notification.set_message("Votre demande de Congé a été refusée")
         notification.save()
         context = get_email_context(employe, demande_conge, request)
-        context['full_domain'] = request.META['HTTP_ORIGIN']
+        context['domain'] = request.META['HTTP_HOST']
         email = loader.render_to_string("Gestion_Conge/email_refuser_demande_conge.html", context)
     except ValueError:
         return JsonResponse({'Response': 'error'})

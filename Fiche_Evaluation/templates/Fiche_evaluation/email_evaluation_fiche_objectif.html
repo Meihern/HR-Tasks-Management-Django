@@ -4,7 +4,7 @@
 {% trans "Votre matricule est : " %} {{ employe.get_matricule }}
 {% trans "Veuillez visiter ce lien et s'authentifier pour consulter votre fiche d'objectif" %}
     {% block reset_link %}
-{{ full_domain }}{% url 'consultation_objectifs'  %}
+{{ protocol }}://{{ domain }}{% url 'consultation_objectifs'  %}
     {% endblock %}
 {% trans "Thanks for using our site!" %}
 
