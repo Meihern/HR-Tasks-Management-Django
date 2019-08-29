@@ -1,5 +1,7 @@
-// Ajax call to retrieve all the received notifications
-$("#notifications-toggle").click(function() {
+// Ajax call to retrieve all the unseen received notifications
+
+$("#notifications-toggle").click(function(e) {
+
         $.ajax({
             url: $(this).data("url"),
             type: 'GET',
@@ -34,5 +36,40 @@ $("#notifications-toggle").click(function() {
         });
 });
 
-//Ajax call to get the details of a single notification
+//Ajax call to get all notifications received
+
+$('#notification-all-modal').on("show.bs.modal", function(e){
+    $.ajax({
+        url: $("#get-all-notifications").data("url"),
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+                console.log("Success");
+                $('#modal-body-notification-all').empty().append(data.notifications.map((notifications) => {
+                    let time_sent = new Date(notifications.time_sent);
+                    time_sent = time_sent.toLocaleDateString('fr-FR',
+                        {
+                            day:'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: 'numeric',
+                            minute: 'numeric',
+                        });
+                    return $('<a class="dropdown-item d-flex align-items-center" data-url="notifications/get_notification_detail" href="#" data-value="'+notifications.id+'" data-toggle="modal" data-target="#notification-detail-modal" >' +
+                        '<div class="mr-3">' +
+                        '<div class="icon-circle bg-primary">' +
+                        '<i class="fas fa-file-alt text-white"></i>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div>' +
+                        '<div class="small text-gray-500"> le ' + time_sent + '</div>' +
+                        '<span class="font-weight-bold">' + notifications.subject +'</span><br>'+
+                        '<span class="small text-gray-500"> Envoyé par ' + notifications.sender__full_name + '</span>'+
+                        '</div>'+
+                        '</a>');
+                }));
+        }
+    });
+});
+
 

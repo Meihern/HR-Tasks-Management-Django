@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.urls import reverse
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.template import loader
@@ -18,7 +19,6 @@ def get_email_context(fiche_objectif: FicheObjectif, employe: Employe):
     context = {
         'employe': employe,
         'site_name': 'EMID Digitalisation Services RH',
-        'protocol': 'http',
         'date_envoi': fiche_objectif.get_date_envoi(),
     }
     return context
@@ -57,15 +57,15 @@ class FicheEvaluationView(FormView):
                     notification.save()
                     messages.success(request, "Votre fiche d'objectifs a été remplie avec succès")
                     context = get_email_context(fiche_objectif, employe)
-                    context['domain'] = request.META['HTTP_HOST']
+                    context['full_domain'] = request.META['HTTP_ORIGIN']
                     email = loader.render_to_string("Fiche_evaluation/email_remplir_fiche_objectif.html", context)
-                    send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
-                              [notification.get_receiver().get_email()], fail_silently=False)
                 except ValueError:
                     result = self.form_invalid(form)
                     messages.error(request, "Une erreur est survenue")
                     fiche_objectif.delete()
                     return result
+                send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
+                          [notification.get_receiver().get_email()], fail_silently=True)
                 result = self.form_valid(form)
                 for i in range(len(objectifs)):
                     objectif = Objectif(description=objectifs[i], fiche_objectif=fiche_objectif,
@@ -90,8 +90,8 @@ class EquipeEvaluationView(TemplateView):
     template_name = 'Fiche_Evaluation/equipe_evaluation.html'
 
     def get(self, request, *args, **kwargs):
-        # if not evaluation_mi_annuelle_accessible() or not evaluation_annuelle_accessible() or request.user.is_consultant:
-        #    return HttpResponseForbidden()
+        # if not evaluation_mi_annuelle_accessible() or not evaluation_annuelle_accessible() or
+        # request.user.is_consultant: return HttpResponseForbidden()
         if not get_accessibilite_evaluation_mi_annuelle() and not get_accessibilite_evaluation_annuelle():
             return HttpResponseForbidden()
 
@@ -157,10 +157,10 @@ class EvaluationView(TemplateView):
                 notification.set_message("Evaluée par %s" % (notification.get_sender().get_full_name()))
                 notification.save()
                 context = get_email_context(fiche_objectif, employe=fiche_objectif.get_employe())
-                context['domain'] = request.META['HTTP_HOST']
+                context['full_domain'] = request.META['HTTP_ORIGIN']
                 email = loader.render_to_string("Fiche_evaluation/email_evaluation_fiche_objectif.html", context)
                 send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
-                          [notification.get_receiver().get_email()], fail_silently=False)
+                          [notification.get_receiver().get_email()], fail_silently=True)
                 messages.success(request, "Fiche d'objectif évaluée avec succès")
             except ValueError:
                 messages.error(request, "Une erreur est survenue")
@@ -176,7 +176,7 @@ class EvaluationView(TemplateView):
                     objectif.set_notation_manager(notations[i])
                     objectif.set_evaluation_annuelle(request.POST.get('evaluation_annuelle' + str(i + 1)))
                     bonus_individuels.append(
-                        round(float(objectif.get_notation_manager()) * float(objectif.get_poids()), 2))
+                        round(float(objectif.get_notation_manager()) * float(objectif.get_poids()), 3))
                 objectif.save()
             fiche_objectif.bonus = sum(bonus_individuels)
             fiche_objectif.save()
@@ -202,17 +202,60 @@ class ConsultationObjectifsView(TemplateView):
         return render(request, self.template_name)
 
 
-class ConsultationObjectifsSuperieurView(TemplateView):
-    template_name = 'Fiche_evaluation/consultation_objectifs_superieur.html'
+class UpdateFicheObjectifSuperieurView(TemplateView):
+    template_name = 'Fiche_evaluation/modification_objectifs_superieur.html'
+    form = FicheObjectifForm
+    success_url = LOGIN_REDIRECT_URL
 
     def get(self, request, fiche_id, *args, **kwargs):
         fiche_objectif = get_object_or_404(FicheObjectif, pk=fiche_id)
         if not request.user.is_superieur_to(fiche_objectif.get_employe()):
             return HttpResponseForbidden()
 
+        if not get_accessibilite_remplir():
+            return HttpResponseForbidden()
+
         data_objectifs, fiche = load_fiche_data(fiche_objectif)
         return render(request, self.template_name,
-                      context={'fiche': fiche_objectif, 'objectifs': data_objectifs})
+                      context={'fiche': fiche_objectif, 'objectifs': data_objectifs, 'form': self.form})
+
+    def post(self, request, fiche_id, *args, **kwargs):
+        fiche_objectif = get_object_or_404(FicheObjectif, pk=fiche_id)
+        form = self.form(request.POST or None)
+        objectifs_ids = request.POST.getlist('objectif_id[]')
+        objectifs = request.POST.getlist(form.FIELD_NAME_MAPPING['objectif'])
+        poids = request.POST.getlist(form.FIELD_NAME_MAPPING['poids'])
+        employe = fiche_objectif.get_employe()
+        if form.is_valid(objectifs, poids):
+            try:
+                notification = Notification(content_object=fiche_objectif, no_reply=True)
+                notification.set_subject("Modification de votre Fiche d'objectif")
+                notification.set_message("Votre supérieur hiérarchique %s a modifié votre Fiche des Objectifs" % (
+                    request.user.get_full_name()))
+                notification.set_sender(request.user)
+                notification.receiver = employe
+                notification.save()
+            except ValueError:
+                messages.error(request, "Une erreur est survenue")
+                return HttpResponseRedirect(self.request.path_info)
+            for i in range(len(objectifs)):
+                Objectif.objects.filter(id=int(objectifs_ids[i])).update(description=objectifs[i],
+                                                                         poids=poids[i]/100)
+            sous_objectifs_ids = request.POST.getlist('sous_objectif_id[]')
+            sous_objectifs_desc = request.POST.getlist('sous_objectif_desc[]')
+            for i in range(len(sous_objectifs_ids)):
+                SousObjectif.objects.filter(id=int(sous_objectifs_ids[i])).update(description=sous_objectifs_desc[i])
+            messages.success(request,
+                             "La fiche des objectifs de %s a été modifiée avec succès" % (employe.get_full_name()))
+            context = get_email_context(fiche_objectif, request.user)
+            context['full_domain'] = request.META['HTTP_ORIGIN']
+            email = loader.render_to_string("Fiche_evaluation/email_modification_fiche_objectif.html", context)
+            send_mail(notification.get_subject(), email, DEFAULT_FROM_EMAIL,
+                      [notification.get_receiver().get_email()], fail_silently=True)
+            return HttpResponseRedirect(self.request.path_info)
+        else:
+            messages.error(request, str(form.errors))
+            return HttpResponseRedirect(self.request.path_info)
 
 
 def set_commentaire_employe(request):

@@ -2,18 +2,14 @@ from django.http import HttpResponseForbidden
 from django.views.generic import TemplateView
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from Fiche_Evaluation.permissions import *
+from Authentification.models import Employe
 
 
 class DashboardView(TemplateView, LoginRequiredMixin):
     template_name = 'Dashboard.html'
 
     def get(self, request, *args, **kwargs):
-        if can_add_fiche_objectif(request.user):
-            can_add_fiche = True
-        else:
-            can_add_fiche = False
-        return render(request, self.template_name, context={'can_add_fiche': can_add_fiche})
+        return render(request, self.template_name)
 
 
 class ConsultationView(TemplateView, LoginRequiredMixin):
@@ -28,7 +24,8 @@ class DemandeMonEquipeView(TemplateView, LoginRequiredMixin):
 
     def get(self, request, *args, **kwargs):
         current_employe = request.user
-        equipe = Employe.objects.filter(superieur_hierarchique=current_employe, email=current_employe.email).values('matricule_paie')
+        equipe = Employe.objects.filter(superieur_hierarchique=current_employe, email=current_employe.email).values(
+            'matricule_paie')
         data_equipe = []
         for e in equipe:
             e = Employe.objects.get(matricule_paie=e['matricule_paie'])
@@ -68,7 +65,3 @@ def handler403(request, exception, template_name="403.html"):
     response = render_to_response(template_name)
     response.status_code = 403
     return response
-
-
-
-

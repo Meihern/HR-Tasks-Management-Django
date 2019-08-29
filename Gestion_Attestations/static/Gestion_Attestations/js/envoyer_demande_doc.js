@@ -19,7 +19,6 @@ $("#confirm-demande-doc").click(function(e) {
     $('#demande-doc-Modal').modal('hide');
     let csrf = window.CSRF_TOKEN;
     if(window.url === undefined){
-        console.log("TESTSSGDJDSMK");
         window.url = $(this).data('url');
     }
     let type_demande = $(this).val();

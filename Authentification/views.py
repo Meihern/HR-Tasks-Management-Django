@@ -92,7 +92,7 @@ class SendPasswordResetEmail(FormView):
                 subject = loader.render_to_string(subject_template_name, context)
                 subject = ''.join(subject.splitlines())
                 email = loader.render_to_string(email_template_name, context)
-                send_mail(subject, email, DEFAULT_FROM_EMAIL, [employe.get_email()], fail_silently=False)
+                send_mail(subject, email, DEFAULT_FROM_EMAIL, [employe.get_email()], fail_silently=True)
                 result = self.form_valid(form)
                 messages.success(request, 'Un message éléctronique a été envoyé à '
                                  + employe.get_email() + ". Veuillez vérifier votre boîte de messagerie "

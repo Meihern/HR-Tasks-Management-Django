@@ -1,5 +1,5 @@
 {% load i18n %}{% autoescape off %}
-{% blocktrans %}Vous recevez cet email en suite à votre demande de congé envoyé le {{ demande_conge.date_envoi }} à {{ site_name }}.{% endblocktrans %}
+{% blocktrans %}Vous recevez cet email en suite à votre demande de congé envoyé le {{ date_envoi }} à {{ site_name }}.{% endblocktrans %}
 {% trans "Nous vous informons que votre demande de congé a été Refusée et nous rappellons que : " %}
 {% trans "Votre matricule est : " %} {{ employe.get_matricule }}
 {% trans "Votre date de départ en congé souhaitée est : " %} {{ demande_conge.get_date_depart }}
@@ -7,7 +7,7 @@
 {% trans "Vos Jours ouvravles sont : " %} {{ demande_conge.get_jours_ouvrables }}
 {% trans "Veuillez visiter ce lien pour voir plus de détails sur toutes vos demandes de congés" %}
     {% block reset_link %}
-{{ protocol }}://{{ domain }}{% url 'historique_demandes_conges'  %}
+{{ full_domain }}{% url 'historique_demandes_conges'  %}
     {% endblock %}
 {% trans "Thanks for using our site!" %}
 

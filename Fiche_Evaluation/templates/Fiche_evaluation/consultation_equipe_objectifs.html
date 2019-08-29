@@ -12,14 +12,26 @@
             <tr>
               <th>Employé</th>
               <th>Fonction</th>
-              <th width="200">Fiche d'objectifs</th>
+                <th>Date d'envoi</th>
+              <th>Modifier la fiche d'objectifs</th>
+              <th width="200">Générer PDF de la Fiche d'objectifs</th>
             </tr>
           </thead>
           <tbody>
           {% for fiche in fiche_objectifs %}
             <tr>
-              <td>{{fiche.employe}}</td>
+              <td>{{ fiche.employe }}</td>
               <td>{{ fiche.fonction }}</td>
+              <td>{{ fiche.date_envoi }}</td>
+              <td>
+                  <div align="center">
+                      <a type="button" {% if is_fiche_accessible %} href="{% url 'modification_fiche_objectif' fiche.id %}"
+                        {% else %}
+                         href="#" id="modification-fiche-objectif-non-accessible"
+                         {% endif %}
+                         class="fas fa-edit" style="font-size: 24px;background: none;"></a>
+                  </div>
+              </td>
               <td>
                 <div align='center'>
                   <a type='button' href="{% url 'generate_pdf_fiche_objectif' fiche.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>

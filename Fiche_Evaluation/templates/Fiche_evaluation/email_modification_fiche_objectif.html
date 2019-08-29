@@ -1,0 +1,14 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}Vous recevez cet email parce que votre fiche d'objectif a été modifié par votre Supérieur Hiérarchique au Plate-forme {{ site_name }}.{% endblocktrans %}
+
+{% trans "Veuillez visiter ce lien pour consulter votre fiche d'objectifs :" %}
+{% block reset_link %}
+{{ full_domain }}{% url 'consultation_objectifs'%}
+{% endblock %}
+{% trans "Le nom de votre supérieur hiérarchique est : " %} {{ employe.get_full_name }}
+
+{% trans "Thanks for using our site!" %}
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+
+{% endautoescape %}

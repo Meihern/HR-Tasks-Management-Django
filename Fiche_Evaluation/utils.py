@@ -38,6 +38,7 @@ def load_fiche_data(fiche_objectif: FicheObjectif):
         'id': fiche_objectif.id,
         'employe': fiche_objectif.get_employe(),
         'bonus': fiche_objectif.get_bonus() if fiche_objectif.get_bonus() else '',
+        'date_envoi': fiche_objectif.date_envoi,
         'commentaire_manager': fiche_objectif.get_commentaire_manager() if fiche_objectif.get_commentaire_manager else '',
         'commentaire_employe': fiche_objectif.get_commentaire_employe() if fiche_objectif.get_commentaire_employe() else ''
     }
@@ -55,11 +56,8 @@ def load_equipe_current_fiches(employe: Employe):
             fiche_objectif = {
                 'id': fiche.id,
                 'employe': fiche.get_employe().get_full_name(),
-                'fonction': fiche.get_employe().get_fonction()
+                'fonction': fiche.get_employe().get_fonction(),
+                'date_envoi': fiche.date_envoi
             }
             data.append(fiche_objectif)
     return data
-
-
-def get_resultat_evaluation(value: float):
-    pass

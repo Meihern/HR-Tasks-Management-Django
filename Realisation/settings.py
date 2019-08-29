@@ -24,9 +24,9 @@ SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 SECRET_KEY = 'g!676-1(#^34fj)rl6$@d2__)rk6*5n8shbfcmb$7kqu^fc!&a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.43.88', '192.168.43.126']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

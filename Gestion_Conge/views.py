@@ -21,7 +21,6 @@ def get_email_context(employe: Employe, demande_conge: DemandeConge, request):
         'employe': employe,
         'demande_conge': demande_conge,
         'date_envoi': demande_conge.get_date_envoi(),
-        'protocol': 'http',
     }
     return context
 
@@ -66,15 +65,16 @@ class DemandeCongeView(FormView):
                     notification.set_receiver()
                     notification.save()
                     context = get_email_context(employe, demande_conge, request)
-                    context['domain'] = request.META['HTTP_HOST']
+                    context['full_domain'] = request.META['HTTP_ORIGIN']
                     email = loader.render_to_string('Gestion_Conge/email_demande_conge.html', context)
-                    send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
-                              recipient_list=[notification.get_receiver().get_email()])
                     messages.success(request, "Vote Demande de Congé a été envoyé avec succès")
                 except:
                     demande_conge.delete()
                     result = self.form_invalid(form)
                     messages.error(request, "Echec de l'envoi de votre demande de congé")
+                    return result
+                send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
+                          recipient_list=[notification.get_receiver().get_email()], fail_silently=True)
                 return result
             else:
                 result = self.form_invalid(form)
@@ -101,10 +101,10 @@ def accept_demande_conge(request):
 
     try:
 
-        if employe.get_superieur_hierarchique() == demande_conge.get_employe().get_departement().get_directeur():
+        if Departement.objects.filter(directeur=employe.get_superieur_hierarchique()).exists():
             demande_conge.update_etat(DemandeConge.ETAT_SUPERIEUR_HIERARCHIQUE)
 
-        if employe == demande_conge.get_employe().get_departement().get_directeur():
+        if Departement.objects.filter(directeur=employe).exists():
             demande_conge.update_etat(DemandeConge.ETAT_DIRECTION_CONCERNEE)
 
         if employe == Departement.objects.safe_get(id=5).get_directeur():
@@ -118,26 +118,26 @@ def accept_demande_conge(request):
             no_reply = False
 
         notification = Notification(content_object=demande_conge, no_reply=no_reply)
-        notification.set_subject("Une nouvelle sur votre demande de congé")
         notification.set_sender(employe)
         notification.set_receiver()
         if no_reply is False:
+            notification.set_subject("Demande de Congé")
             notif_msg = str(demande_conge)
         else:
+            notification.set_subject("Une nouvelle sur votre demande de congé")
             notif_msg = "Votre demande de congé a été acceptée"
         notification.set_message(notif_msg)
         notification.save()
         context = get_email_context(employe, demande_conge, request)
-        context['domain'] = request.META['HTTP_HOST']
-        if demande_conge.get_etat() == DemandeConge.ETAT_DIRECTION_RH:
-            email = loader.render_to_string("Gestion_Conge/email_accept_demande_conge.html", context)
-        else:
-            email = loader.render_to_string("Gestion_Conge/email_demande_conge.html")
-        send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
-                  recipient_list=[notification.get_receiver().get_email()])
+        context['full_domain'] = request.META['HTTP_ORIGIN']
     except ValueError:
         return JsonResponse({'Response': 'error'})
-
+    if demande_conge.get_etat() == DemandeConge.ETAT_DIRECTION_RH:
+        email = loader.render_to_string("Gestion_Conge/email_accept_demande_conge.html", context)
+    else:
+        email = loader.render_to_string("Gestion_Conge/email_demande_conge.html")
+    send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
+              recipient_list=[notification.get_receiver().get_email()], fail_silently=True)
     return JsonResponse({'Response': 'success'})
 
 
@@ -165,13 +165,12 @@ def refuser_demande_conge(request):
         notification.set_message("Votre demande de Congé a été refusée")
         notification.save()
         context = get_email_context(employe, demande_conge, request)
-        context['domain'] = request.META['HTTP_HOST']
+        context['full_domain'] = request.META['HTTP_ORIGIN']
         email = loader.render_to_string("Gestion_Conge/email_refuser_demande_conge.html", context)
-        send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
-                  recipient_list=[notification.get_receiver().get_email()])
     except ValueError:
         return JsonResponse({'Response': 'error'})
-
+    send_mail(notification.get_subject(), email, from_email=DEFAULT_FROM_EMAIL,
+              recipient_list=[notification.get_receiver().get_email()], fail_silently=True)
     return JsonResponse({'Response': 'success'})
 
 
@@ -181,7 +180,6 @@ class ConsultationDemandeConges(TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.can_consult_conges:
             activite_mdlz = Activite.objects.safe_get(id=5)
-            activite_shared = Activite.objects.safe_get(id=4)
             if request.user.can_consult_mdlz:
                 demandes_conges = DemandeConge.objects.filter(employe__activite=activite_mdlz).order_by('-date_envoi')
                 demandes_conges = demandes_conges.all().values('id', 'employe', 'date_envoi',

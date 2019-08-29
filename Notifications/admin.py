@@ -6,3 +6,6 @@ from .models import Notification
 
 class NotificationAdmin(admin.ModelAdmin):
     list_display = ('subject', 'sender', 'receiver', 'seen')
+
+
+admin.site.register(Notification, NotificationAdmin)

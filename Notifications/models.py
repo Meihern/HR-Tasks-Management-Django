@@ -20,7 +20,7 @@ class Notification(models.Model):
     receiver = models.ForeignKey(Employe, on_delete=models.CASCADE, verbose_name='Récepteur', null=False, blank=False, related_name='receiver')
     seen = models.BooleanField(default=False, null=False, blank=False, verbose_name='Vu')
     no_reply = models.BooleanField(default=True, null=False, blank=False, verbose_name='Pas de réponse nécessaire')
-    subject = models.CharField(max_length=50, null=False, blank=False, verbose_name='Sujet')
+    subject = models.CharField(max_length=100, null=False, blank=False, verbose_name='Sujet')
     message = models.TextField(null=True, blank=True)
     time_sent = models.DateTimeField(default=timezone.now)
 
@@ -61,23 +61,18 @@ class Notification(models.Model):
     def set_notif_receiver_attestation(self):
         activite_mdlz = Activite.objects.safe_get(id=5)
         activite_shared_tabac_fmcg = Activite.objects.safe_get(id=3)
-        activite_shared = Activite.objects.safe_get(id=4)
-        if self.get_content_object().get_employe().get_activite() in list(Activite.objects.all().exclude(id=5)):
-            return Employe.objects.safe_get(activite=activite_shared_tabac_fmcg, consultant_attestations=True)
-        elif self.get_content_object().get_employe().get_activite() == activite_mdlz:
-            return Employe.objects.safe_get(activite=activite_mdlz, consultant_attestations=True)
-        elif self.get_content_object().get_employe().get_activite() == activite_shared:
-            return Employe.objects.safe_get(activite=activite_shared, consultant_attestations=True)
+        if self.get_content_object().get_employe().get_activite() == activite_mdlz:
+            return Employe.objects.filter(activite=activite_mdlz, consultant_attestations=True).first()
         else:
-            return None
+            return Employe.objects.filter(activite=activite_shared_tabac_fmcg, consultant_attestations=True).first()
 
     def set_notif_receiver_conge(self):
 
         if self.get_content_object().get_etat() == self.get_content_object().ETAT_ENVOI:
             return self.get_sender().get_superieur_hierarchique()
 
-        if self.get_content_object().get_etat() == self.get_content_object().ETAT_SUPERIEUR_HIERARCHIQUE:
-            return self.get_content_object().get_employe().get_departement().get_directeur()
+        if self.get_content_object().get_etat() == self.get_content_object().ETAT_SUPERIEUR_HIERARCHIQUE: # potentially has to change to get_superieur_hierarchique()
+            return self.get_content_object().get_employe().get_superieur_hierarchique()
 
         if self.get_content_object().get_etat() == self.get_content_object().ETAT_DIRECTION_CONCERNEE:
             return Departement.objects.safe_get(id=5).get_directeur()

@@ -9,36 +9,36 @@ class FicheObjectifAdmin(admin.ModelAdmin):
     list_display = ('employe', 'date_envoi', 'bonus')
 
     def has_add_permission(self, request):
-        return False
+        return True
 
     def has_change_permission(self, request, obj=None):
-        return False
+        return True
 
 
 class ObjectifAdmin(admin.ModelAdmin):
     list_display = ('fiche_objectif', 'description', 'poids', 'notation_manager')
 
     def has_add_permission(self, request):
-        return False
+        return True
 
     def has_change_permission(self, request, obj=None):
-        return False
+        return True
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
 
 class SousObjectifAdmin(admin.ModelAdmin):
     list_display = ('objectif', 'description')
 
     def has_add_permission(self, request):
-        return False
+        return True
 
     def has_change_permission(self, request, obj=None):
-        return False
+        return True
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return True
 
 
 class AccessbiliteFicheObjectifAdmin(admin.ModelAdmin):

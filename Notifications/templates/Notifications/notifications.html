@@ -11,10 +11,14 @@
               <h6 class="dropdown-header">
                 Notifications
               </h6>
-                <div id="notifications-get">
+                <div id="notifications-get" style="overflow-y:auto;max-height: 500px">
                 </div>
-              <span id="notification-none" class="dropdown-item text-center small text-gray-500" href="#">Aucune Notification</span>
+              <!--<span id="notification-none" class="dropdown-item text-center small text-gray-500">Aucune Notification</span>-->
+              <a id="get-all-notifications" href="#" data-url="{% url 'get_all_notifications' %}" data-toggle="modal" data-target="#notification-all-modal">
+                  <span class="dropdown-item text-center small text-gray-500">Voir toutes les notifications</span>
+              </a>
             </div>
+          <!-- Notification Detail Modal  -->
             <div class="modal fade" id="notification-detail-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -22,7 +26,7 @@
                          <h5 class="modal-title" id="modal-title"></h5>
                           <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                         </div>
-                    <div class="modal-body" id="modal-body"></div>
+                    <div class="modal-body" id="modal-body" style="overflow-y: auto; max-height: 500px;"></div>
                 <div class="modal-footer">
                     <div id="notif-reply">
                         <button id="close-button" data-url="" value="" class="btn btn-secondary" type="button" data-dismiss="modal">Fermer</button>
@@ -32,6 +36,21 @@
                 </div>
                 </div>
             </div>
+        <!-- All Notifications Modal  -->
+            <div class="modal fade" id="notification-all-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                         <h5 class="modal-title" id="modal-title">Toutes les Notifications</h5>
+                          <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                    <div class="modal-body" id="modal-body-notification-all" style="overflow-y: auto; max-height: 500px">
 
+                    </div>
+                <div class="modal-footer">
+                </div>
+                </div>
+                </div>
+            </div>
 {% endblock %}
 

@@ -6,4 +6,5 @@ urlpatterns = [
     url('^get_notifications$', login_required(views.get_notifications), name='get_notifications'),
     url('^get_notification_detail$', login_required(views.get_notification_detail), name='get_notification_detail'),
     url('^get_notifications_count$', login_required(views.get_notifications_count), name='get_notifications_count'),
+    url('^get_all_notifications$', login_required(views.get_all_notifications), name='get_all_notifications')
 ]

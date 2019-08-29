@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block Content %}
+<div class="container-fluid">
+    <h1 class="text-primary">Modification de la fiche des objectifs de {{ fiche.employe.get_full_name }}</h1>
+<form method="POST">
+  <br>
+  {% csrf_token %}
+{% for message in messages %}
+                <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
+        <br>
+     <div id="objectif-details" align="center">
+         {% for objectif in objectifs %}
+         <div class='card'>
+             <div class='container-fluid' align="center">
+                 <br>
+                 <input type="hidden" value="{{ objectif.id_objectif }}" name="objectif_id[]">
+                 <div class='row'>
+                     <div class='col-sm-8'>
+                         <label for="{{form.objectif.id_for_label}}" >Objectif {{ forloop.counter }}  </label>
+                         <textarea required id="{{form.objectif.id_for_label}}" name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='2'>{{ objectif.description }}</textarea>
+                     </div>
+                     <div class='col-sm-4'>
+                         <label for="{{form.poids.id_for_label}}" >poids en %</label>
+                         <input required value="{{ objectif.poids }}" min="10" max="100" class='form-control' type='number' placeholder="Entrer une valeur entre 10 et 100" name='{{ form.FIELD_NAME_MAPPING.poids }}' id="{{form.poids.id_for_label}}">
+                     </div>
+                 </div>
+                 <br>
+                 {% for sous_objectif in objectif.sous_objectifs %}
+                    <div class="row">
+                    <div class="col-sm-8">
+                        <input type="hidden" name="sous_objectif_id[]" value="{{ sous_objectif.id_sous_objectif }}"/>
+                        <input type="text" class="form-control" name="sous_objectif_desc[]" value="{{ sous_objectif.description }}" />
+                    </div>
+                    </div>
+                     <br>
+                     {% endfor %}
+             </div>
+         </div>
+             <br>
+         {% endfor %}
+     </div>
+     <br>
+        <br>
+     <div align="right">
+        <button type="submit" class="btn btn-primary" >Modifier les objectifs</button>
+    </div>
+  </form>
+  <br/>
+</div>
+{% endblock %}

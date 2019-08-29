@@ -16,9 +16,14 @@ class FicheObjectifForm(forms.Form):
         'sous_objectif': 'sous_objectifs_objectif_id[]',
     }
 
-    objectif = forms.CharField(max_length=255, widget=forms.TextInput, required=False)
-    poids = forms.IntegerField(min_value=10, max_value=100, widget=forms.NumberInput, required=False)
+    objectif = forms.CharField(max_length=255, widget=forms.TextInput(attrs={'id': 'id_objectif'}), required=False)
+    poids = forms.IntegerField(min_value=10, max_value=100, widget=forms.NumberInput(attrs={'id': 'id_poids'}), required=False)
     sous_objectif = forms.CharField(max_length=255, widget=forms.TextInput, required=False)
+
+    def add_prefix(self, field_name):
+        # look up field name; return original if not found
+        field_name = self.FIELD_NAME_MAPPING.get(field_name, field_name)
+        return super(FicheObjectifForm, self).add_prefix(field_name)
 
     def is_valid_poids(self, poids):
         if not poids:

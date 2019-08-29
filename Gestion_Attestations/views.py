@@ -39,7 +39,7 @@ def envoyer_demande_doc(request):
             demande_doc.delete()
             return JsonResponse({'Response': 'error'})
         send_mail(notification.get_subject(), notification.get_message(),
-                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
+                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()], fail_silently=True)
         return JsonResponse({'Response': 'Success'})
     else:
         return JsonResponse({'Response': 'error'})
@@ -63,7 +63,7 @@ def envoyer_demande_doc_superieur(request, matricule_employe):
             demande_doc.delete()
             return JsonResponse({'Response': 'error'})
         send_mail(notification.get_subject(), notification.get_message(),
-                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
+                  from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()], fail_silently=True)
         return JsonResponse({'Response': 'success'})
     else:
         return JsonResponse({'Response': 'error'})
@@ -73,23 +73,25 @@ def accept_demande_doc(request):
     notif_id = request.POST.get('notif_id')
     doc_id = request.POST.get('doc_id')
 
-    if not request.user.can_consult_attestations:
-        return HttpResponseForbidden()
     if notif_id:
-        notification = Notification.objects.safe_get(id=notif_id)
+        notification = get_object_or_404(Notification, pk=notif_id)
+        if request.user != notification.get_receiver():
+            return HttpResponseForbidden()
         demande_doc = notification.get_content_object()
     elif doc_id:
-        demande_doc = DemandeAttestation.objects.safe_get(id=doc_id)
+        if not request.user.can_consult_attestations:
+            return HttpResponseForbidden()
+        demande_doc = get_object_or_404(DemandeAttestation, pk=doc_id)
     else:
         return JsonResponse({'Response': 'error'})
     demande_doc.update_etat_validation()
     notification = Notification(sender=request.user, receiver=demande_doc.get_employe(),
-                                subject=demande_doc.get_type_demande(),
+                                subject='Nouvelle sur votre ' + str(demande_doc.get_type_demande()),
                                 message='Votre demande de %s a été acceptée !' % (demande_doc.get_type_demande()),
                                 content_object=demande_doc)
     notification.save()
     send_mail(notification.get_subject(), notification.get_message(),
-              from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()])
+              from_email=DEFAULT_FROM_EMAIL, recipient_list=[notification.get_receiver().get_email()], fail_silently=True)
     return JsonResponse({'Response': 'success'})
 
 

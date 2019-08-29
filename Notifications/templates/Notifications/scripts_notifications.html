@@ -8,13 +8,16 @@
             dataType: 'json',
             success: function(data) {
                     if (data.notifications_count > 0) {
-                        $('#notification-logo').text(data.notifications_count);
+                        if (data.notifications_count > 10) $('#notification-logo').text('10+');
+                        else $('#notification-logo').text(data.notifications_count);
                         $('#notification-logo').attr('class', 'badge badge-danger badge-counter');
-                        $('#notification-none').hide();
+                       // $('#notification-none').hide();
+                       // $('#all-notification-get').show();
                     }
                     else {
-                        $('#notification-none').show();
+                       // $('#notification-none').show();
                          $('#notification-logo').text('');
+                       //  $('#all-notification-get').hide();
                     }
             }
 
@@ -22,6 +25,7 @@
     }, 500);
 
       $("#notification-detail-modal").on("show.bs.modal", (function(e) {
+        $("#notification-all-modal").modal('hide');
         let notif_id = $(e.relatedTarget).data("value");
         $.ajax({
             url: '{% url 'get_notification_detail' %}',

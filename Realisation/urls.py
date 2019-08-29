@@ -35,5 +35,3 @@ urlpatterns = [
 admin.site.site_header = "EMID Administration"
 
 handler404 = views.handler404
-handler403 = views.handler403
-handler500 = views.handler500

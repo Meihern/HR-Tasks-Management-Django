@@ -53,6 +53,33 @@ class FicheObjectif(models.Model):
     def get_date_validation_manager(self):
         return self.date_validation_manager
 
+    def get_bonus_display(self):
+        if self.bonus >= 1.24:
+            return 'HP+'
+        if 1.19 <= self.bonus < 1.24:
+            return 'HP='
+        if 1.14 <= self.bonus < 1.19:
+            return 'HP-'
+        if 1.09 <= self.bonus < 1.14:
+            return "EP+"
+        if 1.04 <= self.bonus < 1.09:
+            return "EP="
+        if 1.02 <= self.bonus < 1.04:
+            return "EP-"
+        if 0.99 <= self.bonus < 1.02:
+            return "BP+"
+        if 0.94 <= self.bonus < 0.99:
+            return "BP="
+        if 0.84 <= self.bonus < 0.94:
+            return "BP-"
+        if 0.74 <= self.bonus < 0.84:
+            return "MP+"
+        if 0.5 <= self.bonus < 0.74:
+            return "MP="
+        if self.bonus < 0.5:
+            return "FP"
+
+
     @property
     def is_current(self):
         if self.date_envoi.year == now().date().year:
@@ -244,8 +271,6 @@ class AccessibiliteFicheObjectif(models.Model):
             raise ValidationError("Une seule permission d'accessibilité est possible")
         return super(AccessibiliteFicheObjectif, self).save(*args, **kwargs)
 
-
     class Meta:
         verbose_name = "Permission d'accesibilité aux fonctionnalités Fiche Objectif"
         verbose_name_plural = "Permissions d'accesibilité aux fonctionnalités Fiche Objectif"
-
