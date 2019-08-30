@@ -97,11 +97,11 @@
         type: 'POST',
         datatype : 'json',
         success: function(result) {
-             swal("Succès", "Votre Commentaire a été envoyée", "success");
+             Swal.fire("Succès", "Votre Commentaire a été envoyée", "success");
              $('#commentaire_employe_courant').empty().text(commentaire);
         },
         error: function(result) {
-            swal("Echec", "Une erreur est survenue ", "error");
+            Swal.fire("Echec", "Une erreur est survenue ", "error");
         }
     })
 });

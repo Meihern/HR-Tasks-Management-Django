@@ -21,7 +21,7 @@ def get_notifications(request):
 
 def get_all_notifications(request):
     notifications = Notification.objects.filter(receiver=request.user)
-    notifications = notifications.all().values('id', 'time_sent', 'subject', 'message', 'sender__full_name').order_by('-time_sent')
+    notifications = notifications.all().values('id', 'time_sent','seen', 'subject', 'message', 'sender__full_name').order_by('-time_sent')
     data = {}
     try:
         data['notifications'] = list(notifications)

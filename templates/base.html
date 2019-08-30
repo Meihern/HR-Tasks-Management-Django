@@ -296,6 +296,7 @@
   <script src="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
   {% block javascript %}{% endblock %}
   <script src="{% static 'Realisation/sweetalert/dist/sweetalert.min.js' %}"></script>
+  <script src="{% static 'Realisation/sweetalert2/dist/sweetalert2.all.min.js' %}"></script>
   {% include 'Notifications/scripts_notifications.html' %}
   <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
   <script src="{% static 'Notifications/js/notifications_handling.js' %}"></script>
@@ -309,13 +310,13 @@
     $(document).ready(function(){
         $('#dataTable').DataTable();
     });
-    $("#remplir-fiche-objectif-card-non-accessible").click(function(e){
+    $("#remplir-fiche-objectif-card-non-accessible, #remplir-fiche-objectif-non-accessible, #modification-fiche-objectif-non-accessible, #evaluation-non-accessible").click(function(e){
        e.preventDefault();
-       swal("Non Accessible", "Cette fonctionnalité n'est pas accessible pour le moment", "error");
+       Swal.fire("Non Accessible", "Cette fonctionnalité n'est pas accessible pour le moment", "error");
     });
     $("#remplir-fiche-objectif-complete, #remplir-fiche-objectif-card-complete").click(function(e){
        e.preventDefault();
-       swal("Non Accessible", "Vous avez déjà rempli votre fiche d'objectifs", "error");
+       Swal.fire("Non Accessible", "Vous avez déjà rempli votre fiche d'objectifs", "error");
     });
     </script>
 </body>

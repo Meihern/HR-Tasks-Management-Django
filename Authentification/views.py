@@ -35,7 +35,7 @@ def logout_view(request):
     return HttpResponseRedirect(LOGIN_REDIRECT_URL)
 
 
-class AuthenticationView(TemplateView,views.LoginView):
+class AuthenticationView(TemplateView, views.LoginView):
     template_name = 'Authentification/login.html'
     form = forms.LoginForm()
 
@@ -60,7 +60,6 @@ class AuthenticationView(TemplateView,views.LoginView):
 
 
 class SendPasswordResetEmail(FormView):
-
     template_name = 'Authentification/send_email_password_change.html'
     form = forms.SendPasswordResetEmailForm
     success_url = LOGIN_URL
@@ -105,7 +104,6 @@ class SendPasswordResetEmail(FormView):
 
 
 class ResetPasswordView(FormView):
-
     template_name = 'Authentification/password_change.html'
     form_class = forms.ChangePasswordForm
     success_url = LOGIN_URL
@@ -128,7 +126,12 @@ class ResetPasswordView(FormView):
                     try:
                         password_validation.validate_password(new_password1)
                     except password_validation.ValidationError as e:
-                        messages.error(request, e)
+                        messages.error(request,
+                                       "Votre mot de passe ne peut pas trop ressembler à vos autres informations "
+                                       "personnelles.")
+                        messages.error(request,"Votre mot de passe doit contenir au minimum 8 caractères.")
+                        messages.error(request,"Votre mot de passe ne peut pas être un mot de passe couramment utilisé.")
+                        messages.error(request,"Votre mot de passe ne peut pas être entièrement numérique.")
                         return self.form_invalid(form)
                     employe.set_password(new_password1)
                     employe.save()
@@ -163,5 +166,3 @@ class ProfileView(TemplateView):
             return render(request, template_name=self.template_name, context=context)
         else:
             return HttpResponseForbidden()
-
-

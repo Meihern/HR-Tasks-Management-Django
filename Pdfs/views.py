@@ -82,7 +82,8 @@ class GeneratePDFFichesObjectifs(TemplateView):
             'commentaire_employe': fiche_objectif.get_commentaire_employe() if fiche_objectif.get_commentaire_employe() else '',
             'date_commentaire_employe': fiche_objectif.get_date_validation_employe() if fiche_objectif.get_date_validation_employe() else '',
             'date_commentaire_manager': fiche_objectif.get_date_validation_manager() if fiche_objectif.get_date_validation_manager() else '',
-            'objectifs': objectifs
+            'objectifs': objectifs,
+            'is_manager': True if request.user.is_superieur_to(employe) else False,
         }
         if context:
             template = get_template(self.template_name)

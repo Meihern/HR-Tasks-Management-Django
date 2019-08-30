@@ -72,7 +72,7 @@ class Notification(models.Model):
             return self.get_sender().get_superieur_hierarchique()
 
         if self.get_content_object().get_etat() == self.get_content_object().ETAT_SUPERIEUR_HIERARCHIQUE: # potentially has to change to get_superieur_hierarchique()
-            return self.get_content_object().get_employe().get_superieur_hierarchique()
+            return self.get_sender().get_superieur_hierarchique()
 
         if self.get_content_object().get_etat() == self.get_content_object().ETAT_DIRECTION_CONCERNEE:
             return Departement.objects.safe_get(id=5).get_directeur()

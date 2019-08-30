@@ -37,7 +37,8 @@
         "datatables.net-bs4": "1.10.19",
         "jquery": "3.4.1",
         "jquery.easing": "^1.4.1",
-        "sweetalert": "^2.1.2"
+        "sweetalert": "^2.1.2",
+        "sweetalert2": "^8.16.3"
     },
     "devDependencies": {
         "browser-sync": "2.26.7",

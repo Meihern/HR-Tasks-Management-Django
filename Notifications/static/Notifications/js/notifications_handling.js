@@ -55,18 +55,24 @@ $('#notification-all-modal').on("show.bs.modal", function(e){
                             hour: 'numeric',
                             minute: 'numeric',
                         });
-                    return $('<a class="dropdown-item d-flex align-items-center" data-url="notifications/get_notification_detail" href="#" data-value="'+notifications.id+'" data-toggle="modal" data-target="#notification-detail-modal" >' +
+                    let seen;
+                    if (notifications.seen === true) seen = 'Vue';
+                    else seen = 'Non Vue';
+                    return $(
+                        '<a class="dropdown-item d-flex align-items-center" data-url="notifications/get_notification_detail" href="#" data-value="'+notifications.id+'" data-toggle="modal" data-target="#notification-detail-modal" >' +
                         '<div class="mr-3">' +
                         '<div class="icon-circle bg-primary">' +
                         '<i class="fas fa-file-alt text-white"></i>' +
                         '</div>' +
                         '</div>' +
                         '<div>' +
-                        '<div class="small text-gray-500"> le ' + time_sent + '</div>' +
                         '<span class="font-weight-bold">' + notifications.subject +'</span><br>'+
-                        '<span class="small text-gray-500"> Envoyé par ' + notifications.sender__full_name + '</span>'+
+                        '<div class="small text-gray-500">le ' + time_sent + '</div>' +
+                        '<span class="small text-gray-500"> Envoyé par ' + notifications.sender__full_name + '</span><br>'+
+                        '<span class="small text-info">'+seen+'</span>'+
                         '</div>'+
-                        '</a>');
+                        '</a>'
+                    );
                 }));
         }
     });

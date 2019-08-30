@@ -1,10 +1,8 @@
 $("#demande-doc-Modal").on('show.bs.modal',function(e) {
     let type_demande = $(e.relatedTarget).data("value");
     let matricule = $(e.relatedTarget).data("matricule");
-    console.log(matricule);
     let confirm_modal_button = $("#confirm-demande-doc");
     window.url = confirm_modal_button.data("url");
-    console.log(window.url);
     if(type_demande === 'domiciliation') $("#demande-doc-Modal .modal-body").text("Selectionnez \"Confirmer\" si vous êtes sûr de l'envoi de votre demande de "+type_demande);
     else $("#demande-doc-Modal .modal-body").text("Selectionnez \"Confirmer\" si vous êtes sûr de l'envoi de votre demande d'attestation de "+type_demande);
     confirm_modal_button.val(type_demande);
@@ -15,13 +13,22 @@ $("#demande-doc-Modal").on('show.bs.modal',function(e) {
 
 $("#confirm-demande-doc").click(function(e) {
     e.preventDefault();
-    console.log("test");
     $('#demande-doc-Modal').modal('hide');
     let csrf = window.CSRF_TOKEN;
     if(window.url === undefined){
         window.url = $(this).data('url');
     }
     let type_demande = $(this).val();
+    Swal.fire({
+        title:'Attendez un instant !',
+        text: "Votre demande est en cours d'envoi",
+    });
+    Swal.showLoading({
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        allowClickOutside: false,
+    });
     $.ajax({
         type: 'POST',
         url: url,
@@ -30,13 +37,15 @@ $("#confirm-demande-doc").click(function(e) {
             csrfmiddlewaretoken: csrf,
         },
         success: function(result) {
-            if(type_demande === 'domiciliation') swal("Succès","Demande de "+type_demande+" envoyée avec succès","success");
-            else swal("Succès","Demande d'attestation de "+type_demande+" envoyée avec succès","success");
+            Swal.close();
+            if(type_demande === 'domiciliation') Swal.fire("Succès","Demande de "+type_demande+" envoyée avec succès","success");
+            else Swal.fire("Succès","Demande d'attestation de "+type_demande+" envoyée avec succès","success");
 
         },
         error: function(result) {
-           if(type_demande === 'domiciliation') swal("Echec","Demande de "+type_demande+" non envoyé","error");
-           else swal("Echec","Demande d'attestation de "+type_demande+" non envoyé","error");
+            Swal.close();
+           if(type_demande === 'domiciliation') Swal.fire("Echec","Demande de "+type_demande+" non envoyé","error");
+           else Swal.fire("Echec","Demande d'attestation de "+type_demande+" non envoyé","error");
         }
     });
 });
@@ -56,10 +65,10 @@ $('#notif-reply a').click(function (e) {
                 type: 'POST',
                 datatype: 'json',
                 success: function (result) {
-                    swal("Succès", "Le document est prêt sous format PDF", "success");
+                    Swal.fire("Succès", "Le document est prêt sous format PDF", "success");
                 },
                 error: function (result) {
-                    swal("Echec", "Le document n'est pas prêt ", "error");
+                    Swal.fire("Echec", "Le document n'est pas prêt ", "error");
                 }
             })
         }}
@@ -78,10 +87,10 @@ $("#accept-demande-doc-type a").click(function (e) {
         type: 'POST',
         datatype : 'json',
         success: function(result) {
-             swal("Succès","Le document est prêt sous format PDF","success");
+             Swal.fire("Succès","Le document est prêt sous format PDF","success");
         },
         error: function(result) {
-            swal("Echec", "Le document n'est pas prêt ", "error");
+            Swal.fire("Echec", "Le document n'est pas prêt ", "error");
         }
     })
 });

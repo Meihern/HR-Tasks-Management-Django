@@ -118,12 +118,12 @@
         type: 'POST',
         datatype : 'json',
         success: function(result) {
-             swal("Succès", "Votre Commentaire a été envoyée", "success");
+             Swal.fire("Succès", "Votre Commentaire a été envoyée", "success");
              $('#commentaire_manager_courant').empty().text(commentaire);
              $('#commentaire_manager_courant_div_id').show();
         },
         error: function(result) {
-            swal("Echec", "Une erreur est survenue ", "error");
+            Swal.fire("Echec", "Une erreur est survenue ", "error");
         }
     })
 });
