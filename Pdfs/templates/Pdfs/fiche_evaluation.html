@@ -92,9 +92,9 @@ img {
                   <th width="150" height="1000">Evaluation mi-annuel: Manager</th>
                   <th width="150" height="1000">Evaluation annuel: Manager</th>
                   <th width="35" height="1000">Notation Manager</th>
-                  {{ if }}
+                  {%  if is_manager %}
                   <th width="30" height="1000">en %</th>
-                  {{ % endif % }}
+                  {% endif %}
                 </tr>
                 {% for objectif in objectifs %}
                 <tr>
@@ -108,9 +108,9 @@ img {
                   <td width="150">{{objectif.evaluation_mi_annuelle}}</td>
                   <td width="150">{{objectif.evaluation_annuelle}}</td>
                   <td width="35">{{objectif.notation_manager}}</td>
-                  {{ if }}
+                  {% if is_manager %}
                   <td width="30">{{objectif.notation_manager_value}}</td>
-                  {{ % endif % }}
+                  {% endif %}
                 </tr>
                 {% endfor %}
         </table>

@@ -1,6 +1,10 @@
 {% extends "Authentification/profile.html" %}
+{% load static %}
 {% block title %}Historique demande attestations{% endblock %}
 {% block Content %}
+{% block css %}
+<link href="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
 <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{request.user}}</h1>
@@ -35,7 +39,7 @@
             <th>Etat</th>
           </tr>
         </thead>
-        <tbody id="accept-demande-doc-type">
+        <tbody>
         {% for doc in docs %}
           <tr>
             <td>{{ doc.type }}</td>

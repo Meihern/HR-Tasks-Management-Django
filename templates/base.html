@@ -132,6 +132,11 @@
               <a class="collapse-item" href="{% url 'consultation_conges_valides' 'courant' %}">Employés en Congés</a>
               <a class="collapse-item" href="{% url 'consultation_conges_valides' 'prochain' %}">Prochains Congés</a>
               {% endif %}
+          {% if request.user.can_consult_fiches_objectifs is True %}
+              <h6 class="collapse-header">Fiches des Objectifs</h6>
+            <a class="collapse-item" href="{% url 'consultation_fiches_RH' %}">Fiches des Objectifs Validées</a>
+              {% endif %}
+
           <!--
           {% if request.user.can_consult_recrutements is True %}
             <h6 class="collapse-header">Recrutements</h6>

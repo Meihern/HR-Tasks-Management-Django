@@ -33,12 +33,12 @@ $("#notif-reply a").click(function (e) {
     })
 }});
 
-$("#notif-reply button").click(function (e) {
-    if($(this).attr('id') === 'refuser-demande-conge'){
+$("#refuser-demande-conge").click(function (e) {
     e.preventDefault();
+    $('#refuser-conge-modal').modal('hide');
     let notif_id = $(this).val();
     let csrf =  CSRF_TOKEN;
-    $('#notification-detail-modal').modal('hide');
+    //$('#notification-detail-modal').modal('hide');
     Swal.fire({
         title:'Attendez un instant !',
         text: "La demande de congé est en cours de traitement",
@@ -52,6 +52,7 @@ $("#notif-reply button").click(function (e) {
         url: $(this).data("url"),
         data:{
             'notif_id': notif_id,
+            'motif_refus': $('#motif-refus-conge-id').val(),
             csrfmiddlewaretoken: csrf,
         },
         type: 'POST',
@@ -65,4 +66,4 @@ $("#notif-reply button").click(function (e) {
             Swal.fire("Echec", "Une erreur est survenue ", "error");
         }
     })
-}});
+});

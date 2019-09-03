@@ -13,7 +13,7 @@ urlpatterns = [
     url('^envoyer_commentaire_manager$', login_required(views.set_commentaire_manager), name='envoi_commentaire_manager'),
     url('^consultation_objectifs_equipe$', login_required(views.EquipeView.as_view()),
         name='consultation_objectifs_equipe'),
-    # path('consultation_objectifs/<int:fiche_id>', login_required(views.ConsultationObjectifsSuperieurView.as_view()), name='consultation_objectif_superieur')
+   url('^consultation_objectifs_RH$', login_required(views.ConsultationFicheObjectifsRHView.as_view()), name='consultation_fiches_RH'),
     path('modification_fiche_objectif/<int:fiche_id>', login_required(views.UpdateFicheObjectifSuperieurView.as_view()),
          name='modification_fiche_objectif')
 ]

@@ -148,6 +148,7 @@ def refuser_demande_conge(request):
     if notification_id:
         notification = Notification.objects.get(id=notification_id)
         demande_conge = notification.get_content_object()
+        motif_refus = request.POST.get('motif_refus')
         if not request.user == notification.get_receiver():
             return HttpResponseForbidden()
     else:
@@ -158,12 +159,14 @@ def refuser_demande_conge(request):
 
     try:
         demande_conge.update_etat(DemandeConge.ETAT_REFUS)
+        demande_conge.set_motif_refus(motif_refus)
         demande_conge = DemandeConge.objects.safe_get(id=demande_conge.get_id())
         notification = Notification(content_object=demande_conge)
         notification.set_subject("Une nouvelle sur votre demande de congé")
         notification.set_sender(employe)
         notification.set_receiver()
-        notification.set_message("Votre demande de Congé a été refusée")
+        notification.set_message(
+            "Votre demande de Congé a été refusée pour le motif suivant : %s" % (demande_conge.get_motif_refus()))
         notification.save()
         context = get_email_context(employe, demande_conge, request)
         context['domain'] = request.META['HTTP_HOST']
@@ -283,7 +286,7 @@ class HistoriqueDemandesCongesView(TemplateView):
     def get(self, request, *args, **kwargs):
         employe = request.user
         if employe:
-            demandes_conges = DemandeConge.objects.filter(employe=employe)
+            demandes_conges = DemandeConge.objects.filter(employe=employe).order_by('-date_envoi')
             demandes_conges = demandes_conges.all().values('id', 'date_envoi', 'date_depart', 'date_retour', 'etat')
             data = []
             for demande in demandes_conges:

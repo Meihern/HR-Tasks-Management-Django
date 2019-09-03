@@ -70,7 +70,11 @@
   <script type="text/JavaScript">
       let i=1;
       let j=0;
-
+      let array_objectifs_ids_counts = [];
+      let array_objectifs_ids = [];
+      let array_button_sous_objectifs_ids = [];
+      let array_button_delete_ids = [];
+      let array_label_objectifs_ids = [];
       $('#ajout-sous-objectif').click(function(e){
                 let id_sous_objectif_count = ++j;
                 let sous_objectif_id = '{{ form.sous_objectif.id_for_label }}' + id_sous_objectif_count;
@@ -108,19 +112,24 @@
           let delete_id = 'delete-objectif'+id_objectif_count;
           let objectif_div = "<div id="+div_objectif_id+"></div>";
           let button_sous_objectif_id = 'ajout-sous-objectif'+id_objectif_count;
+          let label_objectif_id = 'label-objectif'+id_objectif_count;
           $('#objectif-details').append(objectif_div);
-
+          array_objectifs_ids_counts.push(id_objectif_count);
+          array_objectifs_ids.push(objectif_id);
+          array_button_delete_ids.push(delete_id);
+          array_button_sous_objectifs_ids.push(button_sous_objectif_id);
+          array_label_objectifs_ids.push(label_objectif_id);
         // Création d'un nouveau objectif
 
         let objectif = "<br><div class='card'>"
         +"<div class='container-fluid'>"
         +"<br>"
         +"<div align='right'>"
-        +"<button id="+delete_id+" data-value="+id_objectif_count+" class='far fa-times-circle' style='font-size:24px;color:grey;background:none;border:none'></button>"
+        //+"<button id="+delete_id+" value="+id_objectif_count+" class='far fa-times-circle' style='font-size:24px;color:grey;background:none;border:none'></button>"
         +"</div>"
         +"<div class='row'>"
         +"<div class='col-sm-8'>"
-        +"<label for="+objectif_id+" >Objectif " + id_objectif_count + "</label>"
+        +"<label id="+label_objectif_id+" for="+objectif_id+" >Objectif " + id_objectif_count + "</label>"
         +"<textarea required id="+objectif_id+" name='{{ form.FIELD_NAME_MAPPING.objectif }}' class='form-control' rows='2'></textarea>"
         +"</div>"
         +"<div class='col-sm-3'>"
@@ -130,22 +139,69 @@
         +"</div>"
         +"<br>"
         +"<div>"
-        +"<button type='button' id="+button_sous_objectif_id+" data-value="+id_objectif_count+" class='btn btn-info'>Ajouter un Sous-Objectif</button>"
+        +"<button type='button' id="+button_sous_objectif_id+" value="+id_objectif_count+" class='btn btn-info'>Ajouter un Sous-Objectif</button>"
         +"</div>"
         +"<br>"
         +"</div>"
         +"</div>";
         $('#' + div_objectif_id).append(objectif);
         // Suppression d'un objectif
+       /* $("#" + delete_id ).click(function() {
 
-        $("#" + delete_id ).click(function() {
-                $("#" + div_objectif_id_empty + $(this).data('value')).remove();
-        });
+                id_objectif_count = --i;
+                array_objectifs_ids_counts.pop();
+                console.log(array_objectifs_ids_counts);
+                console.log(array_button_delete_ids);
+                console.log(array_button_sous_objectifs_ids);
+            var current_delete_id;
+            var current_button_sous_objectif_id;
+            var current_label_id;
+            for (i = 0; i < array_objectifs_ids.length; i++) {
+                console.log(i);
+                console.log(array_objectifs_ids_counts[i]);
+                if (i < array_objectifs_ids_counts.length) {
+                    current_delete_id = $("#" + array_button_delete_ids[i]);
+                    current_button_sous_objectif_id = $("#" + array_button_sous_objectifs_ids[i]);
+                    current_label_id = $("#" + array_label_objectifs_ids[i]);
+                    $("#" + array_objectifs_ids[i]).attr('id', '{{ form.objectif.id_for_label }}' + array_objectifs_ids_counts[i]);
+                    $(current_delete_id).attr('id', 'delete-objectif' + array_objectifs_ids_counts[i]);
+                    $(current_delete_id).attr("value", array_objectifs_ids_counts[i]);
+                    $(current_button_sous_objectif_id).attr('id', 'ajout-sous-objectif' + array_objectifs_ids_counts[i]);
+                    $(current_button_sous_objectif_id).attr("value", array_objectifs_ids_counts[i]);
+                    $(current_label_id).attr('id', 'label-objectif' + array_objectifs_ids_counts[i]);
+                    $(current_label_id).attr('for', '{{ form.objectif.id_for_label }}' + array_objectifs_ids_counts[i]);
+                    $(current_label_id).empty().append("Objectif " + array_objectifs_ids_counts[i]);
+                } else {
+                    current_delete_id = $("#" + array_button_delete_ids[i - 1]);
+                    current_button_sous_objectif_id = $("#" + array_button_sous_objectifs_ids[i - 1]);
+                    current_label_id = $("#" + array_label_objectifs_ids[i - 1]);
+                    $("#" + array_objectifs_ids[i]).attr('id', '{{ form.objectif.id_for_label }}' + array_objectifs_ids_counts[i - 1]);
+                    $(current_delete_id).attr('id', 'delete-objectif' + array_objectifs_ids_counts[i - 1]);
+                    $(current_delete_id).attr("value", array_objectifs_ids_counts[i - 1]);
+                    $(current_button_sous_objectif_id).attr('id', 'ajout-sous-objectif' + array_objectifs_ids_counts[i - 1]);
+                    $(current_button_sous_objectif_id).attr("value", array_objectifs_ids_counts[i - 1]);
+                    $(current_label_id).attr('id', 'label-objectif' + array_objectifs_ids_counts[i - 1]);
+                    $(current_label_id).attr('for', '{{ form.objectif.id_for_label }}' + array_objectifs_ids_counts[i - 1]);
+                    $(current_label_id).empty().append("Objectif " + array_objectifs_ids_counts[i - 1]);
+                }
+            }
+                array_objectifs_ids.pop();
+                array_button_sous_objectifs_ids.pop();
+                array_button_delete_ids.pop();
+                array_label_objectifs_ids.pop();
+                $("#" + div_objectif_id_empty + $(this).val()).remove();
+                console.log(array_objectifs_ids_counts);
+                console.log(array_button_delete_ids);
+                console.log(array_button_sous_objectifs_ids);
+               // $("#"+objectif_id).attr("id",'{{ form.objectif.id_for_label }}'+id_objectif_count);
+                // console.log(objectif_id);
+                // $(this).attr("data-value",id_objectif_count);
+        });*/
          let selector_button_sous_objectif = "#"+button_sous_objectif_id;
          // Ajout des sous objectifs
       $(selector_button_sous_objectif).click(function(e){
                 let id_sous_objectif_count = ++j;
-                let sous_objectif_name = '{{ form.FIELD_NAME_MAPPING.sous_objectif }}'.replace('_objectif_id',id_objectif_count.toString())
+                let sous_objectif_name = '{{ form.FIELD_NAME_MAPPING.sous_objectif }}'.replace('_objectif_id',id_objectif_count.toString());
                 let sous_objectif_id = '{{ form.sous_objectif.id_for_label }}' + id_sous_objectif_count;
                 let div_sous_objectif_id_empty = 'sous-objectif';
                 let div_sous_objectif_id = div_sous_objectif_id_empty + id_sous_objectif_count;

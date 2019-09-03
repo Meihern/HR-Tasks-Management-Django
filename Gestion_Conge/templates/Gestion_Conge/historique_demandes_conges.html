@@ -1,6 +1,10 @@
 {% extends "Authentification/profile.html" %}
+{% load static %}
 {% block title %}Historique demandes congés{% endblock %}
 {% block Content %}
+{% block css %}
+<link href="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
 <div class="container-fluid">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
                 <h1 class="h3 mb-0 text-gray-800">{{request.user}}</h1>
@@ -33,7 +37,7 @@
             <th>Date de depart</th>
             <th>Date de retour</th>
             <th>Etat</th>
-            <th>Telecharger</th>
+            <th>Générer PDF</th>
           </tr>
         </thead>
         <tbody>
@@ -46,7 +50,7 @@
             <td>
               <div align='center'>
                   {% if Demande.etat_code == 4 %}
-                <a type='button' href="{% url 'generate_pdf_demande_conge' Demande.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
+                <a type='button' href="{% url 'generate_pdf_demande_conge' Demande.id %}" target="_blank" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
                   {% else %}
                       Congé Non Validé
                   {% endif %}

@@ -6,6 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.template import loader
 from django.utils.timezone import now
 from django.views.generic import TemplateView, FormView
+
+from Authentification.models import Activite
 from Notifications.models import Notification
 from Realisation.settings import LOGIN_REDIRECT_URL, DEFAULT_FROM_EMAIL
 from .utils import *
@@ -58,7 +60,7 @@ class FicheEvaluationView(FormView):
                     notification.save()
                     messages.success(request, "Votre fiche d'objectifs a été remplie avec succès")
                     context = get_email_context(fiche_objectif, employe)
-                    context['domain'] = request.META['HTTP_POST']
+                    context['domain'] = request.META['HTTP_HOST']
                     email = loader.render_to_string("Fiche_evaluation/email_remplir_fiche_objectif.html", context)
                 except ValueError:
                     result = self.form_invalid(form)
@@ -203,6 +205,35 @@ class ConsultationObjectifsView(TemplateView):
         return render(request, self.template_name)
 
 
+class ConsultationFicheObjectifsRHView(TemplateView):
+    template_name = 'Fiche_evaluation/consultation_fiches_objectifs_RH.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.can_consult_fiches_objectifs:
+            return HttpResponseForbidden()
+        activite_mdlz = Activite.objects.get(id=5)
+        if request.user.can_consult_mdlz:
+            fiches_objectifs = FicheObjectif.objects.filter(employe__activite=activite_mdlz, valide=True).order_by(
+                '-date_envoi')
+        elif request.user.can_consult_shared_tabac_fmcg:
+            fiches_objectifs = FicheObjectif.objects.exclude(employe__activite=activite_mdlz).order_by('-date_envoi')
+        else:
+            fiches_objectifs = FicheObjectif.objects.all()
+
+        fiches_objectifs = fiches_objectifs.all().values('id', 'employe', 'date_envoi')
+        data = []
+
+        for fiche in fiches_objectifs:
+            fiche_objectif = {
+                'id': fiche['id'],
+                'date_envoi': fiche['date_envoi'],
+                'employe': Employe.objects.get(matricule_paie=fiche['employe']).get_full_name(),
+            }
+            data.append(fiche_objectif)
+
+        return render(request, template_name=self.template_name, context={'fiches_objectifs': data})
+
+
 class UpdateFicheObjectifSuperieurView(TemplateView):
     template_name = 'Fiche_evaluation/modification_objectifs_superieur.html'
     form = FicheObjectifForm
@@ -231,8 +262,9 @@ class UpdateFicheObjectifSuperieurView(TemplateView):
             try:
                 notification = Notification(content_object=fiche_objectif, no_reply=True)
                 notification.set_subject("Modification de votre Fiche d'objectif")
-                notification.set_message("Votre supérieur hiérarchique %s a modifié votre Fiche des Objectifs" % (
-                    request.user.get_full_name()))
+                notification.set_message(
+                    "Votre supérieur hiérarchique %s a validé et modifié votre Fiche des Objectifs" % (
+                        request.user.get_full_name()))
                 notification.set_sender(request.user)
                 notification.receiver = employe
                 notification.save()
@@ -241,11 +273,12 @@ class UpdateFicheObjectifSuperieurView(TemplateView):
                 return HttpResponseRedirect(self.request.path_info)
             for i in range(len(objectifs)):
                 Objectif.objects.filter(id=int(objectifs_ids[i])).update(description=objectifs[i],
-                                                                         poids=poids[i]/100)
+                                                                         poids=poids[i] / 100)
             sous_objectifs_ids = request.POST.getlist('sous_objectif_id[]')
             sous_objectifs_desc = request.POST.getlist('sous_objectif_desc[]')
             for i in range(len(sous_objectifs_ids)):
                 SousObjectif.objects.filter(id=int(sous_objectifs_ids[i])).update(description=sous_objectifs_desc[i])
+            fiche_objectif.update_valide_status()
             messages.success(request,
                              "La fiche des objectifs de %s a été modifiée avec succès" % (employe.get_full_name()))
             context = get_email_context(fiche_objectif, request.user)

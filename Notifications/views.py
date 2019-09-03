@@ -38,7 +38,7 @@ def get_notification_detail(request):
     notification_subject = str(notification)
     notification_no_reply = notification.is_no_reply
     notification_content_type = str(notification.get_content_type())
-    doc_id = notification.get_content_object().id
+    doc_id = notification.get_content_object().id if notification.get_content_object() else ''
     data = {'message': notification_message, 'subject': notification_subject,
             'no_reply': notification_no_reply, 'content_type': notification_content_type, 'doc_id': doc_id}
     return JsonResponse(data)

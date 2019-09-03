@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Equipe consultation fiche des objectifs{% endblock %}
 {% block Content %}
+{% block css %}
+<link href="{% static 'Realisation/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock %}
 <!-- DataTales Example -->
  <div class="card shadow mb-4">
     <div class="card-header py-3">
@@ -35,7 +38,7 @@
               </td>
               <td>
                 <div align='center'>
-                  <a type='button' href="{% url 'generate_pdf_fiche_objectif' fiche.id %}" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
+                  <a type='button' href="{% url 'generate_pdf_fiche_objectif' fiche.id %}" target="_blank" class='far fa-file-pdf' style='font-size:24px;color:red;background:none;border:none;'></a>
                 </div>
               </td>
 

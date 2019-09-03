@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}Vous recevez cet email pour vous rappelez de remplir votre fiche des objectifs au Plate-forme {{ site_name }}.{% endblocktrans %}
+{% trans "Nous vous rappelons que votre matricule est : " %}{{ employe.get_matricule }}
+{% trans "Veuillez visiter ce lien et s'authentifier pour remplir votre fiche d'objectifs :" %}
+{% block reset_link %}
+{{ protocol }}://{{ domain }}{% url 'remplir_objectifs'%}
+{% endblock %}
+
+{% trans "Thanks for using our site!" %}
+
+{% blocktrans %}The {{ site_name }} team{% endblocktrans %}
+
+{% endautoescape %}

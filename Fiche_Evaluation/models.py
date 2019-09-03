@@ -13,6 +13,7 @@ class FicheObjectif(models.Model):
     employe = models.ForeignKey(to=Employe, null=False, blank=False, on_delete=None, verbose_name='Employé')
     date_envoi = models.DateField(null=False, blank=False, default=now)
     bonus = models.FloatField(null=True, blank=True, verbose_name='Bonus')
+    valide = models.BooleanField(null=False, blank=False, default=False)
     commentaire_manager = models.TextField(null=True, blank=True,
                                            verbose_name='Commentaire du Manager Performance Annuelle')
     commentaire_employe = models.TextField(null=True, blank=True,
@@ -24,6 +25,9 @@ class FicheObjectif(models.Model):
 
     def __str__(self):
         return "Fiche des objectifs de %s" % (self.employe.get_full_name())
+
+    def update_valide_status(self):
+        FicheObjectif.objects.filter(id=self.pk).update(valide=True)
 
     def get_bonus(self):
         if self.bonus is None:
@@ -86,6 +90,9 @@ class FicheObjectif(models.Model):
             return True
         else:
             return False
+    @property
+    def is_valid(self):
+        return self.valide
 
     class Meta:
         verbose_name_plural = 'Les fiches des objectifs'

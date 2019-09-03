@@ -52,10 +52,23 @@ $("#confirm-demande-doc").click(function(e) {
 
 
 $('#notif-reply a').click(function (e) {
+    e.preventDefault();
         if ($(this).attr('id') === 'accept-demande-doc') {
             let notif_id = $(this).val();
+            let href = $(this).attr('href');
             $('#notification-detail-modal').modal('hide');
             let csrf = window.CSRF_TOKEN;
+            Swal.fire({
+        title:'Attendez un instant !',
+        text: "Le document PDF est en cours de traitement",
+         });
+
+        Swal.showLoading({
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        allowClickOutside: false,
+        });
             $.ajax({
                 url: $(this).data("url"),
                 data: {
@@ -66,6 +79,8 @@ $('#notif-reply a').click(function (e) {
                 datatype: 'json',
                 success: function (result) {
                     Swal.fire("Succès", "Le document est prêt sous format PDF", "success");
+                    console.log(href);
+                    window.open(href, '_blank');
                 },
                 error: function (result) {
                     Swal.fire("Echec", "Le document n'est pas prêt ", "error");
@@ -75,9 +90,21 @@ $('#notif-reply a').click(function (e) {
     );
 
 $("#accept-demande-doc-type a").click(function (e) {
+    e.preventDefault();
+    let href = $(e.currentTarget).attr('href');
     let doc_id = $(e.currentTarget).data("value");
     let csrf = window.CSRF_TOKEN;
-    console.log(doc_id);
+    Swal.fire({
+        title:'Attendez un instant !',
+        text: "Le document PDF est en cours de traitement",
+         });
+
+        Swal.showLoading({
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        allowEnterKey: false,
+        allowClickOutside: false,
+        });
     $.ajax({
         url: $(this).data("url"),
         data:{
@@ -87,9 +114,12 @@ $("#accept-demande-doc-type a").click(function (e) {
         type: 'POST',
         datatype : 'json',
         success: function(result) {
+             Swal.close();
              Swal.fire("Succès","Le document est prêt sous format PDF","success");
+             window.open(href, '_blank');
         },
         error: function(result) {
+            Swal.close();
             Swal.fire("Echec", "Le document n'est pas prêt ", "error");
         }
     })

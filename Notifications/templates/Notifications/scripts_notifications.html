@@ -43,8 +43,8 @@
                 switch(data.content_type){
                     case "Demande Congé":
                         link.attr("id","accept-demande-conge");
-                        close_button.attr("id", "refuser-demande-conge");
-                        close_button.attr("data-url","{% url 'refuser_demande_conge' %}");
+                        close_button.attr("data-toggle", "modal");
+                        close_button.attr("data-target", "#refuser-conge-modal");
                         close_button.text("Refuser");
                         link.attr("data-url","{% url 'accept_demande_conge' %}");
                         link.attr("href","");
@@ -65,12 +65,15 @@
                     link.hide();
                     close_button.attr("id", "close-button");
                     close_button.attr("data-url", "");
+                    close_button.attr("data-toggle", "");
+                    close_button.attr("data-target", "");
+                    close_button.attr("data-dimiss", "modal");
                     close_button.text("Fermer");
                 }
                 else{
                     link.show();
                     link.val(notif_id);
-                    close_button.val(notif_id);
+                    $('#refuser-demande-conge').val(notif_id);
                 }
             }
         });

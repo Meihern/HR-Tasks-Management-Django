@@ -31,6 +31,7 @@ class DemandeConge(models.Model):
     jours_ouvrables = models.PositiveIntegerField(null=False, blank=False, verbose_name='Jours Ouvrables')
     interim = models.CharField(max_length=60, null=True, blank=True, verbose_name='Intérim assuré par')
     telephone = PhoneNumberField(null=True, blank=True, unique=False, verbose_name='Téléphone personnel')
+    motif_refus = models.CharField(null=True, blank=True,max_length=255, verbose_name='Motif Refus du Congé')
     etat = models.PositiveSmallIntegerField(null=False, blank=False, default=ETAT_ENVOI,
                                             choices=CHOIX_ETATS, verbose_name='Etat Demande')
     date_envoi = models.DateField(null=False, blank=False, default=now,
@@ -76,6 +77,9 @@ class DemandeConge(models.Model):
         if code_etat == self.ETAT_REFUS:
             DemandeConge.objects.filter(id=self.pk).update(etat=self.ETAT_REFUS)
 
+    def set_motif_refus(self, motif):
+        DemandeConge.objects.filter(id=self.pk).update(motif_refus=motif)
+
     def get_id(self):
         return self.pk
 
@@ -86,16 +90,22 @@ class DemandeConge(models.Model):
         if self.interim:
             return self.interim
         else:
-            return None
+            return ''
 
     def get_telephone(self):
         if self.telephone:
             return self.telephone
         else:
-            return None
+            return ''
 
     def get_etat(self):
         return self.etat
+
+    def get_motif_refus(self):
+        if self.motif_refus:
+            return self.motif_refus
+        else:
+            return ''
 
     def get_date_depart(self):
         return self.date_depart
