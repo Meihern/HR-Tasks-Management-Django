@@ -1,2 +1,2 @@
-# Stage-Emid-Projet-Digitalisation
- Digitalisation des services RH avec une plateforme WEB basé sur le framework DJANGO
+# HR-Tasks-Management-Django
+ Basic HR Tasks Management application.
